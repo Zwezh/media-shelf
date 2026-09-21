@@ -1,0 +1,19 @@
+@use 'styles/tokens';
+
+html {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font: var(--text-body-lg);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-background);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

@@ -1,0 +1,45 @@
+{
+  "name": "media-shelf",
+  "version": "0.0.0",
+  "description": "MediaShelf is a private, local, non-commercial pet project for managing a personal collection of movies and TV series. The application works as a personal media library where the user can browse, search, filter, sort, add, edit, delete, and inspect movies and series, as well as maintain a wishlist.",
+  "private": true,
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Zwezh/media-shelf.git"
+  },
+  "keywords": [
+    "media-library",
+    "movies",
+    "tv-series",
+    "wishlist",
+    "angular"
+  ],
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "packageManager": "npm@11.4.1",
+  "dependencies": {
+    "@angular/common": "^22.1.0",
+    "@angular/compiler": "^22.1.0",
+    "@angular/core": "^22.1.0",
+    "@angular/forms": "^22.1.0",
+    "@angular/platform-browser": "^22.1.0",
+    "@angular/router": "^22.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.1.7",
+    "@angular/cli": "^22.1.7",
+    "@angular/compiler-cli": "^22.1.0",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^4.0.8"
+  }
+}

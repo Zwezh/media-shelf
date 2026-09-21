@@ -1,0 +1,54 @@
+:root {
+  --font-family-base: 'Nunito Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --font-size-display-lg: 2rem;
+  --font-size-headline-lg: 1.5rem;
+  --font-size-headline-md: 1.25rem;
+  --font-size-headline-sm: 1.125rem;
+  --font-size-title-md: 1rem;
+  --font-size-body-lg: 1rem;
+  --font-size-body-md: 0.875rem;
+  --font-size-body-sm: 0.8125rem;
+  --font-size-label-lg: 0.875rem;
+  --font-size-label-md: 0.75rem;
+  --font-size-label-sm: 0.6875rem;
+  --font-size-code-sm: 0.75rem;
+
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  --line-height-display-lg: 2.5rem;
+  --line-height-headline-lg: 2rem;
+  --line-height-headline-md: 1.75rem;
+  --line-height-headline-sm: 1.5rem;
+  --line-height-title-md: 1.375rem;
+  --line-height-body-lg: 1.5rem;
+  --line-height-body-md: 1.25rem;
+  --line-height-body-sm: 1.125rem;
+  --line-height-label-lg: 1.25rem;
+  --line-height-label-md: 1rem;
+  --line-height-label-sm: 0.875rem;
+  --line-height-code-sm: 1rem;
+
+  --letter-spacing-display-lg: -0.02em;
+  --letter-spacing-headline-lg: -0.015em;
+  --letter-spacing-headline-md: -0.01em;
+  --letter-spacing-label-md: 0.02em;
+  --letter-spacing-label-sm: 0.04em;
+  --letter-spacing-default: 0;
+
+  --text-display-lg: var(--font-weight-extrabold) var(--font-size-display-lg) / var(--line-height-display-lg) var(--font-family-base);
+  --text-headline-lg: var(--font-weight-bold) var(--font-size-headline-lg) / var(--line-height-headline-lg) var(--font-family-base);
+  --text-headline-md: var(--font-weight-bold) var(--font-size-headline-md) / var(--line-height-headline-md) var(--font-family-base);
+  --text-headline-sm: var(--font-weight-semibold) var(--font-size-headline-sm) / var(--line-height-headline-sm) var(--font-family-base);
+  --text-title-md: var(--font-weight-semibold) var(--font-size-title-md) / var(--line-height-title-md) var(--font-family-base);
+  --text-body-lg: var(--font-weight-regular) var(--font-size-body-lg) / var(--line-height-body-lg) var(--font-family-base);
+  --text-body-md: var(--font-weight-regular) var(--font-size-body-md) / var(--line-height-body-md) var(--font-family-base);
+  --text-body-sm: var(--font-weight-regular) var(--font-size-body-sm) / var(--line-height-body-sm) var(--font-family-base);
+  --text-label-lg: var(--font-weight-semibold) var(--font-size-label-lg) / var(--line-height-label-lg) var(--font-family-base);
+  --text-label-md: var(--font-weight-bold) var(--font-size-label-md) / var(--line-height-label-md) var(--font-family-base);
+  --text-label-sm: var(--font-weight-bold) var(--font-size-label-sm) / var(--line-height-label-sm) var(--font-family-base);
+  --text-code-sm: var(--font-weight-semibold) var(--font-size-code-sm) / var(--line-height-code-sm) var(--font-family-base);
+}

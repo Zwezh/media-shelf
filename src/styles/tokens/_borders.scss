@@ -1,0 +1,10 @@
+:root {
+  --border-width-hairline: 1px;
+  --border-width-control: 1px;
+  --border-width-check-control: 1.5px;
+
+  --border-subtle: var(--border-width-hairline) solid var(--color-border);
+  --border-strong: var(--border-width-hairline) solid var(--color-border-strong);
+  --border-emphasis: var(--border-width-hairline) solid var(--color-border-emphasis);
+  --border-focus: 2px solid var(--color-focus-ring);
+}
