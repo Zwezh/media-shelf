@@ -1,11 +1,18 @@
 {
-  "printWidth": 100,
   "singleQuote": true,
+  "semi": true,
+  "trailingComma": "all",
+  "printWidth": 140,
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf",
+  "bracketSpacing": true,
   "overrides": [
     {
       "files": "*.html",
       "options": {
-        "parser": "angular"
+        "parser": "angular",
+        "printWidth": 140
       }
     }
   ]

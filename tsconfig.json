@@ -12,7 +12,14 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@msh-core/*": ["./src/app/core/*"],
+      "@msh-features/*": ["./src/app/features/*"],
+      "@msh-layout/*": ["./src/app/layout/*"],
+      "@msh-shared/*": ["./src/app/shared/*"],
+      "@msh/*": ["./src/app/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
