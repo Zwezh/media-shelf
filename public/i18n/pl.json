@@ -1,0 +1,56 @@
+{
+  "common": {
+    "itemCount": "Elementy: {{count}}"
+  },
+  "footer": {
+    "description": "MediaShelf — system zarządzania archiwum multimediów",
+    "librarySynced": "Biblioteka zsynchronizowana",
+    "version": "wersja {{version}}"
+  },
+  "gallery": {
+    "navigation": "Nawigacja galerii"
+  },
+  "header": {
+    "home": "Strona główna MediaShelf",
+    "primaryNavigation": "Główna nawigacja"
+  },
+  "media": {
+    "duration": "{{hours}} godz. {{minutes}} min",
+    "moreActions": "Więcej działań dla {{title}}",
+    "posterAlt": "Plakat: {{title}}",
+    "ratingLabel": "Ocena {{rating}} na 10",
+    "series": "Serial",
+    "type": {
+      "movie": "Film",
+      "series": "Serial"
+    },
+    "untitled": "Bez tytułu"
+  },
+  "movies": {
+    "addMovie": "Dodaj film",
+    "empty": "Brak dostępnych filmów.",
+    "loadError": "Nie udało się załadować filmów.",
+    "loading": "Ładowanie filmów…",
+    "showing": "Wyświetlono {{visible}} z {{total}} tytułów",
+    "title": "Filmy"
+  },
+  "navigation": {
+    "gallery": "Galeria",
+    "movies": "Filmy",
+    "settings": "Ustawienia",
+    "statistics": "Statystyki",
+    "wishlist": "Lista życzeń"
+  },
+  "pagination": {
+    "label": "Paginacja",
+    "next": "Następna strona",
+    "previous": "Poprzednia strona",
+    "summary": "Strona {{page}} z {{totalPages}} (elementy: {{totalItems}})"
+  },
+  "routes": {
+    "moviesTitle": "Filmy | MediaShelf",
+    "settingsTitle": "Ustawienia | MediaShelf",
+    "statisticsTitle": "Statystyki | MediaShelf",
+    "wishlistTitle": "Lista życzeń | MediaShelf"
+  }
+}

@@ -13,6 +13,8 @@
 - Media model - The immutable card-ready projection produced by `toMedia`, including formatted year, duration, and poster fallback.
 - Archival pagination bar - The shared pager that displays current page, total pages, total item count, and bounded page controls.
 - Poster placeholder - The local branded `public/poster-placeholder.svg` used when poster URLs are absent or fail to load.
+- Translation key - A contextual identifier such as `movies.empty`; components render keys through ngx-translate instead of owning interface copy.
+- Movies store - The feature-scoped NgRx SignalStore that owns movie loading, request state, current page, and visible-page derivation.
 
 ```scss
 .movie-badge {

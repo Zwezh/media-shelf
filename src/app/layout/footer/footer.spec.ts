@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { Footer } from './footer';
+import { provideI18nTesting } from '@msh/testing/i18n-testing';
 
 describe('Footer', () => {
   it('renders the product status and supplied version', async () => {
     await TestBed.configureTestingModule({
       imports: [Footer],
+      providers: [provideI18nTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(Footer);

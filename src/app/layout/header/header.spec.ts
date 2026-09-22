@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { NavigationItem } from '@msh-core/navigation';
+import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { Header } from './header';
 
 @Component({
@@ -12,15 +13,16 @@ class RouteStub {}
 
 describe('Header', () => {
   const navigationItems: readonly NavigationItem[] = [
-    { label: 'Gallery', order: 1, path: '/gallery' },
-    { label: 'Statistics', order: 2, path: '/statistics' },
-    { label: 'Settings', order: 3, path: '/settings' },
+    { labelKey: 'navigation.gallery', order: 1, path: '/gallery' },
+    { labelKey: 'navigation.statistics', order: 2, path: '/statistics' },
+    { labelKey: 'navigation.settings', order: 3, path: '/settings' },
   ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Header],
       providers: [
+        provideI18nTesting(),
         provideRouter([
           {
             path: 'gallery',

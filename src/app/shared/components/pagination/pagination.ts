@@ -1,6 +1,8 @@
 import { Component, computed, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
+  imports: [TranslatePipe],
   selector: 'msh-pagination',
   styleUrl: './pagination.scss',
   templateUrl: './pagination.html',

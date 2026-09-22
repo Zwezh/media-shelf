@@ -1,15 +1,20 @@
 # Media Gallery
 
-The Movies page at `/gallery/movies` reads `MediaDto[]` from `/mock-data.json` with `httpResource`, converts each record through the pure `toMedia` boundary, and presents a responsive 2:3 grid. `DEFAULT_PAGE_SIZE` is 30. Shared primitives include `PageHeader` for title/count/projected actions, `PageStatus` for loading and error states, `EmptyState` for successful empty collections, `MediaCard`, `MediaBadge`, `MediaRating`, and `Pagination`.
+The Movies page at `/gallery/movies` injects a feature-scoped NgRx `MoviesStore`. The store reads `MediaDto[]` from `/mock-data.json`, converts each record through the pure `toMedia` boundary, owns loading/error/page state, and derives the visible 30-item page. Shared primitives receive translation keys or use ngx-translate directly so interface copy reacts to the active language.
 
 ```typescript
-const mediaResource = httpResource<MediaDto[]>(() => '/mock-data.json', { defaultValue: [] });
-const media = computed(() => mediaResource.value().map(toMedia));
+export const MoviesStore = signalStore(
+  withState(initialState),
+  withComputed(({ media, page }) => ({
+    visibleMedia: computed(() => media().slice((page() - 1) * DEFAULT_PAGE_SIZE, page() * DEFAULT_PAGE_SIZE)),
+  })),
+);
 ```
 
 ```mermaid
 flowchart LR
-  JSON[/mock-data.json] --> DTO[MediaDto]
+  JSON[/mock-data.json] --> Store[MoviesStore]
+  Store --> DTO[MediaDto]
   DTO --> Converter[toMedia]
   Converter --> Model[Media model]
   Model --> Grid[Movies grid]
@@ -25,6 +30,7 @@ flowchart LR
 Invariants:
 
 - The transport DTO remains separate from the immutable presentation model.
+- `MoviesStore` is provided by the Movies page, initializes its own load, and owns media, loading/error state, current page, and visible-page derivation.
 - Poster selection prefers `posterUrl`, then `compactPosterUrl`, then `MEDIA_POSTER_PLACEHOLDER`.
 - Runtime image failures also replace the source with `/poster-placeholder.svg` and cannot retry recursively.
 - Cards keep a 2:3 poster ratio; mobile uses exactly two columns and wider canvases use fluid columns capped at six on large desktop.

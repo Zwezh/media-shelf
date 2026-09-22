@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
 
 export interface NavigationMetadata {
-  readonly label: string;
+  readonly labelKey: string;
   readonly order: number;
 }
 
@@ -16,7 +16,7 @@ const isNavigationMetadata = (value: unknown): value is NavigationMetadata => {
 
   const metadata = value as Record<string, unknown>;
 
-  return typeof metadata['label'] === 'string' && typeof metadata['order'] === 'number';
+  return typeof metadata['labelKey'] === 'string' && typeof metadata['order'] === 'number';
 };
 
 export const createNavigationItems = (routes: readonly Route[]): readonly NavigationItem[] =>
@@ -30,7 +30,7 @@ export const createNavigationItems = (routes: readonly Route[]): readonly Naviga
 
       return [
         {
-          label: metadata.label,
+          labelKey: metadata.labelKey,
           order: metadata.order,
           path: `/${route.path}`,
         },
