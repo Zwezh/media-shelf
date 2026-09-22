@@ -30,10 +30,12 @@ flowchart TD
 ```
 
 Contracts:
+
 - Components consume semantic tokens such as `--color-surface`, `--color-primary`, `--text-body-md`, `--space-base`, `--radius-md`, and `--shadow-level-1`.
+- Shared layout components consume the Figma-aligned `--color-shell-*` and `--size-shell-*` families so feature semantics remain independent.
 - Palette tokens may exist to compose color semantics, but component code should not depend on raw palette names unless it is defining a new semantic token.
 - Light colors are defined on `:root, [data-theme='light']`; dark colors are defined on `[data-theme='dark']`.
 - Non-color tokens are theme-neutral.
 - Angular Material theming is not configured in the project; there is no Material token bridge yet.
 
-Related lodes: [UI summary](summary.md), [practices](../practices.md), [terminology](../terminology.md).
+Related lodes: [UI summary](summary.md), [application shell](application-shell.md), [practices](../practices.md), [terminology](../terminology.md).

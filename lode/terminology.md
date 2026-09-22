@@ -5,7 +5,10 @@
 - Palette token - A raw color token such as `--palette-slate-200`; these support semantic tokens and are not the preferred component API.
 - Theme selector - `[data-theme='light']` or `[data-theme='dark']`, used to switch theme-aware color variables.
 - Media badge - A compact label for taxonomy or metadata states including Movie, Series, Wishlist, Rating, Quality, and Age Rating.
-- Wishlist - A personal list of movies or series the user wants to track separately from fully cataloged collection entries.
+- Wishlist - A gallery-owned child collection at `/gallery/wishlist` for movies or series the user wants to track separately from fully cataloged entries.
+- Application shell - The shared header, main router outlet, and footer composed by the root `App` component.
+- Root navigation item - A header link derived from `navigation` metadata on a navigable root route.
+- Brand mark - The canonical MediaShelf logo exported from Figma node `15:2` and stored at `public/logo.svg`.
 
 ```scss
 .movie-badge {
