@@ -54,11 +54,17 @@ it('shows an empty state when no media items exist', async () => {
 ```
 
 ```scss
+@use 'abstracts/breakpoints' as breakpoint;
+
 .toolbar-button {
   min-height: var(--size-control-compact);
   padding: var(--space-sm) var(--space-base);
   font: var(--text-label-lg);
   border-radius: var(--radius-md);
+
+  @include breakpoint.mobile {
+    width: 100%;
+  }
 }
 ```
 
@@ -89,9 +95,11 @@ flowchart LR
 ```
 
 Invariants:
+
 - `DESIGN.md` is the visual source of truth.
 - `src/styles.scss` is the Angular-configured global stylesheet.
 - Theme-aware values belong in color/elevation tokens; spacing, typography, sizing, radius, motion, and z-index stay theme-neutral unless the design spec changes.
+- Component SCSS uses expanded declarations and nested BEM selectors; responsive rules use the named mixins in `src/styles/abstracts/_breakpoints.scss` instead of local width literals.
 - `tsconfig.json` is the source of truth for import aliases; instruction examples must stay synchronized with it.
 - New aliases represent stable top-level architectural boundaries, never individual features or temporary folders.
 - Barrels define supported public APIs; they never bulk-export an entire architectural layer or hide lazy-loading and dependency boundaries.

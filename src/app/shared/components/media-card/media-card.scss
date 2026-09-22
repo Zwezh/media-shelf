@@ -1,0 +1,123 @@
+@use 'abstracts/breakpoints' as breakpoint;
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.media-card {
+  overflow: hidden;
+  background: var(--color-surface);
+  border: var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-level-1);
+
+  &__poster {
+    position: relative;
+    aspect-ratio: var(--size-poster-aspect-ratio);
+    overflow: hidden;
+    background: var(--color-surface-inset);
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__topline,
+  &__poster-footer {
+    position: absolute;
+    right: var(--space-sm);
+    left: var(--space-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+
+  &__topline {
+    top: var(--space-sm);
+    align-items: flex-start;
+  }
+
+  &__topline-end {
+    display: flex;
+    min-width: 0;
+    gap: var(--space-xs);
+  }
+
+  &__poster-footer {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    min-height: 2rem;
+    padding: var(--space-xs) var(--space-sm);
+    color: var(--color-text-inverse);
+    font: var(--text-label-md);
+    background: rgba(15, 23, 42, 0.72);
+  }
+
+  &__details {
+    min-height: 7.5rem;
+    padding: var(--space-md);
+
+    h2 {
+      margin: 0;
+      overflow: hidden;
+      color: var(--color-text-primary);
+      font: var(--text-title-md);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    p {
+      display: -webkit-box;
+      min-height: 2.5rem;
+      margin: var(--space-xs) 0 0;
+      overflow: hidden;
+      color: var(--color-text-secondary);
+      font: var(--text-body-md);
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+  }
+
+  &__metadata {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+    color: var(--color-secondary);
+    font: var(--text-label-md);
+
+    > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    button {
+      width: 1.5rem;
+      height: 1.5rem;
+      padding: 0;
+      color: var(--color-text-muted);
+      background: transparent;
+      border: 0;
+    }
+  }
+
+  @include breakpoint.phone {
+    &__details {
+      min-height: 7rem;
+      padding: var(--space-sm);
+    }
+
+    &__topline {
+      right: var(--space-xs);
+      left: var(--space-xs);
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # UI Summary
 
-The MediaShelf UI uses a restrained, full-width application shell with header navigation, a fluid feature canvas, and a compact status footer. Feature pages may introduce dense poster grids, tabular metadata views, inspectors, and semantic badges inside that canvas, but they do not replace the shared shell. Current UI work starts from the global token layer rather than one-off component values. The canonical brand mark is the Figma-exported `public/logo.svg`; browsers use it as the primary favicon and `public/favicon.ico` as the multi-size compatibility fallback.
+The MediaShelf UI uses a restrained, full-width application shell with header navigation, a fluid feature canvas, and a compact status footer. Gallery adds route-derived local navigation and a responsive Movies canvas built from reusable media cards, badges, ratings, and archival pagination. Current UI work starts from the global token layer rather than one-off component values. The canonical brand mark is the Figma-exported `public/logo.svg`; browsers use it as the primary favicon and `public/favicon.ico` as the multi-size compatibility fallback.
 
 ```scss
 :host {
@@ -33,4 +33,4 @@ Invariants:
 - Application code references local public assets and never temporary Figma asset URLs.
 - The shared shell owns the only `<main>` landmark; feature roots use sections.
 
-Related lodes: [project summary](../summary.md), [application shell](application-shell.md), [design tokens](design-tokens.md).
+Related lodes: [project summary](../summary.md), [application shell](application-shell.md), [design tokens](design-tokens.md), [media gallery](media-gallery.md).

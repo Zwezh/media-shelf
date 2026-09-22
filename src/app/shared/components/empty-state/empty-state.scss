@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+.empty-state {
+  display: grid;
+  min-height: 12rem;
+  padding: var(--space-3xl);
+  color: var(--color-text-secondary);
+  text-align: center;
+  place-items: center;
+
+  p {
+    margin: 0;
+    font: var(--text-body-lg);
+  }
+}

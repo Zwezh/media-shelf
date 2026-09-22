@@ -21,6 +21,7 @@ flowchart TD
 Contracts:
 
 - The desktop header is 56 px high with 24 px inline padding; at 48 rem and below it is 64 px high with 16 px padding.
+- The application header is sticky at the viewport top and remains above feature-level sticky navigation.
 - Mobile navigation remains in the header and scrolls horizontally. There is no bottom navigation or placeholder for future account controls.
 - The header receives root navigation items from `App`; it does not import route configuration.
 - `Gallery` remains active for `/gallery` child URLs such as `/gallery/wishlist`.

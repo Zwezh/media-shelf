@@ -1,0 +1,28 @@
+$phone: 30rem;
+$mobile: 40rem;
+$tablet: 48rem;
+$wide: 90rem;
+
+@mixin phone {
+  @media (max-width: $phone) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin wide {
+  @media (min-width: $wide) {
+    @content;
+  }
+}

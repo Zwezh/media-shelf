@@ -1,0 +1,31 @@
+<nav class="pagination" aria-label="Pagination">
+  <p>Page {{ page() }} of {{ totalPages() }} ({{ totalItems() }} items)</p>
+  <div class="pagination__controls">
+    <button class="pagination__arrow" type="button" aria-label="Previous page" [disabled]="page() === 1" (click)="selectPage(page() - 1)">
+      <span aria-hidden="true">‹</span>
+    </button>
+    @for (item of visiblePages(); track $index) {
+      @if (item === 'ellipsis') {
+        <span class="pagination__ellipsis" aria-hidden="true">…</span>
+      } @else {
+        <button
+          type="button"
+          [class.pagination__page--active]="item === page()"
+          [attr.aria-current]="item === page() ? 'page' : null"
+          (click)="selectPage(item)"
+        >
+          {{ item }}
+        </button>
+      }
+    }
+    <button
+      class="pagination__arrow"
+      type="button"
+      aria-label="Next page"
+      [disabled]="page() === totalPages()"
+      (click)="selectPage(page() + 1)"
+    >
+      <span aria-hidden="true">›</span>
+    </button>
+  </div>
+</nav>
