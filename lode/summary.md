@@ -1,6 +1,6 @@
 # MediaShelf Summary
 
-MediaShelf is a private, local, non-commercial Angular 22 SCSS pet project for managing a personal collection of movies and TV series. It is a personal media library where the user can browse, search, filter, sort, add, edit, delete, and inspect movies and series, maintain a wishlist, and track metadata, technical flags, ratings, and collection states. The responsive app shell composes a route-driven header, a full-width main `RouterOutlet`, and a package-versioned footer around lazy gallery, statistics, and settings boundaries; wishlist is owned by gallery at `/gallery/wishlist`. The visual foundation is global native CSS custom properties imported from `src/styles.scss`; app code should consume semantic tokens instead of hard-coded color, spacing, typography, radius, border, shadow, motion, size, or z-index values.
+MediaShelf is a private, local, non-commercial Angular 22 SCSS pet project for managing a personal collection of movies and TV series. The responsive app shell composes a route-driven header, a full-width main `RouterOutlet`, and a package-versioned footer around lazy gallery, statistics, and settings boundaries. Gallery owns Movies at `/gallery/movies` and Wishlist at `/gallery/wishlist`; Movies currently loads 30 typed mock records from `/mock-data.json` into a responsive 2:3 poster grid with reusable cards and pagination. The visual foundation is global native CSS custom properties imported from `src/styles.scss`; app code should consume semantic tokens instead of hard-coded visual values.
 
 ```scss
 .media-panel {

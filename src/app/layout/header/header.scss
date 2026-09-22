@@ -1,4 +1,9 @@
+@use 'abstracts/breakpoints' as breakpoint;
+
 :host {
+  position: sticky;
+  z-index: calc(var(--z-index-sticky) + 1);
+  top: 0;
   display: block;
   min-width: 0;
 }
@@ -79,7 +84,7 @@
   outline-offset: var(--space-xxs);
 }
 
-@media (max-width: 48rem) {
+@include breakpoint.tablet {
   .app-header {
     height: var(--size-shell-header-height-mobile);
     padding-inline: var(--size-shell-inline-padding-mobile);

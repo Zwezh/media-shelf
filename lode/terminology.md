@@ -9,6 +9,10 @@
 - Application shell - The shared header, main router outlet, and footer composed by the root `App` component.
 - Root navigation item - A header link derived from `navigation` metadata on a navigable root route.
 - Brand mark - The canonical MediaShelf logo exported from Figma node `15:2` and stored at `public/logo.svg`.
+- Media DTO - The transport shape loaded from `/mock-data.json`; it is converted before presentation code consumes it.
+- Media model - The immutable card-ready projection produced by `toMedia`, including formatted year, duration, and poster fallback.
+- Archival pagination bar - The shared pager that displays current page, total pages, total item count, and bounded page controls.
+- Poster placeholder - The local branded `public/poster-placeholder.svg` used when poster URLs are absent or fail to load.
 
 ```scss
 .movie-badge {

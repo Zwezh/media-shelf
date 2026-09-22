@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 288" role="img" aria-labelledby="title description">
+  <title id="title">MediaShelf poster placeholder</title>
+  <desc id="description">A pale library poster used when cover artwork is unavailable.</desc>
+  <defs>
+    <linearGradient id="wash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e6f6ff"/>
+      <stop offset="0.58" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#fff8eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="288" fill="url(#wash)"/>
+  <path d="M0 188C43 155 73 169 111 146c29-18 50-19 81-13v155H0Z" fill="#fff" opacity=".42"/>
+  <text x="96" y="43" text-anchor="middle" fill="#182033" font-family="Arial, sans-serif" font-size="20" font-weight="700">MediaShelf</text>
+  <text x="96" y="63" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="13">— Library Gallery</text>
+  <text x="96" y="250" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="11">POSTER UNAVAILABLE</text>
+</svg>

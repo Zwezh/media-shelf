@@ -1,0 +1,29 @@
+<article class="media-card">
+  <div class="media-card__poster">
+    <img [src]="media().posterUrl" [alt]="media().title + ' poster'" loading="lazy" (error)="usePlaceholder($event)" />
+    <div class="media-card__topline">
+      <msh-media-badge [tone]="media().type">{{ media().type }}</msh-media-badge>
+      <div class="media-card__topline-end">
+        <msh-media-badge tone="quality">{{ media().quality }}</msh-media-badge>
+        <msh-media-badge tone="age">{{ media().ageRating }}</msh-media-badge>
+      </div>
+    </div>
+    <div class="media-card__poster-footer">
+      <msh-media-rating [rating]="media().rating" />
+      <span>{{ media().duration }}</span>
+    </div>
+  </div>
+  <div class="media-card__details">
+    <h2>{{ media().title }}</h2>
+    <p>
+      {{ media().year }}
+      @if (media().director) {
+        · {{ media().director }}
+      }
+    </p>
+    <div class="media-card__metadata">
+      <span>{{ media().genres.slice(0, 2).join(' · ') }}</span>
+      <button type="button" aria-label="More actions for {{ media().title }}" disabled>⋮</button>
+    </div>
+  </div>
+</article>

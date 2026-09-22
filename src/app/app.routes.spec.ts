@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -6,7 +7,7 @@ import { APP_NAVIGATION_ITEMS, routes } from './app.routes';
 describe('root routes', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter(routes)],
+      providers: [provideHttpClient(), provideRouter(routes)],
     });
   });
 
@@ -19,7 +20,8 @@ describe('root routes', () => {
   });
 
   it.each([
-    ['/gallery', 'Gallery'],
+    ['/gallery', 'Movies'],
+    ['/gallery/movies', 'Movies'],
     ['/gallery/wishlist', 'Wishlist'],
     ['/statistics', 'Statistics'],
     ['/settings', 'Settings'],
@@ -35,7 +37,7 @@ describe('root routes', () => {
     const router = TestBed.inject(Router);
     await harness.navigateByUrl(path);
 
-    expect(router.url).toBe('/gallery');
-    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Gallery');
+    expect(router.url).toBe('/gallery/movies');
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Movies');
   });
 });

@@ -6,6 +6,7 @@
 - [ui/summary.md](ui/summary.md) - UI architecture overview.
 - [ui/application-shell.md](ui/application-shell.md) - Responsive header, main outlet, footer, and version contract.
 - [ui/design-tokens.md](ui/design-tokens.md) - Global CSS design-token contract.
+- [ui/media-gallery.md](ui/media-gallery.md) - Movies grid, media-card, poster fallback, and pagination contract.
 - [routing/summary.md](routing/summary.md) - Root URL contract and lazy feature boundaries.
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
 - `plans/` - Persistent roadmaps and TODOs when needed.
@@ -23,6 +24,7 @@ flowchart TD
   Root --> UI[ui]
   UI --> UIShell[application-shell.md]
   UI --> UITokens[design-tokens.md]
+  UI --> MediaGallery[media-gallery.md]
   Root --> Routing[routing]
   Routing --> RouteSummary[summary.md]
   Root --> CI[ci]

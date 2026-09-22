@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.page-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  min-height: 12rem;
+  padding: var(--space-3xl);
+  color: var(--color-text-secondary);
+
+  &__spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--color-border-strong);
+    border-top-color: var(--color-primary);
+    border-radius: var(--radius-pill);
+    animation: page-status-spin 700ms linear infinite;
+  }
+
+  &--error {
+    color: var(--color-error);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+@keyframes page-status-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-status__spinner {
+    animation: none;
+  }
+}

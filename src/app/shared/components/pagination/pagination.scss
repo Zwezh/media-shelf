@@ -1,0 +1,89 @@
+@use 'abstracts/breakpoints' as breakpoint;
+
+:host {
+  display: block;
+}
+
+.pagination {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xl) 0 var(--space-2xl);
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font: var(--text-label-md);
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xxs);
+    min-height: 3rem;
+    padding: var(--space-xs);
+    background: var(--color-surface);
+    border: var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-level-1);
+  }
+
+  button,
+  &__ellipsis {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    font: var(--text-label-lg);
+  }
+
+  button {
+    padding: 0;
+    color: var(--color-text-primary);
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+
+    &:hover:not(:disabled, .pagination__page--active) {
+      background: var(--color-surface-hover);
+    }
+
+    &:focus-visible {
+      outline: var(--border-focus);
+      outline-offset: 0;
+    }
+
+    &:disabled {
+      color: var(--color-text-muted);
+      cursor: default;
+    }
+  }
+
+  &__arrow {
+    font-size: 1.5rem;
+  }
+
+  &__ellipsis {
+    color: var(--color-text-secondary);
+  }
+
+  &__page--active {
+    color: var(--color-on-primary);
+    background: var(--color-primary);
+  }
+
+  @include breakpoint.phone {
+    &__controls {
+      width: 100%;
+    }
+
+    button,
+    &__ellipsis {
+      flex: 1 1 0;
+      width: auto;
+      min-width: 2.25rem;
+    }
+  }
+}

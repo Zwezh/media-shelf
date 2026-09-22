@@ -1,0 +1,44 @@
+:host {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  max-width: 100%;
+  padding: 0 var(--space-sm);
+  overflow: hidden;
+  font: var(--text-label-sm);
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+
+  &--movie {
+    color: var(--color-badge-movie-text);
+    background: var(--color-badge-movie-bg);
+    border-color: var(--color-badge-movie-border);
+  }
+
+  &--series {
+    color: var(--color-badge-series-text);
+    background: var(--color-badge-series-bg);
+    border-color: var(--color-badge-series-border);
+  }
+
+  &--quality {
+    color: var(--color-badge-quality-text);
+    background: var(--color-badge-quality-bg);
+    border-color: var(--color-badge-quality-border);
+  }
+
+  &--age {
+    color: var(--color-badge-age-text);
+    background: var(--color-badge-age-bg);
+    border-color: var(--color-badge-age-border);
+  }
+}
