@@ -8,6 +8,7 @@
 - [ui/design-tokens.md](ui/design-tokens.md) - Global CSS design-token contract.
 - [ui/media-gallery.md](ui/media-gallery.md) - Movies grid, media-card, poster fallback, and pagination contract.
 - [routing/summary.md](routing/summary.md) - Root URL contract and lazy feature boundaries.
+- [i18n/summary.md](i18n/summary.md) - Runtime language initialization, translation resources, and key contracts.
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
 - `plans/` - Persistent roadmaps and TODOs when needed.
 - `tmp/` - Git-ignored session scraps and handovers.
@@ -27,6 +28,8 @@ flowchart TD
   UI --> MediaGallery[media-gallery.md]
   Root --> Routing[routing]
   Routing --> RouteSummary[summary.md]
+  Root --> I18n[i18n]
+  I18n --> I18nSummary[summary.md]
   Root --> CI[ci]
   CI --> CISummary[summary.md]
 ```

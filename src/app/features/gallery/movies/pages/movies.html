@@ -1,21 +1,23 @@
 <section class="movies" aria-labelledby="movies-title">
-  <msh-page-header title="Movies" headingId="movies-title" [itemCount]="media().length">
-    <button class="movies__add-button" type="button" disabled><span aria-hidden="true">+</span> Add movie</button>
+  <msh-page-header titleKey="movies.title" headingId="movies-title" [itemCount]="store.media().length">
+    <button class="movies__add-button" type="button" disabled><span aria-hidden="true">+</span> {{ 'movies.addMovie' | translate }}</button>
   </msh-page-header>
 
-  @if (isLoading()) {
-    <msh-page-status message="Loading movies…" />
-  } @else if (error()) {
-    <msh-page-status kind="error" message="Movies could not be loaded." />
-  } @else if (media().length === 0) {
-    <msh-empty-state message="There are no movies available." />
+  @if (store.isLoading()) {
+    <msh-page-status messageKey="movies.loading" />
+  } @else if (store.hasError()) {
+    <msh-page-status kind="error" messageKey="movies.loadError" />
+  } @else if (store.media().length === 0) {
+    <msh-empty-state messageKey="movies.empty" />
   } @else {
-    <p class="movies__summary">Showing {{ visibleMedia().length }} of {{ media().length }} titles</p>
+    <p class="movies__summary">
+      {{ 'movies.showing' | translate: { visible: store.visibleMedia().length, total: store.media().length } }}
+    </p>
     <div class="movies__grid">
-      @for (item of visibleMedia(); track item.id) {
+      @for (item of store.visibleMedia(); track item.id) {
         <msh-media-card [media]="item" />
       }
     </div>
-    <msh-pagination [page]="page()" [pageSize]="pageSize" [totalItems]="media().length" (pageChange)="changePage($event)" />
+    <msh-pagination [page]="store.page()" [pageSize]="pageSize" [totalItems]="store.media().length" (pageChange)="changePage($event)" />
   }
 </section>

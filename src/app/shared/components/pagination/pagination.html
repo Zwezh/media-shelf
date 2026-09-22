@@ -1,7 +1,13 @@
-<nav class="pagination" aria-label="Pagination">
-  <p>Page {{ page() }} of {{ totalPages() }} ({{ totalItems() }} items)</p>
+<nav class="pagination" [attr.aria-label]="'pagination.label' | translate">
+  <p>{{ 'pagination.summary' | translate: { page: page(), totalPages: totalPages(), totalItems: totalItems() } }}</p>
   <div class="pagination__controls">
-    <button class="pagination__arrow" type="button" aria-label="Previous page" [disabled]="page() === 1" (click)="selectPage(page() - 1)">
+    <button
+      class="pagination__arrow"
+      type="button"
+      [attr.aria-label]="'pagination.previous' | translate"
+      [disabled]="page() === 1"
+      (click)="selectPage(page() - 1)"
+    >
       <span aria-hidden="true">‹</span>
     </button>
     @for (item of visiblePages(); track $index) {
@@ -21,7 +27,7 @@
     <button
       class="pagination__arrow"
       type="button"
-      aria-label="Next page"
+      [attr.aria-label]="'pagination.next' | translate"
       [disabled]="page() === totalPages()"
       (click)="selectPage(page() + 1)"
     >

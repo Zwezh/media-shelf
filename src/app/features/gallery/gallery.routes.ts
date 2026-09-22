@@ -13,14 +13,14 @@ export const GALLERY_ROUTES: Routes = [
       },
       {
         path: 'movies',
-        title: 'Movies | MediaShelf',
-        data: { navigation: { label: 'Movies', order: 1 } satisfies NavigationMetadata },
+        title: 'routes.moviesTitle',
+        data: { navigation: { labelKey: 'navigation.movies', order: 1 } satisfies NavigationMetadata },
         loadComponent: () => import('./movies/pages/movies').then((module) => module.Movies),
       },
       {
         path: 'wishlist',
-        title: 'Wishlist | MediaShelf',
-        data: { navigation: { label: 'Wishlist', order: 2 } satisfies NavigationMetadata },
+        title: 'routes.wishlistTitle',
+        data: { navigation: { labelKey: 'navigation.wishlist', order: 2 } satisfies NavigationMetadata },
         loadComponent: () => import('./wishlist/pages/wishlist').then((module) => module.Wishlist),
       },
     ],
@@ -31,6 +31,6 @@ export const GALLERY_NAVIGATION_ITEMS =
   GALLERY_ROUTES[0].children
     ?.filter((route) => route.path && route.data?.['navigation'])
     .map((route) => ({
-      label: (route.data?.['navigation'] as NavigationMetadata).label,
+      labelKey: (route.data?.['navigation'] as NavigationMetadata).labelKey,
       path: `/gallery/${route.path}`,
     })) ?? [];

@@ -8,7 +8,7 @@ export interface Media {
   readonly rating: number;
   readonly ageRating: string;
   readonly year: string;
-  readonly duration: string;
+  readonly durationMinutes: number;
   readonly genres: readonly string[];
   readonly director: string;
 }

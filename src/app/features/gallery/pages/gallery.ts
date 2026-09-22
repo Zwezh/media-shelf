@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
+  imports: [TranslatePipe],
   selector: 'msh-gallery',
   template: `
     <section class="feature-placeholder" aria-labelledby="gallery-title">
-      <h1 id="gallery-title">Gallery</h1>
+      <h1 id="gallery-title">{{ 'navigation.gallery' | translate }}</h1>
     </section>
   `,
   styles: `

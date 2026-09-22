@@ -1,11 +1,11 @@
 <footer class="app-footer">
-  <p class="app-footer__description">MediaShelf — Archival Media Management Suite</p>
+  <p class="app-footer__description">{{ 'footer.description' | translate }}</p>
 
   <div class="app-footer__metadata">
     <p class="app-footer__status">
       <span class="app-footer__status-indicator" aria-hidden="true"></span>
-      Library Synced
+      {{ 'footer.librarySynced' | translate }}
     </p>
-    <p class="app-footer__version">v{{ version() }}</p>
+    <p class="app-footer__version">{{ 'footer.version' | translate: { version: version() } }}</p>
   </div>
 </footer>

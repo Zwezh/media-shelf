@@ -1,11 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pagination } from './pagination';
+import { provideI18nTesting } from '@msh/testing/i18n-testing';
 
 describe('Pagination', () => {
   let fixture: ComponentFixture<Pagination>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [Pagination] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [Pagination],
+      providers: [provideI18nTesting()],
+    }).compileComponents();
     fixture = TestBed.createComponent(Pagination);
     fixture.componentRef.setInput('page', 2);
     fixture.componentRef.setInput('pageSize', 30);

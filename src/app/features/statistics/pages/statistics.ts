@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
+  imports: [TranslatePipe],
   selector: 'msh-statistics',
   template: `
     <section class="feature-placeholder" aria-labelledby="statistics-title">
-      <h1 id="statistics-title">Statistics</h1>
+      <h1 id="statistics-title">{{ 'navigation.statistics' | translate }}</h1>
     </section>
   `,
   styles: `

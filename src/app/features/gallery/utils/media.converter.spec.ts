@@ -32,7 +32,7 @@ describe('toMedia', () => {
     expect(toMedia(dto)).toMatchObject({
       title: 'Movie title',
       posterUrl: MEDIA_POSTER_PLACEHOLDER,
-      duration: '2h 7m',
+      durationMinutes: 127,
       year: '2023–2024',
       type: 'movie',
     });

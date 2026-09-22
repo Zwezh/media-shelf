@@ -1,0 +1,56 @@
+{
+  "common": {
+    "itemCount": "Элементов: {{count}}"
+  },
+  "footer": {
+    "description": "MediaShelf — система управления медиатекой",
+    "librarySynced": "Медиатека синхронизирована",
+    "version": "версия {{version}}"
+  },
+  "gallery": {
+    "navigation": "Навигация по галерее"
+  },
+  "header": {
+    "home": "Главная MediaShelf",
+    "primaryNavigation": "Основная навигация"
+  },
+  "media": {
+    "duration": "{{hours}} ч {{minutes}} мин",
+    "moreActions": "Другие действия для {{title}}",
+    "posterAlt": "Постер «{{title}}»",
+    "ratingLabel": "Рейтинг {{rating}} из 10",
+    "series": "Сериал",
+    "type": {
+      "movie": "Фильм",
+      "series": "Сериал"
+    },
+    "untitled": "Без названия"
+  },
+  "movies": {
+    "addMovie": "Добавить фильм",
+    "empty": "Нет доступных фильмов.",
+    "loadError": "Не удалось загрузить фильмы.",
+    "loading": "Загрузка фильмов…",
+    "showing": "Показано {{visible}} из {{total}}",
+    "title": "Фильмы"
+  },
+  "navigation": {
+    "gallery": "Галерея",
+    "movies": "Фильмы",
+    "settings": "Настройки",
+    "statistics": "Статистика",
+    "wishlist": "Список желаний"
+  },
+  "pagination": {
+    "label": "Пагинация",
+    "next": "Следующая страница",
+    "previous": "Предыдущая страница",
+    "summary": "Страница {{page}} из {{totalPages}} (элементов: {{totalItems}})"
+  },
+  "routes": {
+    "moviesTitle": "Фильмы | MediaShelf",
+    "settingsTitle": "Настройки | MediaShelf",
+    "statisticsTitle": "Статистика | MediaShelf",
+    "wishlistTitle": "Список желаний | MediaShelf"
+  }
+}
