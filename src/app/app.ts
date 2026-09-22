@@ -1,12 +1,17 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { APP_VERSION } from '@msh-core/config/app-version';
+import { Footer } from '@msh-layout/footer/footer';
+import { Header } from '@msh-layout/header/header';
+import { MainContent } from '@msh-layout/main-content/main-content';
+import { APP_NAVIGATION_ITEMS } from './app.routes';
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [Footer, Header, MainContent],
   selector: 'msh-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('app');
+  protected readonly navigationItems = APP_NAVIGATION_ITEMS;
+  protected readonly version = APP_VERSION;
 }

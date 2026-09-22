@@ -164,13 +164,17 @@ import { MediaCard, type MediaCardModel } from '@msh-shared/components/media-car
 
 ## Angular Rules
 
-- ALWAYS use standalone components (`standalone: true` in @Component)
+- ALWAYS use standalone components; do not set `standalone: true` in Angular 20+ decorators because it is the default.
 - ALWAYS use `inject()` function - never constructor injection
 - ALWAYS use `input()` signal API for @Input, `output()` for @Output
-- Use `OnPush` change detection strategy on all components
+- In Angular 22, `ChangeDetectionStrategy.OnPush` is the component default. Do not add `changeDetection: ChangeDetectionStrategy.OnPush`; only set `changeDetection: ChangeDetectionStrategy.Eager`/`Default` when a component deliberately opts into application-wide eager checking.
 - Use `@defer` blocks for non-critical UI sections
 - Use signal forms for working with forms
 - Can be use experimental Angular API like debounce
+- Create new services with `@Service()` from `@angular/core` and field-level `inject()` dependencies. Use `@Service({ autoProvided: false })` only when the service must be provided manually in a component, route, or other provider scope. Keep `@Injectable()` only for legacy services or advanced provider options that `@Service()` does not cover.
+- For API reads over Angular HTTP, prefer `httpResource()` from `@angular/common/http`; it is eager, signal-based, cancels stale requests, uses interceptors, and exposes loading/error/value signals. Guard `value()` reads with `hasValue()` and use `parse` for runtime response validation.
+- Use generic `resource()` from `@angular/core` for asynchronous work that is not an Angular `HttpClient` request, such as IndexedDB, file APIs, custom SDK promises, or non-HTTP async computations. Pass the provided `abortSignal` to abortable work.
+- Use `HttpClient` directly for mutations (`POST`, `PUT`, `PATCH`, `DELETE`) and imperative one-shot calls. Mutation requests must be subscribed to or converted through an explicit async workflow so they execute.
 
 ## State Management Rules
 
@@ -179,7 +183,7 @@ import { MediaCard, type MediaCardModel } from '@msh-shared/components/media-car
 - Store files use the NgRx SignalStore pattern (see @src/app/features/users/state/users.store.ts)
 - Private writable signals; expose readonly via asReadonly()
 - Use `patchState()` - NEVER mutate state directly
-- Async side effects use `withMethods` + RxJS inside store
+- Async state reads should prefer `httpResource()` or `resource()` when they naturally derive from signals. Use `withMethods` + RxJS inside a store for mutations, imperative workflows, or cases where SignalStore orchestration is the clearest owner.
 
 ## Testing Rules
 

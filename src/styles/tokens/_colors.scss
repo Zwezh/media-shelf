@@ -97,6 +97,17 @@
   --color-badge-age-bg: var(--palette-rose-50);
   --color-badge-age-border: var(--palette-rose-200);
   --color-badge-age-text: var(--palette-rose-700);
+
+  --color-shell-background: #faf8ff;
+  --color-shell-surface: var(--palette-white);
+  --color-shell-border: rgba(199, 196, 216, 0.4);
+  --color-shell-text: #464555;
+  --color-shell-text-muted: #777587;
+  --color-shell-navigation-hover: #f5f3fc;
+  --color-shell-navigation-active-background: #eaedff;
+  --color-shell-navigation-active-text: #3525cd;
+  --color-shell-focus: #3525cd;
+  --color-shell-status-success: #006c4a;
 }
 
 [data-theme='dark'] {
@@ -158,4 +169,15 @@
   --color-badge-age-bg: rgba(225, 29, 72, 0.18);
   --color-badge-age-border: rgba(254, 205, 211, 0.32);
   --color-badge-age-text: #fecdd3;
+
+  --color-shell-background: var(--palette-slate-900);
+  --color-shell-surface: var(--palette-slate-800);
+  --color-shell-border: rgba(199, 196, 216, 0.2);
+  --color-shell-text: var(--palette-slate-200);
+  --color-shell-text-muted: var(--palette-slate-400);
+  --color-shell-navigation-hover: var(--palette-slate-700);
+  --color-shell-navigation-active-background: rgba(79, 70, 229, 0.28);
+  --color-shell-navigation-active-text: #dad7ff;
+  --color-shell-focus: #c3c0ff;
+  --color-shell-status-success: #68dba9;
 }
