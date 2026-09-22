@@ -10,6 +10,8 @@ New features and runtime behavior changes ship with focused Vitest unit tests in
 
 ESLint and Prettier share one formatting contract: `.prettierrc` owns formatting options, while `eslint-plugin-prettier/recommended` reports violations through `npm run lint`. Before every commit, `npm run check` must pass; it runs ESLint and the complete unit suite in non-watch mode. Failures are fixed at their source and checks are never disabled or weakened merely to permit a commit.
 
+GitHub Actions applies the same quality gate to pull requests and pushes targeting `master`, then verifies the production Angular build. CI installs the lockfile exactly with `npm ci` on the minimum supported Node.js 22 runtime, and superseded runs for the same ref are cancelled.
+
 Services use Angular 22 `@Service()` from `@angular/core` for app-wide singletons and field-level `inject()` for dependencies. Use `@Service({ autoProvided: false })` only when the service is intentionally scoped through a component, route, or other provider list. Keep `@Injectable()` for legacy code or advanced provider configurations that `@Service()` does not express.
 
 API reads that use Angular HTTP should prefer `httpResource()` from `@angular/common/http`; it produces signal-based status/value/error state, participates in interceptors, eagerly starts the request, and cancels stale reactive requests. Use generic `resource()` from `@angular/core` for async signal state outside the Angular HTTP stack, such as IndexedDB, file APIs, custom SDK promises, or non-HTTP async computations. Mutations and imperative one-shot calls use `HttpClient` directly, with execution triggered deliberately by subscription or an explicit async workflow.
@@ -82,6 +84,8 @@ flowchart LR
   PreCommit --> AllTests[Complete unit suite]
   Lint --> Commit[Commit allowed]
   AllTests --> Commit
+  Commit --> CI[GitHub Actions]
+  CI --> ProductionBuild[Production Angular build]
 ```
 
 Invariants:
@@ -99,5 +103,6 @@ Invariants:
 - Services default to `@Service()` singletons and use `inject()` rather than constructor injection.
 - Runtime functionality is incomplete without passing unit tests that cover its observable behavior.
 - Commits require a passing `npm run check`; lint, formatting, and test failures are fixed before committing.
+- GitHub Actions must pass `npm run check` and `npm run build` before changes are merged to `master`.
 
-Related lodes: [summary](summary.md), [UI design tokens](ui/design-tokens.md).
+Related lodes: [summary](summary.md), [UI design tokens](ui/design-tokens.md), [continuous integration](ci/summary.md).
