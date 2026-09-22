@@ -1,6 +1,7 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, signal } from '@angular/core';
 import { DEFAULT_PAGE_SIZE } from '@msh-core/config/media';
+import { EmptyState } from '@msh-shared/components/empty-state/empty-state';
 import { MediaCard } from '@msh-shared/components/media-card/media-card';
 import { PageHeader } from '@msh-shared/components/page-header/page-header';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
@@ -9,7 +10,7 @@ import { MediaDto } from '../../models/media.dto';
 import { toMedia } from '../../utils/media.converter';
 
 @Component({
-  imports: [MediaCard, PageHeader, PageStatus, Pagination],
+  imports: [EmptyState, MediaCard, PageHeader, PageStatus, Pagination],
   selector: 'msh-movies',
   styleUrl: './movies.scss',
   templateUrl: './movies.html',

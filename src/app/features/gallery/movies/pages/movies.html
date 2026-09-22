@@ -7,6 +7,8 @@
     <msh-page-status message="Loading movies…" />
   } @else if (error()) {
     <msh-page-status kind="error" message="Movies could not be loaded." />
+  } @else if (media().length === 0) {
+    <msh-empty-state message="There are no movies available." />
   } @else {
     <p class="movies__summary">Showing {{ visibleMedia().length }} of {{ media().length }} titles</p>
     <div class="movies__grid">

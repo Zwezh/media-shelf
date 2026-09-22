@@ -1,6 +1,6 @@
 # Media Gallery
 
-The Movies page at `/gallery/movies` reads `MediaDto[]` from `/mock-data.json` with `httpResource`, converts each record through the pure `toMedia` boundary, and presents a responsive 2:3 grid. `DEFAULT_PAGE_SIZE` is 30. Shared primitives include `PageHeader` for title/count/projected actions, `PageStatus` for loading and error states, `MediaCard`, `MediaBadge`, `MediaRating`, and `Pagination`.
+The Movies page at `/gallery/movies` reads `MediaDto[]` from `/mock-data.json` with `httpResource`, converts each record through the pure `toMedia` boundary, and presents a responsive 2:3 grid. `DEFAULT_PAGE_SIZE` is 30. Shared primitives include `PageHeader` for title/count/projected actions, `PageStatus` for loading and error states, `EmptyState` for successful empty collections, `MediaCard`, `MediaBadge`, `MediaRating`, and `Pagination`.
 
 ```typescript
 const mediaResource = httpResource<MediaDto[]>(() => '/mock-data.json', { defaultValue: [] });
@@ -18,6 +18,7 @@ flowchart LR
   Card --> Rating[MediaRating]
   Header[PageHeader] --> Grid
   Status[PageStatus] --> Grid
+  Empty[EmptyState] --> Grid
   Pager[Pagination] -->|pageChange| Grid
 ```
 
@@ -31,6 +32,7 @@ Invariants:
 - Gallery subnavigation is sticky beneath the application header, using the matching desktop or mobile header-height token as its offset.
 - `PageHeader` owns page identity and action layout; callers project feature-specific actions.
 - `PageStatus` uses polite `status` semantics while loading and assertive `alert` semantics for errors.
+- A successfully loaded empty Movies collection renders `EmptyState` with “There are no movies available.” and omits the grid and pagination.
 - The quick search-preview helper is not rendered.
 - Pagination always reports page, total pages, and total items; controls never emit values outside the valid range. Middle pages retain both adjacent pages between first/last anchors and ellipses.
 - All user-facing controls have accessible names and visible focus treatment.
