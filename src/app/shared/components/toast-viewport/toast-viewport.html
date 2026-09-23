@@ -1,0 +1,9 @@
+@for (toast of toastStore.toasts(); track toast.id) {
+  <msh-toast
+    animate.enter="toast-enter"
+    animate.leave="toast-leave"
+    [toast]="toast"
+    (actionRequested)="toastStore.activateAction($event)"
+    (dismissed)="toastStore.dismiss($event)"
+  />
+}

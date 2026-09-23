@@ -7,6 +7,7 @@
 - [ui/application-shell.md](ui/application-shell.md) - Responsive header, main outlet, footer, and version contract.
 - [ui/design-tokens.md](ui/design-tokens.md) - Global CSS design-token contract.
 - [ui/media-gallery.md](ui/media-gallery.md) - Movies grid, media-card, poster fallback, and pagination contract.
+- [ui/toast-notifications.md](ui/toast-notifications.md) - Global toast store, viewport, variants, timers, accessibility, and animations.
 - [routing/summary.md](routing/summary.md) - Root URL contract and lazy feature boundaries.
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
 - `plans/` - Persistent roadmaps and TODOs when needed.
@@ -25,10 +26,11 @@ flowchart TD
   UI --> UIShell[application-shell.md]
   UI --> UITokens[design-tokens.md]
   UI --> MediaGallery[media-gallery.md]
+  UI --> Toasts[toast-notifications.md]
   Root --> Routing[routing]
   Routing --> RouteSummary[summary.md]
   Root --> CI[ci]
   CI --> CISummary[summary.md]
 ```
 
-Related lodes: [summary](summary.md), [UI tokens](ui/design-tokens.md), [routing](routing/summary.md), [CI](ci/summary.md).
+Related lodes: [summary](summary.md), [UI tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md), [routing](routing/summary.md), [CI](ci/summary.md).

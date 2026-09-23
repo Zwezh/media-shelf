@@ -108,6 +108,23 @@
   --color-shell-navigation-active-text: #3525cd;
   --color-shell-focus: #3525cd;
   --color-shell-status-success: #006c4a;
+
+  --color-toast-info-background: var(--palette-indigo-600);
+  --color-toast-info-border: rgba(53, 37, 205, 0.3);
+  --color-toast-info-foreground: var(--palette-white);
+  --color-toast-info-muted: #e2dfff;
+  --color-toast-success-background: var(--palette-emerald-700);
+  --color-toast-success-border: rgba(0, 81, 55, 0.35);
+  --color-toast-success-foreground: var(--palette-white);
+  --color-toast-success-muted: var(--palette-emerald-200);
+  --color-toast-warning-background: var(--palette-amber-700);
+  --color-toast-warning-border: rgba(110, 57, 0, 0.35);
+  --color-toast-warning-foreground: var(--palette-white);
+  --color-toast-warning-muted: var(--palette-amber-100);
+  --color-toast-error-background: var(--palette-rose-700);
+  --color-toast-error-border: rgba(147, 0, 10, 0.35);
+  --color-toast-error-foreground: var(--palette-white);
+  --color-toast-error-muted: var(--palette-rose-200);
 }
 
 [data-theme='dark'] {
@@ -180,4 +197,21 @@
   --color-shell-navigation-active-text: #dad7ff;
   --color-shell-focus: #c3c0ff;
   --color-shell-status-success: #68dba9;
+
+  --color-toast-info-background: var(--palette-indigo-800);
+  --color-toast-info-border: rgba(199, 210, 254, 0.36);
+  --color-toast-info-foreground: var(--palette-white);
+  --color-toast-info-muted: var(--palette-indigo-200);
+  --color-toast-success-background: #005137;
+  --color-toast-success-border: rgba(167, 243, 208, 0.32);
+  --color-toast-success-foreground: var(--palette-white);
+  --color-toast-success-muted: #85f8c4;
+  --color-toast-warning-background: #6e3900;
+  --color-toast-warning-border: rgba(252, 211, 77, 0.36);
+  --color-toast-warning-foreground: var(--palette-white);
+  --color-toast-warning-muted: #ffdcc3;
+  --color-toast-error-background: #93000a;
+  --color-toast-error-border: rgba(254, 205, 211, 0.32);
+  --color-toast-error-foreground: var(--palette-white);
+  --color-toast-error-muted: #ffdad6;
 }
