@@ -1,13 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageHeader } from './page-header';
+import { provideI18nTesting } from '@msh/testing/i18n-testing';
 
 describe('PageHeader', () => {
   let fixture: ComponentFixture<PageHeader>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [PageHeader] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [PageHeader],
+      providers: [provideI18nTesting()],
+    }).compileComponents();
     fixture = TestBed.createComponent(PageHeader);
-    fixture.componentRef.setInput('title', 'Movies');
+    fixture.componentRef.setInput('titleKey', 'movies.title');
     fixture.componentRef.setInput('itemCount', 30);
     fixture.componentRef.setInput('headingId', 'movies-title');
     fixture.detectChanges();

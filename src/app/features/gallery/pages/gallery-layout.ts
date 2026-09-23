@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { GALLERY_NAVIGATION_ITEMS } from '../gallery.routes';
 
 @Component({
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, TranslatePipe],
   selector: 'msh-gallery-layout',
   styleUrl: './gallery-layout.scss',
   template: `
-    <nav class="gallery-navigation" aria-label="Gallery navigation">
+    <nav class="gallery-navigation" [attr.aria-label]="'gallery.navigation' | translate">
       <ul>
         @for (item of navigationItems; track item.path) {
           <li>
             <a [routerLink]="item.path" routerLinkActive="gallery-navigation__link--active" ariaCurrentWhenActive="page">{{
-              item.label
+              item.labelKey | translate
             }}</a>
           </li>
         }

@@ -1,9 +1,9 @@
 <header class="app-header">
-  <a class="app-header__brand" routerLink="/gallery" aria-label="MediaShelf home">
+  <a class="app-header__brand" routerLink="/gallery" [attr.aria-label]="'header.home' | translate">
     <img ngSrc="logo.svg" width="32" height="32" alt="" priority />
   </a>
 
-  <nav class="app-header__navigation" aria-label="Primary navigation">
+  <nav class="app-header__navigation" [attr.aria-label]="'header.primaryNavigation' | translate">
     <ul class="app-header__navigation-list">
       @for (item of navigationItems(); track item.path) {
         <li>
@@ -13,7 +13,7 @@
             routerLinkActive="app-header__navigation-link--active"
             ariaCurrentWhenActive="page"
           >
-            {{ item.label }}
+            {{ item.labelKey | translate }}
           </a>
         </li>
       }

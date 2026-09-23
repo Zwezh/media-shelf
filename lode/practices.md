@@ -110,6 +110,8 @@ Invariants:
 - Mutation requests are not hidden in `httpResource`; they use explicit `HttpClient` workflows.
 - Services default to `@Service()` singletons and use `inject()` rather than constructor injection.
 - Runtime functionality is incomplete without passing unit tests that cover its observable behavior.
+- Stateful feature workflows use feature-scoped NgRx SignalStores when request state, mutations, and derived view state belong together; components inject the store and remain presentation-focused.
+- User-facing interface copy lives in synchronized `public/i18n` dictionaries and is referenced through contextual translation keys.
 - Commits require a passing `npm run check`; lint, formatting, and test failures are fixed before committing.
 - GitHub Actions must pass `npm run check` and `npm run build` before changes are merged to `master`.
 

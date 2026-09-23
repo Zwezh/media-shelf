@@ -6,7 +6,7 @@ const formatYear = (year: number | number[]): string => (Array.isArray(year) ? y
 
 export const toMedia = (dto: MediaDto): Media => ({
   id: dto.id,
-  title: dto.name || dto.enName || 'Untitled',
+  title: dto.name || dto.enName,
   originalTitle: dto.enName,
   posterUrl: dto.posterUrl || dto.compactPosterUrl || MEDIA_POSTER_PLACEHOLDER,
   type: dto.isSeries ? 'series' : 'movie',
@@ -14,7 +14,7 @@ export const toMedia = (dto: MediaDto): Media => ({
   rating: dto.rating,
   ageRating: `${dto.ageRating}+`,
   year: formatYear(dto.year),
-  duration: dto.isSeries ? 'Series' : `${Math.floor(dto.movieLength / 60)}h ${dto.movieLength % 60}m`,
+  durationMinutes: dto.movieLength,
   genres: dto.genres,
   director: dto.director.join(', '),
 });

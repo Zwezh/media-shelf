@@ -6,12 +6,13 @@ import { Footer } from '@msh-layout/footer/footer';
 import { Header } from '@msh-layout/header/header';
 import { MainContent } from '@msh-layout/main-content/main-content';
 import { App } from './app';
+import { provideI18nTesting } from './testing/i18n-testing';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideI18nTesting()],
     }).compileComponents();
   });
 

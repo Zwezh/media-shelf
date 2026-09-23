@@ -1,0 +1,56 @@
+{
+  "common": {
+    "itemCount": "{{count}} items"
+  },
+  "footer": {
+    "description": "MediaShelf — Archival Media Management Suite",
+    "librarySynced": "Library Synced",
+    "version": "v{{version}}"
+  },
+  "gallery": {
+    "navigation": "Gallery navigation"
+  },
+  "header": {
+    "home": "MediaShelf home",
+    "primaryNavigation": "Primary navigation"
+  },
+  "media": {
+    "duration": "{{hours}}h {{minutes}}m",
+    "moreActions": "More actions for {{title}}",
+    "posterAlt": "{{title}} poster",
+    "ratingLabel": "Rating {{rating}} out of 10",
+    "series": "Series",
+    "type": {
+      "movie": "Movie",
+      "series": "Series"
+    },
+    "untitled": "Untitled"
+  },
+  "movies": {
+    "addMovie": "Add movie",
+    "empty": "There are no movies available.",
+    "loadError": "Movies could not be loaded.",
+    "loading": "Loading movies…",
+    "showing": "Showing {{visible}} of {{total}} titles",
+    "title": "Movies"
+  },
+  "navigation": {
+    "gallery": "Gallery",
+    "movies": "Movies",
+    "settings": "Settings",
+    "statistics": "Statistics",
+    "wishlist": "Wishlist"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "next": "Next page",
+    "previous": "Previous page",
+    "summary": "Page {{page}} of {{totalPages}} ({{totalItems}} items)"
+  },
+  "routes": {
+    "moviesTitle": "Movies | MediaShelf",
+    "settingsTitle": "Settings | MediaShelf",
+    "statisticsTitle": "Statistics | MediaShelf",
+    "wishlistTitle": "Wishlist | MediaShelf"
+  }
+}

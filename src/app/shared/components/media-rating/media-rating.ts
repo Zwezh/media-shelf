@@ -1,8 +1,12 @@
 import { Component, computed, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
+  imports: [TranslatePipe],
   selector: 'msh-media-rating',
-  template: `<span class="rating" [attr.aria-label]="label()"><span aria-hidden="true">★</span> {{ formattedRating() }}</span>`,
+  template: `<span class="rating" [attr.aria-label]="'media.ratingLabel' | translate: { rating: formattedRating() }"
+    ><span aria-hidden="true">★</span> {{ formattedRating() }}</span
+  >`,
   styles: `
     .rating {
       display: inline-flex;
@@ -21,5 +25,4 @@ import { Component, computed, input } from '@angular/core';
 export class MediaRating {
   readonly rating = input.required<number>();
   protected readonly formattedRating = computed(() => this.rating().toFixed(1));
-  protected readonly label = computed(() => `Rating ${this.formattedRating()} out of 10`);
 }
