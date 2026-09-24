@@ -196,16 +196,13 @@ describe('MoviesStore', () => {
     expect(store.media()).toEqual([]);
     expect(store.totalCount()).toBe(0);
     expect(toastStore.toasts()).toEqual([
-      expect.objectContaining({ title: 'Library refresh failed', type: 'error', autoHide: true, delay: 5_000 }),
+      expect.objectContaining({ title: 'Library load failed', type: 'error', autoHide: true, delay: 5_000 }),
     ]);
   });
 
-  it('shows a success toast after a background poll completes', () => {
+  it('loads once, shows a success toast, and does not poll', () => {
     const initialParamMap = convertToParamMap({});
-    const getMovies = vi
-      .fn()
-      .mockReturnValueOnce(of({ currentPage: 0, media: [media], totalCount: 1 }))
-      .mockReturnValueOnce(of({ currentPage: 0, media: [media], totalCount: 1 }));
+    const getMovies = vi.fn(() => of({ currentPage: 0, media: [media], totalCount: 1 }));
 
     TestBed.configureTestingModule({
       providers: [
@@ -224,46 +221,11 @@ describe('MoviesStore', () => {
     const toastStore = TestBed.inject(ToastStore);
 
     expect(toastStore.toasts()).toEqual([
-      expect.objectContaining({ title: 'Library refreshed', type: 'success', autoHide: true, delay: 2_500 }),
+      expect.objectContaining({ title: 'Library loaded', type: 'success', autoHide: true, delay: 2_500 }),
     ]);
-    vi.advanceTimersByTime(30_000);
+    vi.advanceTimersByTime(60_000);
 
-    expect(getMovies).toHaveBeenCalledTimes(2);
-    expect(toastStore.toasts()).toEqual([
-      expect.objectContaining({ title: 'Library refreshed', type: 'success', autoHide: true, delay: 2_500 }),
-    ]);
-  });
-
-  it('preserves loaded movies and shows an error toast when polling fails', () => {
-    const initialParamMap = convertToParamMap({});
-    const getMovies = vi
-      .fn()
-      .mockReturnValueOnce(of({ currentPage: 0, media: [media], totalCount: 1 }))
-      .mockReturnValueOnce(throwError(() => new Error('Polling failed')));
-
-    TestBed.configureTestingModule({
-      providers: [
-        MoviesStore,
-        ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies } },
-        {
-          provide: ActivatedRoute,
-          useValue: { queryParamMap: of(initialParamMap), snapshot: { queryParamMap: initialParamMap } },
-        },
-        { provide: Router, useValue: { navigate: vi.fn(() => Promise.resolve(true)) } },
-      ],
-    });
-
-    const store = TestBed.inject(MoviesStore);
-    const toastStore = TestBed.inject(ToastStore);
-
-    vi.advanceTimersByTime(30_000);
-
-    expect(store.media()).toEqual([media]);
-    expect(store.totalCount()).toBe(1);
-    expect(store.hasError()).toBe(false);
-    expect(toastStore.toasts()).toEqual([
-      expect.objectContaining({ title: 'Library refresh failed', type: 'error', autoHide: true, delay: 5_000 }),
-    ]);
+    expect(getMovies).toHaveBeenCalledTimes(1);
+    expect(toastStore.toasts()).toEqual([]);
   });
 });

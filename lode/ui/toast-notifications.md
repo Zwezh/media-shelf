@@ -39,7 +39,7 @@ Contracts:
 - Info and success use `role="status"`; warning and error use `role="alert"`. Toast contents are atomic announcements.
 - Enter and leave behavior uses Angular's native `animate.enter` and `animate.leave` CSS API and honors reduced-motion preferences.
 - The viewport uses the toast z-index token, safe-area insets, a 28 rem maximum width, and a responsive viewport-relative width.
-- The immediate Movies load and subsequent polling results use localized success and error toasts; these auto-hide after 2.5 and 5 seconds respectively. Initial loading/error state also remains visible in-page, while background poll errors preserve loaded content.
+- URL-driven Movies loads use localized success and error toasts; these auto-hide after 2.5 and 5 seconds respectively. Loading and error state also remain visible in-page, and unchanged query parameters do not trigger background requests.
 
 Rationale and lessons:
 

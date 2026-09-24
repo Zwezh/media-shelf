@@ -31,10 +31,10 @@
     "empty": "Brak dostępnych filmów.",
     "loadError": "Nie udało się załadować filmów.",
     "loading": "Ładowanie filmów…",
-    "pollErrorMessage": "Zachowano ostatnio wczytane filmy. Kolejna próba odświeżenia nastąpi automatycznie.",
-    "pollErrorTitle": "Odświeżenie biblioteki nie powiodło się",
-    "pollSuccessMessage": "Biblioteka filmów jest aktualna.",
-    "pollSuccessTitle": "Biblioteka odświeżona",
+    "loadErrorMessage": "Sprawdź połączenie i spróbuj ponownie załadować bibliotekę filmów.",
+    "loadErrorTitle": "Nie udało się załadować biblioteki",
+    "loadSuccessMessage": "Biblioteka filmów jest aktualna.",
+    "loadSuccessTitle": "Biblioteka załadowana",
     "title": "Filmy"
   },
   "navigation": {

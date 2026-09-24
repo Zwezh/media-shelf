@@ -39,7 +39,7 @@ Invariants:
 - `ENVIRONMENT` is provided once from `src/environments/environment`; production builds replace it with `environment.prod.ts`.
 - `environment.apiUrl` has no required trailing slash because `GalleryApi` normalizes it before appending an endpoint.
 - `GalleryApi` is the gallery HTTP boundary and owns DTO-to-UI conversion.
-- `MoviesStore` is provided by the Movies page and owns the current server page, total count, request params, loading/error state, and a 30-second background polling cycle that restarts when URL params change.
+- `MoviesStore` is provided by the Movies page and owns the current server page, total count, request params, and loading/error state. Each distinct URL parameter set triggers one API request; the store does not poll unchanged data.
 - Required movie params are always canonicalized into the URL: `currentPage=0`, `pageSize=30`, `direction=desc`, and `key=addedDate` are the defaults.
 - URL and API `currentPage` values are zero-based, while `Pagination` remains one-based. The store adds one for display and subtracts one from page-change events.
 - After each response, the last valid API index is `max(0, ceil(totalCount / pageSize) - 1)`. An oversized URL index is replaced with that value, and route reactivity requests the corrected last page.
@@ -56,7 +56,7 @@ Invariants:
 - `PageStatus` uses polite `status` semantics while loading and assertive `alert` semantics for errors.
 - A successfully loaded empty Movies collection renders `EmptyState` with “There are no movies available.” and omits the grid and pagination.
 - The quick search-preview helper is not rendered.
-- The grid starts directly below the page header without a separate visible-count summary or header divider. The immediate load and each 30-second background poll report success or failure through localized auto-hiding toasts; initial failures also use the page error state, while a failed background poll preserves the last successful grid.
+- The grid starts directly below the page header without a separate visible-count summary or header divider. Each URL-driven load reports success or failure through localized auto-hiding toasts, and failures also use the page error state.
 - Pagination follows the same full-width band pattern as gallery navigation: its surface and shadow span the viewport while a centered 90rem inner row owns the content. The row is at least 56px tall and uses 24px desktop side padding, a 13px visible-range summary, a compact lavender page-size badge, and 32px numbered controls beside text First/Last boundaries and chevrons. Controls never emit values outside the valid range; middle pages retain both adjacent pages between endpoint anchors and ellipses, the active page uses the archival indigo fill, and mobile centers the metadata above a horizontally scrollable control row.
 - All user-facing controls have accessible names and visible focus treatment.
 
