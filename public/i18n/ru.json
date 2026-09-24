@@ -1,5 +1,6 @@
 {
   "common": {
+    "close": "Закрыть",
     "itemCount": "Элементов: {{count}}"
   },
   "footer": {
@@ -29,6 +30,41 @@
   "movies": {
     "addMovie": "Добавить фильм",
     "empty": "Нет доступных фильмов.",
+    "filters": {
+      "active": "Активные фильтры",
+      "actors": "Актёры",
+      "actorsChip": "Актёры: {{value}}",
+      "ageRating": "Возрастной рейтинг",
+      "ageChip": "Возраст: {{value}}",
+      "any": "Любой",
+      "apply": "Применить фильтры",
+      "clearAll": "Очистить всё",
+      "directors": "Режиссёры",
+      "directorsChip": "Режиссёры: {{value}}",
+      "filtersButton": "Фильтры",
+      "fromYear": "От",
+      "genreChip": "Жанр: {{value}}",
+      "genres": "Жанры",
+      "genresError": "Не удалось загрузить жанры.",
+      "invalidYear": "Введите год из четырёх цифр.",
+      "invalidYearRange": "Начальный год не может быть позже конечного.",
+      "loadingGenres": "Загрузка жанров…",
+      "minimumRating": "Минимальная оценка",
+      "namesPlaceholder": "Разделяйте имена запятыми",
+      "noneSelected": "Фильтры не выбраны",
+      "openFilters": "Открыть фильтры, активно: {{count}}",
+      "people": "Люди",
+      "quality": "Качество и разрешение",
+      "qualityChip": "Качество: {{value}}",
+      "ratingChip": "Рейтинг: {{value}}",
+      "releaseRange": "Диапазон года выпуска",
+      "removeFilter": "Удалить фильтр {{filter}}",
+      "resetAll": "Сбросить всё",
+      "selectedCount": "Выбрано: {{count}}",
+      "title": "Фильтры",
+      "toYear": "До",
+      "yearsChip": "Годы: {{value}}"
+    },
     "loadError": "Не удалось загрузить фильмы.",
     "loading": "Загрузка фильмов…",
     "loadErrorMessage": "Проверьте подключение и попробуйте загрузить медиатеку еще раз.",

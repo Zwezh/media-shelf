@@ -7,7 +7,7 @@ import { type MoviesPage } from '../models/movies-page';
 import { type MoviesPageDto } from '../models/movies-page.dto';
 import { type MoviesParams } from '../models/movies-params';
 import { toMedia } from '../utils/media.converter';
-import { toMoviesQueryParams } from '../utils/movies-params';
+import { type MoviesQueryParams, toMoviesQueryParams } from '../utils/movies-params';
 
 export type GalleryEndpoint = 'movies' | 'series' | 'wishlist';
 
@@ -36,10 +36,7 @@ export class GalleryApi {
     };
   }
 
-  private toApiParams(params: MoviesParams): Record<string, number | string | readonly string[]> {
-    return {
-      ...toMoviesQueryParams(params),
-      ...(params.directors?.length ? { directors: params.directors.join(',') } : {}),
-    };
+  private toApiParams(params: MoviesParams): MoviesQueryParams {
+    return toMoviesQueryParams(params);
   }
 }

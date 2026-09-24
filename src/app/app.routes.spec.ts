@@ -46,7 +46,7 @@ describe('root routes', () => {
     await harness.navigateByUrl(path);
 
     await vi.waitFor(() => {
-      expect(router.url).toBe('/gallery/movies?currentPage=0&direction=desc&key=addedDate&pageSize=30');
+      expect(router.url).toBe('/gallery/movies');
     });
     expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Movies');
   });

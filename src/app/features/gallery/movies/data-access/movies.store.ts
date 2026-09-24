@@ -7,7 +7,9 @@ import { catchError, distinctUntilChanged, EMPTY, map, pipe, switchMap, tap } fr
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { GalleryApi } from '../../data-access/gallery-api';
 import { type Media } from '../../models/media';
+import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-filters';
 import { type MoviesParams } from '../../models/movies-params';
+import { countActiveMovieFilters, extractMoviesFilters, removeMovieFilters, replaceMovieFilters } from '../../utils/movies-filters';
 import { DEFAULT_MOVIES_PARAMS, readMoviesParams, toMoviesQueryParams } from '../../utils/movies-params';
 
 const LOAD_SUCCESS_TOAST_DELAY_MS = 2_500;
@@ -32,6 +34,8 @@ const initialState: MoviesState = {
 export const MoviesStore = signalStore(
   withState(initialState),
   withComputed(({ media, params }) => ({
+    activeFilterCount: computed(() => countActiveMovieFilters(extractMoviesFilters(params()))),
+    appliedFilters: computed(() => extractMoviesFilters(params())),
     page: computed(() => params().currentPage + 1),
     pageSize: computed(() => params().pageSize),
     visibleMedia: computed(() => media()),
@@ -52,6 +56,24 @@ export const MoviesStore = signalStore(
         void router.navigate([], {
           relativeTo: route,
           queryParams: toMoviesQueryParams({ ...store.params(), currentPage }),
+        });
+      },
+      applyFilters(filters: MoviesFilters): void {
+        void router.navigate([], {
+          relativeTo: route,
+          queryParams: toMoviesQueryParams(replaceMovieFilters(store.params(), filters)),
+        });
+      },
+      clearFilters(): void {
+        void router.navigate([], {
+          relativeTo: route,
+          queryParams: toMoviesQueryParams(replaceMovieFilters(store.params(), {})),
+        });
+      },
+      removeFilters(keys: readonly MovieFilterKey[]): void {
+        void router.navigate([], {
+          relativeTo: route,
+          queryParams: toMoviesQueryParams(removeMovieFilters(store.params(), keys)),
         });
       },
       loadMovies: rxMethod<MoviesParams>(
@@ -96,22 +118,14 @@ export const MoviesStore = signalStore(
       ),
     }),
   ),
-  withHooks((store, route = inject(ActivatedRoute), router = inject(Router)) => ({
+  withHooks((store, route = inject(ActivatedRoute)) => ({
     onInit() {
-      const initialParams = readMoviesParams(route.snapshot.queryParamMap);
-
       store.loadMovies(
         route.queryParamMap.pipe(
           map(readMoviesParams),
           distinctUntilChanged((previous, current) => JSON.stringify(previous) === JSON.stringify(current)),
         ),
       );
-
-      void router.navigate([], {
-        relativeTo: route,
-        queryParams: toMoviesQueryParams(initialParams),
-        replaceUrl: true,
-      });
     },
   })),
 );

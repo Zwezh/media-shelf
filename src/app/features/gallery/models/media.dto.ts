@@ -1,6 +1,6 @@
 export type MediaDto = {
   addedDate: string;
-  ageRating: number;
+  ageRating?: number | null;
   backdropUrl: string;
   compactPosterUrl: string;
   countries: string[];

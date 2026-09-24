@@ -18,12 +18,73 @@
     width: 100%;
   }
 
-  &__add-button {
+  &__toolbar,
+  &__filter-chips {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-sm);
+  }
+
+  &__toolbar {
+    justify-content: flex-end;
+    gap: var(--space-md);
+    min-width: 0;
+  }
+
+  &__filter-chips {
+    gap: var(--space-xs);
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  &__filter-chip,
+  &__filters-button,
+  &__add-button {
     min-height: var(--size-control-standard);
     padding: 0 var(--space-base);
+    font: var(--text-label-lg);
+    white-space: nowrap;
+    border-radius: var(--radius-md);
+  }
+
+  &__filter-chip {
+    color: var(--color-shell-text);
+    background: var(--color-surface);
+    border: var(--border-subtle);
+    cursor: pointer;
+
+    span {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  &__filters-button,
+  &__add-button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  &__filters-button {
+    color: var(--color-on-primary);
+    background: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    cursor: pointer;
+
+    strong {
+      display: grid;
+      min-width: 1.5rem;
+      height: 1.5rem;
+      padding-inline: var(--space-xs);
+      place-items: center;
+      color: var(--color-primary);
+      background: var(--color-on-primary);
+      border-radius: var(--radius-pill);
+    }
+  }
+
+  &__add-button {
     color: var(--color-text-muted);
     font: var(--text-label-lg);
     background: var(--color-surface-inset);
@@ -53,6 +114,16 @@
       padding: var(--space-base) var(--size-shell-inline-padding-mobile) 0;
     }
 
+    &__toolbar {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    &__filter-chips {
+      display: none;
+    }
+
+    &__filters-button,
     &__add-button {
       padding-inline: var(--space-md);
     }
@@ -62,5 +133,10 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-md) var(--space-sm);
     }
+  }
+
+  button:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
   }
 }

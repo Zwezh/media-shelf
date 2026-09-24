@@ -36,7 +36,7 @@ describe('MoviesStore', () => {
     const initialParamMap = convertToParamMap({
       currentPage: '2',
       direction: 'asc',
-      directors: ['Director One', 'Director Two'],
+      directors: 'Director One,Director Two',
       genres: ['Drama', 'Comedy'],
       key: 'rating',
       pageSize: '12',
@@ -64,7 +64,7 @@ describe('MoviesStore', () => {
     expect(getMovies).toHaveBeenCalledWith({
       currentPage: 2,
       direction: 'asc',
-      directors: ['Director One', 'Director Two'],
+      directors: 'Director One,Director Two',
       genres: ['Drama', 'Comedy'],
       key: 'rating',
       pageSize: 12,
@@ -82,7 +82,7 @@ describe('MoviesStore', () => {
       queryParams: {
         currentPage: 3,
         direction: 'asc',
-        directors: ['Director One', 'Director Two'],
+        directors: 'Director One,Director Two',
         genres: ['Drama', 'Comedy'],
         key: 'rating',
         pageSize: 12,
@@ -94,7 +94,7 @@ describe('MoviesStore', () => {
       convertToParamMap({
         currentPage: '3',
         direction: 'asc',
-        directors: ['Director One', 'Director Two'],
+        directors: 'Director One,Director Two',
         genres: ['Drama', 'Comedy'],
         key: 'rating',
         pageSize: '12',
@@ -106,8 +106,8 @@ describe('MoviesStore', () => {
     expect(store.page()).toBe(4);
   });
 
-  it('uses canonical defaults when URL params are missing or invalid', () => {
-    const initialParamMap = convertToParamMap({ currentPage: '-1', direction: 'down', key: 'unknown', pageSize: 'none' });
+  it('uses defaults without adding query params when the URL has none', () => {
+    const initialParamMap = convertToParamMap({});
     const getMovies = vi.fn(() => of({ currentPage: 0, media: [], totalCount: 0 }));
     const navigate = vi.fn(() => Promise.resolve(true));
 
@@ -127,10 +127,62 @@ describe('MoviesStore', () => {
     TestBed.inject(MoviesStore);
 
     expect(getMovies).toHaveBeenCalledWith({ currentPage: 0, direction: 'desc', key: 'addedDate', pageSize: 30 });
-    expect(navigate).toHaveBeenCalledWith([], {
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it('applies, removes, and clears URL-backed filters from page zero', () => {
+    const initialParamMap = convertToParamMap({
+      currentPage: '4',
+      direction: 'desc',
+      genres: ['Drama'],
+      key: 'addedDate',
+      pageSize: '30',
+      rating: '7.5',
+      search: 'Dune',
+    });
+    const navigate = vi.fn(() => Promise.resolve(true));
+
+    TestBed.configureTestingModule({
+      providers: [
+        MoviesStore,
+        ...provideI18nTesting(),
+        { provide: GalleryApi, useValue: { getMovies: vi.fn(() => of({ currentPage: 4, media: [media], totalCount: 150 })) } },
+        {
+          provide: ActivatedRoute,
+          useValue: { queryParamMap: of(initialParamMap), snapshot: { queryParamMap: initialParamMap } },
+        },
+        { provide: Router, useValue: { navigate } },
+      ],
+    });
+
+    const store = TestBed.inject(MoviesStore);
+    expect(store.activeFilterCount()).toBe(2);
+
+    store.applyFilters({ ageRating: [12, 16], directors: 'Director One,Director Two', quality: ['4K HDR'] });
+    expect(navigate).toHaveBeenLastCalledWith([], {
       relativeTo: expect.anything(),
-      queryParams: { currentPage: 0, direction: 'desc', key: 'addedDate', pageSize: 30 },
-      replaceUrl: true,
+      queryParams: {
+        ageRating: [12, 16],
+        currentPage: 0,
+        direction: 'desc',
+        directors: 'Director One,Director Two',
+        key: 'addedDate',
+        pageSize: 30,
+        quality: ['4K HDR'],
+        search: 'Dune',
+      },
+    });
+
+    store.removeFilters(['genres', 'rating']);
+    expect(navigate).toHaveBeenLastCalledWith([], {
+      relativeTo: expect.anything(),
+      queryParams: { currentPage: 0, direction: 'desc', key: 'addedDate', pageSize: 30, search: 'Dune' },
+    });
+
+    store.clearFilters();
+    expect(navigate).toHaveBeenLastCalledWith([], {
+      relativeTo: expect.anything(),
+      queryParams: { currentPage: 0, direction: 'desc', key: 'addedDate', pageSize: 30, search: 'Dune' },
     });
   });
 
