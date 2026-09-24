@@ -1,7 +1,8 @@
-import { Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe],
   selector: 'msh-pagination',
   styleUrl: './pagination.scss',
@@ -14,6 +15,8 @@ export class Pagination {
   readonly pageChange = output<number>();
 
   protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalItems() / this.pageSize())));
+  protected readonly firstItem = computed(() => (this.totalItems() === 0 ? 0 : (this.page() - 1) * this.pageSize() + 1));
+  protected readonly lastItem = computed(() => Math.min(this.page() * this.pageSize(), this.totalItems()));
   protected readonly visiblePages = computed<readonly (number | 'ellipsis')[]>(() => {
     const total = this.totalPages();
     if (total <= 5) return Array.from({ length: total }, (_, index) => index + 1);

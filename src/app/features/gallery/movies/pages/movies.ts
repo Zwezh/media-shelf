@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { DEFAULT_PAGE_SIZE } from '@msh-core/config/media';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EmptyState } from '@msh-shared/components/empty-state/empty-state';
 import { MediaCard } from '@msh-shared/components/media-card/media-card';
@@ -16,7 +15,6 @@ import { MoviesStore } from '../data-access/movies.store';
   templateUrl: './movies.html',
 })
 export class Movies {
-  protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected readonly store = inject(MoviesStore);
 
   protected changePage(page: number): void {

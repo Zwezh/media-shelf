@@ -31,7 +31,10 @@
     "empty": "There are no movies available.",
     "loadError": "Movies could not be loaded.",
     "loading": "Loading movies…",
-    "showing": "Showing {{visible}} of {{total}} titles",
+    "pollErrorMessage": "Keeping the last loaded movies. Another refresh will be attempted automatically.",
+    "pollErrorTitle": "Library refresh failed",
+    "pollSuccessMessage": "The movie library is up to date.",
+    "pollSuccessTitle": "Library refreshed",
     "title": "Movies"
   },
   "navigation": {
@@ -42,10 +45,15 @@
     "wishlist": "Wishlist"
   },
   "pagination": {
+    "first": "First page",
+    "firstShort": "First",
     "label": "Pagination",
+    "last": "Last page",
+    "lastShort": "Last",
     "next": "Next page",
+    "perPage": "Per page:",
     "previous": "Previous page",
-    "summary": "Page {{page}} of {{totalPages}} ({{totalItems}} items)"
+    "summary": "Showing {{firstItem}}–{{lastItem}} of {{totalItems}} items"
   },
   "routes": {
     "moviesTitle": "Movies | MediaShelf",

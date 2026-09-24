@@ -1,7 +1,7 @@
 import { DestroyRef, Service, inject, signal } from '@angular/core';
 import { ToastId, ToastMessage, ToastOptions, ToastType } from '@msh-shared/models/toast.model';
 
-const DEFAULT_TOAST_DELAY = 500;
+const DEFAULT_TOAST_DELAY = 5_000;
 
 @Service()
 export class ToastStore {

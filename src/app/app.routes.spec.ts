@@ -2,13 +2,20 @@ import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { of } from 'rxjs';
+import { GalleryApi } from './features/gallery/data-access/gallery-api';
 import { APP_NAVIGATION_ITEMS, routes } from './app.routes';
 import { provideI18nTesting } from './testing/i18n-testing';
 
 describe('root routes', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideRouter(routes), provideI18nTesting()],
+      providers: [
+        provideHttpClient(),
+        provideRouter(routes),
+        provideI18nTesting(),
+        { provide: GalleryApi, useValue: { getMovies: () => of({ currentPage: 0, media: [], totalCount: 0 }) } },
+      ],
     });
   });
 
@@ -38,7 +45,9 @@ describe('root routes', () => {
     const router = TestBed.inject(Router);
     await harness.navigateByUrl(path);
 
-    expect(router.url).toBe('/gallery/movies');
+    await vi.waitFor(() => {
+      expect(router.url).toBe('/gallery/movies?currentPage=0&direction=desc&key=addedDate&pageSize=30');
+    });
     expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Movies');
   });
 });

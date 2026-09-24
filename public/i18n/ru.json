@@ -31,7 +31,10 @@
     "empty": "Нет доступных фильмов.",
     "loadError": "Не удалось загрузить фильмы.",
     "loading": "Загрузка фильмов…",
-    "showing": "Показано {{visible}} из {{total}}",
+    "pollErrorMessage": "Сохранены последние загруженные фильмы. Следующее обновление будет выполнено автоматически.",
+    "pollErrorTitle": "Не удалось обновить медиатеку",
+    "pollSuccessMessage": "Медиатека фильмов обновлена.",
+    "pollSuccessTitle": "Медиатека обновлена",
     "title": "Фильмы"
   },
   "navigation": {
@@ -42,10 +45,15 @@
     "wishlist": "Список желаний"
   },
   "pagination": {
+    "first": "Первая страница",
+    "firstShort": "Первая",
     "label": "Пагинация",
+    "last": "Последняя страница",
+    "lastShort": "Последняя",
     "next": "Следующая страница",
+    "perPage": "На странице:",
     "previous": "Предыдущая страница",
-    "summary": "Страница {{page}} из {{totalPages}} (элементов: {{totalItems}})"
+    "summary": "Показано {{firstItem}}–{{lastItem}} из {{totalItems}} элементов"
   },
   "routes": {
     "moviesTitle": "Фильмы | MediaShelf",

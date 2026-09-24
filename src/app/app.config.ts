@@ -1,15 +1,18 @@
 import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, TitleStrategy } from '@angular/router';
+import { provideEnvironment } from '@msh-core/config/environment.token';
+import { provideRouter, TitleStrategy, withViewTransitions } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { languageInitializer } from '@msh-core/i18n/language-initializer';
 import { TranslatedTitleStrategy } from '@msh-core/i18n/translated-title-strategy';
+import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideEnvironment(environment),
     provideHttpClient(),
     provideTranslateService({
       fallbackLang: 'en',
@@ -19,7 +22,7 @@ export const appConfig: ApplicationConfig = {
       }),
     }),
     provideAppInitializer(languageInitializer),
-    provideRouter(routes),
+    provideRouter(routes, withViewTransitions()),
     { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
   ],
 };
