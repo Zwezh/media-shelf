@@ -3,21 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, concat, distinctUntilChanged, EMPTY, map, of, pipe, switchMap, tap, timer } from 'rxjs';
+import { catchError, distinctUntilChanged, EMPTY, map, pipe, switchMap, tap } from 'rxjs';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { GalleryApi } from '../../data-access/gallery-api';
 import { type Media } from '../../models/media';
 import { type MoviesParams } from '../../models/movies-params';
 import { DEFAULT_MOVIES_PARAMS, readMoviesParams, toMoviesQueryParams } from '../../utils/movies-params';
 
-const MOVIES_POLL_INTERVAL_MS = 30_000;
-const POLL_SUCCESS_TOAST_DELAY_MS = 2_500;
-const POLL_ERROR_TOAST_DELAY_MS = 5_000;
-
-type MoviesLoadRequest = {
-  readonly isPolling: boolean;
-  readonly params: MoviesParams;
-};
+const LOAD_SUCCESS_TOAST_DELAY_MS = 2_500;
+const LOAD_ERROR_TOAST_DELAY_MS = 5_000;
 
 type MoviesState = {
   readonly media: readonly Media[];
@@ -60,12 +54,12 @@ export const MoviesStore = signalStore(
           queryParams: toMoviesQueryParams({ ...store.params(), currentPage }),
         });
       },
-      loadMovies: rxMethod<MoviesLoadRequest>(
+      loadMovies: rxMethod<MoviesParams>(
         pipe(
-          tap(({ isPolling, params }) => {
-            patchState(store, isPolling ? { params } : { hasError: false, isLoading: true, params });
+          tap((params) => {
+            patchState(store, { hasError: false, isLoading: true, params });
           }),
-          switchMap(({ isPolling, params }) =>
+          switchMap((params) =>
             galleryApi.getMovies(params).pipe(
               tap(({ media, totalCount }) => {
                 const lastPage = Math.max(0, Math.ceil(totalCount / params.pageSize) - 1);
@@ -81,22 +75,18 @@ export const MoviesStore = signalStore(
                 patchState(store, { hasError: false, isLoading: false, media, totalCount });
                 toastStore.success({
                   autoHide: true,
-                  delay: POLL_SUCCESS_TOAST_DELAY_MS,
-                  message: String(translate.instant('movies.pollSuccessMessage')),
-                  title: String(translate.instant('movies.pollSuccessTitle')),
+                  delay: LOAD_SUCCESS_TOAST_DELAY_MS,
+                  message: String(translate.instant('movies.loadSuccessMessage')),
+                  title: String(translate.instant('movies.loadSuccessTitle')),
                 });
               }),
               catchError(() => {
-                if (isPolling) {
-                  patchState(store, { isLoading: false });
-                } else {
-                  patchState(store, { hasError: true, isLoading: false, media: [], totalCount: 0 });
-                }
+                patchState(store, { hasError: true, isLoading: false, media: [], totalCount: 0 });
                 toastStore.error({
                   autoHide: true,
-                  delay: POLL_ERROR_TOAST_DELAY_MS,
-                  message: String(translate.instant('movies.pollErrorMessage')),
-                  title: String(translate.instant('movies.pollErrorTitle')),
+                  delay: LOAD_ERROR_TOAST_DELAY_MS,
+                  message: String(translate.instant('movies.loadErrorMessage')),
+                  title: String(translate.instant('movies.loadErrorTitle')),
                 });
                 return EMPTY;
               }),
@@ -114,12 +104,6 @@ export const MoviesStore = signalStore(
         route.queryParamMap.pipe(
           map(readMoviesParams),
           distinctUntilChanged((previous, current) => JSON.stringify(previous) === JSON.stringify(current)),
-          switchMap((params) =>
-            concat(
-              of({ isPolling: false, params }),
-              timer(MOVIES_POLL_INTERVAL_MS, MOVIES_POLL_INTERVAL_MS).pipe(map(() => ({ isPolling: true, params }))),
-            ),
-          ),
         ),
       );
 

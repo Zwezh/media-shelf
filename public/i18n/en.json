@@ -31,10 +31,10 @@
     "empty": "There are no movies available.",
     "loadError": "Movies could not be loaded.",
     "loading": "Loading movies…",
-    "pollErrorMessage": "Keeping the last loaded movies. Another refresh will be attempted automatically.",
-    "pollErrorTitle": "Library refresh failed",
-    "pollSuccessMessage": "The movie library is up to date.",
-    "pollSuccessTitle": "Library refreshed",
+    "loadErrorMessage": "Check your connection and try loading the movie library again.",
+    "loadErrorTitle": "Library load failed",
+    "loadSuccessMessage": "The movie library is up to date.",
+    "loadSuccessTitle": "Library loaded",
     "title": "Movies"
   },
   "navigation": {
