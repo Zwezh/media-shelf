@@ -24,10 +24,10 @@ describe('ToastStore', () => {
     expect(store.toasts().every(({ closable }) => closable)).toBe(true);
   });
 
-  it('auto-hides after the default 500 ms delay', () => {
+  it('auto-hides after the default 5 second delay', () => {
     store.show({ title: 'Temporary', autoHide: true });
 
-    vi.advanceTimersByTime(499);
+    vi.advanceTimersByTime(4_999);
     expect(store.toasts()).toHaveLength(1);
 
     vi.advanceTimersByTime(1);
@@ -38,10 +38,10 @@ describe('ToastStore', () => {
     store.show({ title: 'Custom', autoHide: true, delay: 1_000 });
     store.show({ title: 'Normalized', autoHide: true, delay: 0 });
 
-    vi.advanceTimersByTime(500);
-    expect(store.toasts().map(({ title }) => title)).toEqual(['Custom']);
+    vi.advanceTimersByTime(1_000);
+    expect(store.toasts().map(({ title }) => title)).toEqual(['Normalized']);
 
-    vi.advanceTimersByTime(500);
+    vi.advanceTimersByTime(4_000);
     expect(store.toasts()).toHaveLength(0);
   });
 

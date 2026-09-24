@@ -1,23 +1,32 @@
 <section class="movies" aria-labelledby="movies-title">
-  <msh-page-header titleKey="movies.title" headingId="movies-title" [itemCount]="store.media().length">
-    <button class="movies__add-button" type="button" disabled><span aria-hidden="true">+</span> {{ 'movies.addMovie' | translate }}</button>
-  </msh-page-header>
+  <div class="movies__content">
+    <msh-page-header titleKey="movies.title" headingId="movies-title" [itemCount]="store.totalCount()">
+      <button class="movies__add-button" type="button" disabled>
+        <span aria-hidden="true">+</span> {{ 'movies.addMovie' | translate }}
+      </button>
+    </msh-page-header>
 
-  @if (store.isLoading()) {
-    <msh-page-status messageKey="movies.loading" />
-  } @else if (store.hasError()) {
-    <msh-page-status kind="error" messageKey="movies.loadError" />
-  } @else if (store.media().length === 0) {
-    <msh-empty-state messageKey="movies.empty" />
-  } @else {
-    <p class="movies__summary">
-      {{ 'movies.showing' | translate: { visible: store.visibleMedia().length, total: store.media().length } }}
-    </p>
-    <div class="movies__grid">
-      @for (item of store.visibleMedia(); track item.id) {
-        <msh-media-card [media]="item" />
-      }
-    </div>
-    <msh-pagination [page]="store.page()" [pageSize]="pageSize" [totalItems]="store.media().length" (pageChange)="changePage($event)" />
+    @if (store.isLoading()) {
+      <msh-page-status messageKey="movies.loading" />
+    } @else if (store.hasError()) {
+      <msh-page-status kind="error" messageKey="movies.loadError" />
+    } @else if (store.media().length === 0) {
+      <msh-empty-state messageKey="movies.empty" />
+    } @else {
+      <div class="movies__grid">
+        @for (item of store.visibleMedia(); track item.id) {
+          <msh-media-card [media]="item" />
+        }
+      </div>
+    }
+  </div>
+
+  @if (!store.isLoading() && !store.hasError() && store.media().length > 0) {
+    <msh-pagination
+      [page]="store.page()"
+      [pageSize]="store.pageSize()"
+      [totalItems]="store.totalCount()"
+      (pageChange)="changePage($event)"
+    />
   }
 </section>

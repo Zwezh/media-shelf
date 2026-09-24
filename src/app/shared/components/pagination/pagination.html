@@ -1,37 +1,66 @@
 <nav class="pagination" [attr.aria-label]="'pagination.label' | translate">
-  <p>{{ 'pagination.summary' | translate: { page: page(), totalPages: totalPages(), totalItems: totalItems() } }}</p>
-  <div class="pagination__controls">
-    <button
-      class="pagination__arrow"
-      type="button"
-      [attr.aria-label]="'pagination.previous' | translate"
-      [disabled]="page() === 1"
-      (click)="selectPage(page() - 1)"
-    >
-      <span aria-hidden="true">‹</span>
-    </button>
-    @for (item of visiblePages(); track $index) {
-      @if (item === 'ellipsis') {
-        <span class="pagination__ellipsis" aria-hidden="true">…</span>
-      } @else {
-        <button
-          type="button"
-          [class.pagination__page--active]="item === page()"
-          [attr.aria-current]="item === page() ? 'page' : null"
-          (click)="selectPage(item)"
-        >
-          {{ item }}
-        </button>
+  <div class="pagination__inner">
+    <div class="pagination__meta">
+      <p class="pagination__summary">
+        {{ 'pagination.summary' | translate: { firstItem: firstItem(), lastItem: lastItem(), totalItems: totalItems() } }}
+      </p>
+      <p class="pagination__page-size">
+        <span>{{ 'pagination.perPage' | translate }}</span>
+        <strong>{{ pageSize() }}</strong>
+      </p>
+    </div>
+    <div class="pagination__controls">
+      <button
+        class="pagination__arrow pagination__boundary"
+        type="button"
+        [attr.aria-label]="'pagination.first' | translate"
+        [disabled]="page() === 1"
+        (click)="selectPage(1)"
+      >
+        <span aria-hidden="true">{{ 'pagination.firstShort' | translate }}</span>
+      </button>
+      <button
+        class="pagination__arrow"
+        type="button"
+        [attr.aria-label]="'pagination.previous' | translate"
+        [disabled]="page() === 1"
+        (click)="selectPage(page() - 1)"
+      >
+        <span aria-hidden="true">‹</span>
+      </button>
+      @for (item of visiblePages(); track $index) {
+        @if (item === 'ellipsis') {
+          <span class="pagination__ellipsis" aria-hidden="true">…</span>
+        } @else {
+          <button
+            class="pagination__page"
+            type="button"
+            [class.pagination__page--active]="item === page()"
+            [attr.aria-current]="item === page() ? 'page' : null"
+            (click)="selectPage(item)"
+          >
+            {{ item }}
+          </button>
+        }
       }
-    }
-    <button
-      class="pagination__arrow"
-      type="button"
-      [attr.aria-label]="'pagination.next' | translate"
-      [disabled]="page() === totalPages()"
-      (click)="selectPage(page() + 1)"
-    >
-      <span aria-hidden="true">›</span>
-    </button>
+      <button
+        class="pagination__arrow"
+        type="button"
+        [attr.aria-label]="'pagination.next' | translate"
+        [disabled]="page() === totalPages()"
+        (click)="selectPage(page() + 1)"
+      >
+        <span aria-hidden="true">›</span>
+      </button>
+      <button
+        class="pagination__arrow pagination__boundary"
+        type="button"
+        [attr.aria-label]="'pagination.last' | translate"
+        [disabled]="page() === totalPages()"
+        (click)="selectPage(totalPages())"
+      >
+        <span aria-hidden="true">{{ 'pagination.lastShort' | translate }}</span>
+      </button>
+    </div>
   </div>
 </nav>

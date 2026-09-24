@@ -31,7 +31,7 @@ Contracts:
 - `show()` accepts a required `title` plus optional `message`, `type`, `closable`, `autoHide`, `delay`, and `action`.
 - `info()`, `success()`, `warning()`, and `error()` are typed convenience methods over `show()`.
 - Toasts are closable by default and do not auto-hide by default. These settings are independent, so either, both, or neither behavior may be enabled.
-- Auto-hide uses `500` ms when delay is absent, non-finite, zero, or negative. A positive finite delay is used unchanged.
+- Auto-hide uses `5,000` ms when delay is absent, non-finite, zero, or negative. A positive finite delay is used unchanged.
 - `show()` returns a numeric `ToastId`; `dismiss(id)` is idempotent and `clear()` removes all notifications.
 - Activating an optional action invokes its handler and dismisses the toast, including when the handler throws.
 - `ToastStore` cancels associated timers on manual dismissal, clear, and service destruction.
@@ -39,12 +39,13 @@ Contracts:
 - Info and success use `role="status"`; warning and error use `role="alert"`. Toast contents are atomic announcements.
 - Enter and leave behavior uses Angular's native `animate.enter` and `animate.leave` CSS API and honors reduced-motion preferences.
 - The viewport uses the toast z-index token, safe-area insets, a 28 rem maximum width, and a responsive viewport-relative width.
+- The immediate Movies load and subsequent polling results use localized success and error toasts; these auto-hide after 2.5 and 5 seconds respectively. Initial loading/error state also remains visible in-page, while background poll errors preserve loaded content.
 
 Rationale and lessons:
 
 - Timer ownership stays beside state ownership so every removal path can cancel pending work.
 - The global viewport avoids feature-level stacking conflicts and preserves notifications during route changes.
-- Auto-hide is opt-in because the design default of `500` ms is suitable for brief status feedback but too short for general reading.
+- Auto-hide is opt-in; its 5-second fallback keeps status feedback readable without forcing a duration on persistent notifications.
 - The implementation adapts Figma node `32:560` geometry and elevation while using MediaShelf semantic tokens instead of raw component colors.
 
 Related lodes: [UI summary](summary.md), [design tokens](design-tokens.md), [application shell](application-shell.md), [project practices](../practices.md).
