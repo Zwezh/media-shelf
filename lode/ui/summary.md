@@ -1,6 +1,6 @@
 # UI Summary
 
-The MediaShelf UI uses a restrained, full-width application shell with header navigation, a fluid feature canvas, a compact status footer, and a global bottom-right toast viewport. Gallery adds route-derived local navigation and a responsive Movies canvas built from reusable media cards, badges, ratings, and archival pagination. Current UI work starts from the global token layer rather than one-off component values. The canonical brand mark is the Figma-exported `public/logo.svg`; browsers use it as the primary favicon and `public/favicon.ico` as the multi-size compatibility fallback.
+The MediaShelf UI uses a restrained, full-width application shell with header navigation, a fluid feature canvas, a compact status footer, a global bottom-right toast viewport, and dynamically attached native-dialog floating panels. Gallery adds route-derived local navigation and a responsive Movies canvas built from reusable media cards, badges, ratings, filters, and archival pagination. Current UI work starts from the global token layer rather than one-off component values. The canonical brand mark is the Figma-exported `public/logo.svg`; browsers use it as the primary favicon and `public/favicon.ico` as the multi-size compatibility fallback.
 
 ```scss
 :host {
@@ -22,6 +22,7 @@ flowchart LR
   Canvas --> Footer[Status footer]
   Canvas --> Features[Feature page grids]
   Shell[Root application shell] --> Toasts[Global toast viewport]
+  Shell --> FloatingPanels[Dynamic native-dialog panels]
   Figma[Figma logo node 15:2] --> SVG[logo.svg]
   SVG --> Favicon[Browser favicon]
   SVG --> ICO[favicon.ico fallback]
@@ -34,5 +35,6 @@ Invariants:
 - Application code references local public assets and never temporary Figma asset URLs.
 - The shared shell owns the only `<main>` landmark; feature roots use sections.
 - The root shell owns the only toast viewport; callers communicate through `ToastStore`.
+- Feature callers open modal sheets through `FloatingPanel`; dynamic panel content remains feature-owned.
 
-Related lodes: [project summary](../summary.md), [application shell](application-shell.md), [design tokens](design-tokens.md), [media gallery](media-gallery.md), [toast notifications](toast-notifications.md).
+Related lodes: [project summary](../summary.md), [application shell](application-shell.md), [design tokens](design-tokens.md), [floating panels](floating-panels.md), [media gallery](media-gallery.md), [toast notifications](toast-notifications.md).

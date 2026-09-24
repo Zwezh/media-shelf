@@ -17,6 +17,8 @@ export class GalleryApi {
 flowchart LR
   Env[ENVIRONMENT] --> API[GalleryApi]
   URL[URL query params] --> Store[MoviesStore]
+  Settings[/settings] --> FilterPanel[Signal Form filter panel]
+  FilterPanel -->|apply typed filters| URL
   Store --> API
   API --> Endpoint[/movies]
   Endpoint --> DTO[MoviesPageDto]
@@ -39,11 +41,16 @@ Invariants:
 - `ENVIRONMENT` is provided once from `src/environments/environment`; production builds replace it with `environment.prod.ts`.
 - `environment.apiUrl` has no required trailing slash because `GalleryApi` normalizes it before appending an endpoint.
 - `GalleryApi` is the gallery HTTP boundary and owns DTO-to-UI conversion.
+- `toMedia` always supplies card-ready age-rating text: finite numeric ratings receive a `+` suffix, while missing, null, or unknown values become `--`.
 - `MoviesStore` is provided by the Movies page and owns the current server page, total count, request params, and loading/error state. Each distinct URL parameter set triggers one API request; the store does not poll unchanged data.
-- Required movie params are always canonicalized into the URL: `currentPage=0`, `pageSize=30`, `direction=desc`, and `key=addedDate` are the defaults.
+- Missing or invalid required movie params resolve in memory to `currentPage=0`, `pageSize=30`, `direction=desc`, and `key=addedDate`. Store initialization does not rewrite the URL, so opening `/gallery/movies` keeps that clean path while the API request still receives all defaults.
 - URL and API `currentPage` values are zero-based, while `Pagination` remains one-based. The store adds one for display and subtracts one from page-change events.
 - After each response, the last valid API index is `max(0, ceil(totalCount / pageSize) - 1)`. An oversized URL index is replaced with that value, and route reactivity requests the corrected last page.
-- Optional `actors`, `directors`, `fromYear`, `genres`, `rating`, `search`, and `toYear` values are restored from the URL and forwarded to the API. URL arrays use repeated keys; `GalleryApi` joins `directors` with commas for the backend's string parser.
+- Optional `actors`, `directors`, `fromYear`, `genres`, `rating`, `search`, and `toYear` values are restored from the URL and forwarded to the API. `ageRating`, `genres`, and `quality` are repeated URL/API values; actors and directors are normalized comma-separated strings.
+- `SettingsApi` owns one cached `httpResource` for the singular `/settings` DTO. The filter panel reads its alphabetized `genresForFilters` values and renders explicit loading and error states.
+- The Movies header contains only its title/count group, removable applied-filter chips, the Filters trigger with an active-group count, and the disabled Add Movie action. A from/to year pair counts as one active group.
+- `MoviesFilterPanel` uses Angular Signal Forms for draft state. Opening restores applied URL filters and captures them as the comparison baseline; Apply remains disabled until the valid normalized draft differs from that baseline. Reset All changes only the draft; Apply normalizes the result, resets `currentPage` to zero, navigates, and closes. Removing a header chip navigates immediately.
+- The filter panel covers genres, release years, a `0–10` minimum-rating slider in `0.5` steps, age ratings, qualities, actors, and directors. Desktop uses a full-height right sheet; mobile uses a full-height sheet with a scrollable body and persistent equal-width Reset/Apply actions. Filter actions use the lazy public `filters.svg` asset through the shared `Icon` component.
 - Invalid required URL values fall back to defaults. Pagination currently changes only `currentPage`; the route stream triggers the resulting API request.
 - The API response supplies `totalCount` for page controls and the page header; the current response `list` is rendered directly without client-side slicing.
 - Movies, Series, and Wishlist share the typed `GalleryEndpoint` contract; Movies currently requests `movies`.
@@ -60,4 +67,4 @@ Invariants:
 - Pagination follows the same full-width band pattern as gallery navigation: its surface and shadow span the viewport while a centered 90rem inner row owns the content. The row is at least 56px tall and uses 24px desktop side padding, a 13px visible-range summary, a compact lavender page-size badge, and 32px numbered controls beside text First/Last boundaries and chevrons. Controls never emit values outside the valid range; middle pages retain both adjacent pages between endpoint anchors and ellipses, the active page uses the archival indigo fill, and mobile centers the metadata above a horizontally scrollable control row.
 - All user-facing controls have accessible names and visible focus treatment.
 
-Related lodes: [UI summary](summary.md), [design tokens](design-tokens.md), [routing](../routing/summary.md), [practices](../practices.md).
+Related lodes: [UI summary](summary.md), [design tokens](design-tokens.md), [floating panels](floating-panels.md), [routing](../routing/summary.md), [practices](../practices.md).

@@ -39,14 +39,16 @@ const mediaDto: MediaDto = {
 };
 
 const params: MoviesParams = {
+  ageRating: [12, 16],
   actors: 'Actor',
   currentPage: 0,
   direction: 'desc',
-  directors: ['Director One', 'Director Two'],
+  directors: 'Director One,Director Two',
   fromYear: 2000,
   genres: ['Drama', 'Comedy'],
   key: 'addedDate',
   pageSize: 30,
+  quality: ['4K UHD', '4K HDR'],
   rating: 7,
   search: 'Movie',
   toYear: 2025,
@@ -75,9 +77,11 @@ describe('GalleryApi', () => {
     expect(request.request.params.get('key')).toBe('addedDate');
     expect(request.request.params.get('pageSize')).toBe('30');
     expect(request.request.params.get('actors')).toBe('Actor');
+    expect(request.request.params.getAll('ageRating')).toEqual(['12', '16']);
     expect(request.request.params.get('directors')).toBe('Director One,Director Two');
     expect(request.request.params.get('fromYear')).toBe('2000');
     expect(request.request.params.getAll('genres')).toEqual(['Drama', 'Comedy']);
+    expect(request.request.params.getAll('quality')).toEqual(['4K UHD', '4K HDR']);
     expect(request.request.params.get('rating')).toBe('7');
     expect(request.request.params.get('search')).toBe('Movie');
     expect(request.request.params.get('toYear')).toBe('2025');

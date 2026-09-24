@@ -1,9 +1,36 @@
 <section class="movies" aria-labelledby="movies-title">
   <div class="movies__content">
     <msh-page-header titleKey="movies.title" headingId="movies-title" [itemCount]="store.totalCount()">
-      <button class="movies__add-button" type="button" disabled>
-        <span aria-hidden="true">+</span> {{ 'movies.addMovie' | translate }}
-      </button>
+      <div class="movies__toolbar">
+        @if (filterChips().length > 0) {
+          <div class="movies__filter-chips" [attr.aria-label]="'movies.filters.active' | translate">
+            @for (chip of filterChips(); track chip.key) {
+              <button
+                class="movies__filter-chip"
+                type="button"
+                [attr.aria-label]="'movies.filters.removeFilter' | translate: { filter: chip.value }"
+                (click)="removeFilters(chip.filterKeys)"
+              >
+                {{ chip.labelKey | translate: { value: chip.value } }} <span aria-hidden="true">×</span>
+              </button>
+            }
+          </div>
+        }
+        <button
+          class="movies__filters-button"
+          type="button"
+          [attr.aria-label]="'movies.filters.openFilters' | translate: { count: store.activeFilterCount() }"
+          (click)="openFilters()"
+        >
+          <msh-icon name="filters" /> {{ 'movies.filters.filtersButton' | translate }}
+          @if (store.activeFilterCount() > 0) {
+            <strong>{{ store.activeFilterCount() }}</strong>
+          }
+        </button>
+        <button class="movies__add-button" type="button" disabled>
+          <span aria-hidden="true">+</span> {{ 'movies.addMovie' | translate }}
+        </button>
+      </div>
     </msh-page-header>
 
     @if (store.isLoading()) {

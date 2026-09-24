@@ -41,4 +41,12 @@ describe('toMedia', () => {
   it('prefers a compact poster when the primary poster is absent', () => {
     expect(toMedia({ ...dto, compactPosterUrl: '/compact.jpg' }).posterUrl).toBe('/compact.jpg');
   });
+
+  it.each([undefined, null, 'unknown'])('displays an unknown age rating as a double dash for %s', (ageRating) => {
+    expect(toMedia({ ...dto, ageRating } as MediaDto).ageRating).toBe('--');
+  });
+
+  it('keeps zero as a valid age rating', () => {
+    expect(toMedia({ ...dto, ageRating: 0 }).ageRating).toBe('0+');
+  });
 });

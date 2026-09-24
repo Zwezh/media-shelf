@@ -9,25 +9,35 @@ export const DEFAULT_MOVIES_PARAMS: MoviesParams = {
   pageSize: DEFAULT_PAGE_SIZE,
 };
 
-type MoviesQueryParams = Record<string, number | string | readonly string[]>;
+export type MoviesQueryParams = Record<string, number | string | readonly (number | string)[]>;
 
 const sortingDirections: readonly SortingDirection[] = ['asc', 'desc'];
 const sortingKeys: readonly SortingKey[] = ['addedDate', 'ageRating', 'enName', 'name', 'quality', 'rating', 'year'];
 
 export function readMoviesParams(paramMap: ParamMap): MoviesParams {
   return {
+    ...readNumberArrayParam(paramMap, 'ageRating'),
     currentPage: readNonNegativeInteger(paramMap.get('currentPage')) ?? DEFAULT_MOVIES_PARAMS.currentPage,
     direction: readValue(paramMap.get('direction'), sortingDirections) ?? DEFAULT_MOVIES_PARAMS.direction,
     key: readValue(paramMap.get('key'), sortingKeys) ?? DEFAULT_MOVIES_PARAMS.key,
     pageSize: readPositiveInteger(paramMap.get('pageSize')) ?? DEFAULT_MOVIES_PARAMS.pageSize,
     ...readStringParam(paramMap, 'actors'),
-    ...readStringArrayParam(paramMap, 'directors'),
+    ...readStringParam(paramMap, 'directors'),
     ...readNumberParam(paramMap, 'fromYear'),
     ...readStringArrayParam(paramMap, 'genres'),
+    ...readStringArrayParam(paramMap, 'quality'),
     ...readNumberParam(paramMap, 'rating'),
     ...readStringParam(paramMap, 'search'),
     ...readNumberParam(paramMap, 'toYear'),
   };
+}
+
+function readNumberArrayParam(paramMap: ParamMap, key: string): Partial<MoviesParams> {
+  const values = paramMap
+    .getAll(key)
+    .map(Number)
+    .filter((value) => Number.isFinite(value) && value >= 0);
+  return values.length > 0 ? { [key]: [...new Set(values)] } : {};
 }
 
 export function toMoviesQueryParams(params: MoviesParams): MoviesQueryParams {
@@ -60,7 +70,7 @@ function readStringArrayParam(paramMap: ParamMap, key: string): Partial<MoviesPa
     .getAll(key)
     .map((value) => value.trim())
     .filter(Boolean);
-  return values.length > 0 ? { [key]: values } : {};
+  return values.length > 0 ? { [key]: [...new Set(values)] } : {};
 }
 
 function readStringParam(paramMap: ParamMap, key: string): Partial<MoviesParams> {

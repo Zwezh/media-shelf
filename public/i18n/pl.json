@@ -1,5 +1,6 @@
 {
   "common": {
+    "close": "Zamknij",
     "itemCount": "Elementy: {{count}}"
   },
   "footer": {
@@ -29,6 +30,41 @@
   "movies": {
     "addMovie": "Dodaj film",
     "empty": "Brak dostępnych filmów.",
+    "filters": {
+      "active": "Aktywne filtry",
+      "actors": "Aktorzy",
+      "actorsChip": "Aktorzy: {{value}}",
+      "ageRating": "Kategoria wiekowa",
+      "ageChip": "Wiek: {{value}}",
+      "any": "Dowolna",
+      "apply": "Zastosuj filtry",
+      "clearAll": "Wyczyść wszystko",
+      "directors": "Reżyserzy",
+      "directorsChip": "Reżyserzy: {{value}}",
+      "filtersButton": "Filtry",
+      "fromYear": "Od",
+      "genreChip": "Gatunek: {{value}}",
+      "genres": "Gatunki",
+      "genresError": "Nie udało się wczytać gatunków.",
+      "invalidYear": "Wprowadź czterocyfrowy rok.",
+      "invalidYearRange": "Rok początkowy nie może być późniejszy niż końcowy.",
+      "loadingGenres": "Ładowanie gatunków…",
+      "minimumRating": "Minimalna ocena",
+      "namesPlaceholder": "Oddziel nazwiska przecinkami",
+      "noneSelected": "Nie wybrano filtrów",
+      "openFilters": "Otwórz filtry, aktywnych: {{count}}",
+      "people": "Osoby",
+      "quality": "Jakość i rozdzielczość",
+      "qualityChip": "Jakość: {{value}}",
+      "ratingChip": "Ocena: {{value}}",
+      "releaseRange": "Zakres roku wydania",
+      "removeFilter": "Usuń filtr {{filter}}",
+      "resetAll": "Resetuj wszystko",
+      "selectedCount": "Wybrano: {{count}}",
+      "title": "Filtry",
+      "toYear": "Do",
+      "yearsChip": "Lata: {{value}}"
+    },
     "loadError": "Nie udało się załadować filmów.",
     "loading": "Ładowanie filmów…",
     "loadErrorMessage": "Sprawdź połączenie i spróbuj ponownie załadować bibliotekę filmów.",

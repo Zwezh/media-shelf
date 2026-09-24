@@ -1,12 +1,14 @@
 export type MoviesParams = {
+  ageRating?: number[];
   currentPage: number;
   direction: SortingDirection;
   key: SortingKey;
   pageSize: number;
   actors?: string;
-  directors?: string[];
+  directors?: string;
   fromYear?: number;
   genres?: string[];
+  quality?: string[];
   rating?: number;
   search?: string;
   toYear?: number;

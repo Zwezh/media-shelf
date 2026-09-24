@@ -1,5 +1,6 @@
 {
   "common": {
+    "close": "Close",
     "itemCount": "{{count}} items"
   },
   "footer": {
@@ -29,6 +30,41 @@
   "movies": {
     "addMovie": "Add movie",
     "empty": "There are no movies available.",
+    "filters": {
+      "active": "Active filters",
+      "actors": "Actors",
+      "actorsChip": "Actors: {{value}}",
+      "ageRating": "Age certification",
+      "ageChip": "Age: {{value}}",
+      "any": "Any",
+      "apply": "Apply filters",
+      "clearAll": "Clear all",
+      "directors": "Directors",
+      "directorsChip": "Directors: {{value}}",
+      "filtersButton": "Filters",
+      "fromYear": "From",
+      "genreChip": "Genre: {{value}}",
+      "genres": "Genres",
+      "genresError": "Genres could not be loaded.",
+      "invalidYear": "Enter a four-digit year.",
+      "invalidYearRange": "The starting year must not be later than the ending year.",
+      "loadingGenres": "Loading genres…",
+      "minimumRating": "Minimum rating",
+      "namesPlaceholder": "Separate names with commas",
+      "noneSelected": "No filters selected",
+      "openFilters": "Open filters, {{count}} active",
+      "people": "People",
+      "quality": "Quality & resolution",
+      "qualityChip": "Quality: {{value}}",
+      "ratingChip": "Rating: {{value}}",
+      "releaseRange": "Release year range",
+      "removeFilter": "Remove {{filter}} filter",
+      "resetAll": "Reset all",
+      "selectedCount": "{{count}} selected",
+      "title": "Filters",
+      "toYear": "To",
+      "yearsChip": "Years: {{value}}"
+    },
     "loadError": "Movies could not be loaded.",
     "loading": "Loading movies…",
     "loadErrorMessage": "Check your connection and try loading the movie library again.",

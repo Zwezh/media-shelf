@@ -6,12 +6,16 @@
 
 .page-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-base);
   padding-bottom: var(--space-lg);
 
   &__summary {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--space-md);
     min-width: 0;
 
     h1 {
@@ -22,19 +26,27 @@
     }
 
     p {
-      margin: var(--space-xxs) 0 0;
-      color: var(--color-text-secondary);
-      font: var(--text-body-md);
+      margin: 0;
+      padding: var(--space-xs) var(--space-sm);
+      color: var(--color-shell-text);
+      font: var(--text-label-lg);
+      background: var(--color-pagination-page-size-background);
+      border-radius: var(--radius-pill);
     }
   }
 
   &__actions {
     display: flex;
+    min-width: 0;
     flex: 0 0 auto;
     align-items: center;
   }
 
   @include breakpoint.mobile {
-    align-items: center;
+    flex-wrap: wrap;
+
+    &__actions {
+      width: 100%;
+    }
   }
 }

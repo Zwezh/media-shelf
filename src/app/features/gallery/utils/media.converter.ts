@@ -3,6 +3,8 @@ import { MediaDto } from '../models/media.dto';
 import { Media } from '../models/media';
 
 const formatYear = (year: number | number[]): string => (Array.isArray(year) ? year.join('–') : `${year}`);
+const formatAgeRating = (ageRating: unknown): string =>
+  typeof ageRating === 'number' && Number.isFinite(ageRating) ? `${ageRating}+` : '--';
 
 export const toMedia = (dto: MediaDto): Media => ({
   id: dto.id,
@@ -12,7 +14,7 @@ export const toMedia = (dto: MediaDto): Media => ({
   type: dto.isSeries ? 'series' : 'movie',
   quality: dto.quality,
   rating: dto.rating,
-  ageRating: `${dto.ageRating}+`,
+  ageRating: formatAgeRating(dto.ageRating),
   year: formatYear(dto.year),
   durationMinutes: dto.movieLength,
   genres: dto.genres,
