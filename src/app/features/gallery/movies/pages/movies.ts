@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EmptyState } from '@msh-shared/components/empty-state/empty-state';
 import { MediaCard } from '@msh-shared/components/media-card/media-card';
@@ -10,6 +11,7 @@ import { Pagination } from '@msh-shared/components/pagination/pagination';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { filter, take } from 'rxjs';
 import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-filters';
+import { type Media } from '../../models/media';
 import { MoviesFilterPanel, type MoviesFilterPanelData } from '../components/movies-filter-panel/movies-filter-panel';
 import { MoviesSortSelect } from '../components/movies-sort-select/movies-sort-select';
 import { MoviesStore } from '../data-access/movies.store';
@@ -31,6 +33,8 @@ type FilterChip = {
 export class Movies {
   private readonly destroyRef = inject(DestroyRef);
   private readonly floatingPanel = inject(FloatingPanel);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   protected readonly store = inject(MoviesStore);
   protected readonly filterChips = computed<readonly FilterChip[]>(() => toFilterChips(this.store.appliedFilters()));
 
@@ -56,6 +60,10 @@ export class Movies {
 
   protected removeFilters(keys: readonly MovieFilterKey[]): void {
     this.store.removeFilters(keys);
+  }
+
+  protected viewMovie(media: Media): void {
+    void this.router.navigate([media.id], { relativeTo: this.route, queryParamsHandling: 'preserve' });
   }
 }
 

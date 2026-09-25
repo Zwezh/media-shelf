@@ -28,6 +28,8 @@
 - Toast viewport - The single root-owned, fixed bottom-right region that renders notifications from `ToastStore` with the newest toast at the bottom.
 - Translation key - A contextual identifier such as `movies.empty`; components render keys through ngx-translate instead of owning interface copy.
 - Movies store - The feature-scoped NgRx SignalStore that owns movie loading, request state, current page, and visible-page derivation.
+- Movie details - The immutable detail projection loaded from `GET /movies/{id}` and presented at `/gallery/movies/:id` without widening the card-oriented Media model.
+- Kinopoisk rating link - The detail hero rating anchor derived from `MediaDto.kpId`, opening `https://www.kinopoisk.ru/film/{kpId}` in a new tab.
 
 ```scss
 .movie-badge {
@@ -47,6 +49,7 @@ flowchart TD
   SettingsResource[Settings resource] --> FilterPanel[Floating panel filter form]
   GalleryAPI --> DTO[Movies page DTO]
   DTO --> Model[Media model]
+  DTO --> Details[Movie details model]
 ```
 
 Related lodes: [summary](summary.md), [media gallery](ui/media-gallery.md), [UI design tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md).

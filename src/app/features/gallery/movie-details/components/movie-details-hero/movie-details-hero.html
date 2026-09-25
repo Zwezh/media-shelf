@@ -1,0 +1,75 @@
+@let currentMovie = movie();
+<section class="movie-hero" aria-labelledby="movie-details-title">
+  <div class="movie-hero__ambient" aria-hidden="true">
+    @if (currentMovie.backdropUrl) {
+      <img alt="" [src]="currentMovie.backdropUrl" (error)="hideFailedBackdrop($event)" />
+    }
+  </div>
+
+  <div class="movie-hero__content">
+    <div class="movie-hero__poster-column">
+      <div class="movie-hero__poster">
+        <img
+          [src]="currentMovie.posterUrl"
+          [alt]="'media.posterAlt' | translate: { title: currentMovie.title }"
+          fetchpriority="high"
+          (error)="usePosterPlaceholder($event)"
+        />
+        <span class="movie-hero__poster-quality">{{ currentMovie.quality }}</span>
+      </div>
+
+      <div class="movie-hero__primary-actions" role="group" [attr.aria-label]="'movieDetails.actions.label' | translate">
+        <button class="btn btn-primary" type="button" disabled>
+          <msh-icon name="edit" [size]="18" /> {{ 'movieDetails.actions.edit' | translate }}
+        </button>
+        <button class="btn btn-danger" type="button" disabled>
+          <msh-icon name="delete" [size]="18" /> {{ 'movieDetails.actions.delete' | translate }}
+        </button>
+      </div>
+
+      <div class="movie-hero__auxiliary-actions" role="group" [attr.aria-label]="'movieDetails.actions.auxiliaryLabel' | translate">
+        <button class="btn btn-secondary" type="button" disabled>{{ 'movieDetails.actions.playTrailer' | translate }}</button>
+        <button class="btn btn-secondary" type="button" disabled>{{ 'movieDetails.actions.openPath' | translate }}</button>
+      </div>
+    </div>
+
+    <div class="movie-hero__overview">
+      <div class="movie-hero__badges">
+        <msh-media-badge [tone]="currentMovie.type">{{ 'media.type.' + currentMovie.type | translate }}</msh-media-badge>
+        <msh-media-badge tone="quality">{{ currentMovie.quality }}</msh-media-badge>
+        <a
+          class="movie-hero__rating"
+          target="_blank"
+          rel="noopener noreferrer"
+          [href]="kinopoiskUrl()"
+          [attr.aria-label]="'movieDetails.kinopoiskLinkLabel' | translate: { rating: formattedRating(), title: currentMovie.title }"
+        >
+          <span aria-hidden="true">★</span> {{ formattedRating() }} / 10
+        </a>
+        <msh-media-badge tone="age">{{ currentMovie.ageRating }}</msh-media-badge>
+        <span class="movie-hero__duration">{{ 'media.duration' | translate: durationParams() }}</span>
+      </div>
+
+      <header class="movie-hero__heading">
+        <h1 id="movie-details-title">{{ currentMovie.title }}</h1>
+        <p>{{ currentMovie.originalTitle }} ({{ currentMovie.year }})</p>
+      </header>
+
+      @if (currentMovie.genres.length > 0) {
+        <div class="movie-hero__genres">
+          <span>{{ 'movieDetails.genres' | translate }}</span>
+          <ul>
+            @for (genre of currentMovie.genres; track $index) {
+              <li>{{ genre }}</li>
+            }
+          </ul>
+        </div>
+      }
+
+      <div class="movie-hero__synopsis">
+        <h2>{{ 'movieDetails.synopsis' | translate }}</h2>
+        <p>{{ currentMovie.description || ('movieDetails.emptyValue' | translate) }}</p>
+      </div>
+    </div>
+  </div>
+</section>

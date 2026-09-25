@@ -5,6 +5,7 @@ import { GalleryApi } from '../../data-access/gallery-api';
 import { type Media } from '../../models/media';
 import { type MoviesPage } from '../../models/movies-page';
 import { type MoviesParams } from '../../models/movies-params';
+import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { MoviesStore } from './movies.store';
@@ -293,7 +294,12 @@ describe('MoviesStore', () => {
     expect(store.media()).toEqual([]);
     expect(store.totalCount()).toBe(0);
     expect(toastStore.toasts()).toEqual([
-      expect.objectContaining({ title: 'Library load failed', type: 'error', autoHide: true, delay: 5_000 }),
+      expect.objectContaining({
+        title: 'Library load failed',
+        type: 'error',
+        autoHide: true,
+        delay: TOAST_AUTO_HIDE_DELAY_MS.error,
+      }),
     ]);
   });
 
@@ -318,7 +324,12 @@ describe('MoviesStore', () => {
     const toastStore = TestBed.inject(ToastStore);
 
     expect(toastStore.toasts()).toEqual([
-      expect.objectContaining({ title: 'Library loaded', type: 'success', autoHide: true, delay: 2_500 }),
+      expect.objectContaining({
+        title: 'Library loaded',
+        type: 'success',
+        autoHide: true,
+        delay: TOAST_AUTO_HIDE_DELAY_MS.success,
+      }),
     ]);
     vi.advanceTimersByTime(60_000);
 

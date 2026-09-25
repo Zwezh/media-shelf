@@ -1,7 +1,6 @@
 import { DestroyRef, Service, inject, signal } from '@angular/core';
+import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastId, ToastMessage, ToastOptions, ToastType } from '@msh-shared/models/toast.model';
-
-const DEFAULT_TOAST_DELAY = 5_000;
 
 @Service()
 export class ToastStore {
@@ -84,7 +83,7 @@ export class ToastStore {
   }
 
   private normalizeDelay(delay: number | undefined): number {
-    return delay !== undefined && Number.isFinite(delay) && delay > 0 ? delay : DEFAULT_TOAST_DELAY;
+    return delay !== undefined && Number.isFinite(delay) && delay > 0 ? delay : TOAST_AUTO_HIDE_DELAY_MS.default;
   }
 
   private cancelTimer(id: ToastId): void {

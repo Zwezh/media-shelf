@@ -30,6 +30,7 @@ flowchart LR
   Card --> Badge[MediaBadge]
   Card --> Rating[MediaRating]
   Card --> Actions[View/Edit/Delete outputs]
+  Actions -->|View + preserved query| Details[/movies/:id]
   Header[PageHeader] --> Grid
   Status[PageStatus] --> Grid
   Empty[EmptyState] --> Grid
@@ -65,7 +66,11 @@ Invariants:
 - The grid spans the gallery canvas with a uniform 16px gutter and explicit responsive column counts: two by default, three from 640px, four from 768px, five from 1024px, and six from 1280px. Cards stretch evenly within their row and retain the canonical 2:3 poster ratio.
 - Cards use the Stitch surface contract: an 8px clipped container, Level-1 resting elevation, a strong border/Level-2 elevation/2px lift on hover or focus-within, a primary active border, and a 5% poster zoom. Reduced-motion preferences remove transforms and transitions.
 - Poster badges place media type and quality at the start and age rating at the end. A bottom scrim contains duration/type metadata and View, Edit, and Delete buttons. The scrim appears on hover or keyboard focus and stays visible on devices without hover capability.
-- View, Edit, and Delete are enabled accessible buttons with localized names and dedicated icons. `MediaCard` emits the selected immutable `Media` through `viewRequested`, `editRequested`, and `deleteRequested`; routing and mutations remain the consuming feature's responsibility because no detail/edit/delete endpoint contract exists yet.
+- View, Edit, and Delete are enabled accessible card buttons with localized names and dedicated icons. `MediaCard` emits the selected immutable `Media` through `viewRequested`, `editRequested`, and `deleteRequested`; the Movies page handles View by navigating to `/gallery/movies/:id` while preserving collection query parameters. Edit and Delete remain unimplemented mutations.
+- `GET /movies/{id}` returns `MediaDto`, which `GalleryApi` converts to an immutable detail-specific model. `MovieDetailsStore` owns route-ID loading, stale-request cancellation, retry, page state, and success/error toasts.
+- The detail page adapts the Stitch prototype into a responsive hero, a shared `DetailCard` 7/5 metadata grid, and conditional Similar movies and Sequels & prequels name lists. Unsupported telemetry is omitted; Edit, Delete, Trailer, and Path controls remain visible and disabled.
+- Detail conversion trims `similarMovies` and `sequelsAndPrequels` titles and removes empty or whitespace-only entries. Each related block is rendered only when its normalized list contains an item.
+- The hero rating is Kinopoisk-only: `kpId` produces a safe new-tab link to `https://www.kinopoisk.ru/film/{kpId}`. No IMDb content is shown.
 - The metadata shelf below the poster uses 8px padding and a minimum 84px height. It renders a single-line title/year row, a single-line two-genre summary, and a rating/director row, all with ellipsis protection for narrow cards.
 - The top action bar always shows the title, loaded item count, and disabled `Add movie` placeholder.
 - Gallery subnavigation is sticky beneath the application header, uses the matching desktop or mobile header-height token as its offset, and spans the available width without an inner maximum-width cap.

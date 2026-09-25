@@ -1,0 +1,45 @@
+<article class="movie-details">
+  <nav class="movie-details__breadcrumbs" [attr.aria-label]="'movieDetails.breadcrumbs.label' | translate">
+    <ol>
+      <li>
+        <a routerLink="/gallery" queryParamsHandling="preserve">{{ 'navigation.gallery' | translate }}</a>
+      </li>
+      <li aria-hidden="true">/</li>
+      <li>
+        <a routerLink="/gallery/movies" queryParamsHandling="preserve">{{ 'navigation.movies' | translate }}</a>
+      </li>
+      <li aria-hidden="true">/</li>
+      <li aria-current="page">
+        {{ breadcrumbTitle() || ('movieDetails.breadcrumbs.current' | translate) }}
+      </li>
+    </ol>
+  </nav>
+
+  @if (store.isLoading()) {
+    <div class="movie-details__status">
+      <h1 class="movie-details__visually-hidden">{{ 'movieDetails.breadcrumbs.current' | translate }}</h1>
+      <msh-page-status messageKey="movieDetails.loading" />
+    </div>
+  } @else if (store.hasError()) {
+    <div class="movie-details__status">
+      <h1 class="movie-details__visually-hidden">{{ 'movieDetails.breadcrumbs.current' | translate }}</h1>
+      <msh-page-status kind="error" messageKey="movieDetails.loadError" />
+      <div class="movie-details__error-actions">
+        <button class="btn btn-primary" type="button" (click)="store.retry()">{{ 'movieDetails.retry' | translate }}</button>
+        <a class="btn btn-secondary" routerLink="/gallery/movies" queryParamsHandling="preserve">
+          {{ 'movieDetails.backToMovies' | translate }}
+        </a>
+      </div>
+    </div>
+  } @else if (store.movie(); as movie) {
+    <msh-movie-details-hero [movie]="movie" />
+
+    <div class="movie-details__content">
+      <div class="movie-details__cards">
+        <msh-production-and-cast [movie]="movie" />
+        <msh-additional-information [movie]="movie" />
+      </div>
+      <msh-related-movie-lists [movie]="movie" />
+    </div>
+  }
+</article>

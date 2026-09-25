@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.detail-card {
+  height: 100%;
+  padding: var(--space-xl);
+  background: var(--color-surface-container-lowest);
+  border: var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-level-1);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-base);
+    margin-bottom: var(--space-lg);
+  }
+
+  h2 {
+    margin: 0;
+    color: var(--color-on-surface);
+  }
+
+  &__content {
+    min-width: 0;
+  }
+}

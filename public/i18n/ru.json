@@ -33,6 +33,50 @@
     },
     "untitled": "Без названия"
   },
+  "movieDetails": {
+    "actions": {
+      "auxiliaryLabel": "Недоступные действия с медиа",
+      "delete": "Удалить",
+      "edit": "Изменить",
+      "label": "Действия с фильмом",
+      "openPath": "Путь",
+      "playTrailer": "Смотреть трейлер"
+    },
+    "additionalInformation": {
+      "addedDate": "Добавлено в медиатеку",
+      "extension": "Расширение",
+      "quality": "Качество",
+      "title": "Дополнительная информация"
+    },
+    "backToMovies": "Вернуться к фильмам",
+    "breadcrumbs": {
+      "current": "Сведения о фильме",
+      "label": "Навигационная цепочка"
+    },
+    "emptyValue": "Нет данных",
+    "genres": "Жанры",
+    "kinopoiskLinkLabel": "Открыть рейтинг {{rating}} фильма «{{title}}» на Кинопоиске в новой вкладке",
+    "loadError": "Не удалось загрузить сведения о фильме.",
+    "loadErrorMessage": "Проверьте подключение и попробуйте загрузить фильм ещё раз.",
+    "loadErrorTitle": "Не удалось загрузить фильм",
+    "loading": "Загрузка сведений о фильме…",
+    "loadSuccessMessage": "Сведения о фильме обновлены.",
+    "loadSuccessTitle": "Фильм загружен",
+    "production": {
+      "actors": "Актёры",
+      "countries": "Страны производства",
+      "director": "Режиссёр",
+      "noActors": "Актёры не указаны.",
+      "originalRelease": "Год выпуска",
+      "title": "Производство и актёры"
+    },
+    "related": {
+      "sequelsAndPrequels": "Сиквелы и приквелы",
+      "similarMovies": "Похожие фильмы"
+    },
+    "retry": "Повторить",
+    "synopsis": "Описание"
+  },
   "movies": {
     "addMovie": "Добавить фильм",
     "empty": "Нет доступных фильмов.",
@@ -135,6 +179,7 @@
     "summary": "Показано {{firstItem}}–{{lastItem}} из {{totalItems}} элементов"
   },
   "routes": {
+    "movieDetailsTitle": "Сведения о фильме | MediaShelf",
     "moviesTitle": "Фильмы | MediaShelf",
     "settingsTitle": "Настройки | MediaShelf",
     "statisticsTitle": "Статистика | MediaShelf",

@@ -1,0 +1,25 @@
+@let currentMovie = movie();
+<msh-detail-card headingId="additional-information-title" titleKey="movieDetails.additionalInformation.title">
+  <dl class="additional-information">
+    <div>
+      <dt>{{ 'movieDetails.additionalInformation.addedDate' | translate }}</dt>
+      <dd>
+        @if (currentMovie.addedDate; as addedDate) {
+          {{ addedDate | date: 'mediumDate' }}
+        } @else {
+          {{ 'movieDetails.emptyValue' | translate }}
+        }
+      </dd>
+    </div>
+    <div>
+      <dt>{{ 'movieDetails.additionalInformation.quality' | translate }}</dt>
+      <dd>{{ currentMovie.quality }}</dd>
+    </div>
+    <div>
+      <dt>{{ 'movieDetails.additionalInformation.extension' | translate }}</dt>
+      <dd>
+        <code>{{ currentMovie.extension }}</code>
+      </dd>
+    </div>
+  </dl>
+</msh-detail-card>
