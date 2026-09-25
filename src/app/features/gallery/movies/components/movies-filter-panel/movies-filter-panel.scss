@@ -32,7 +32,6 @@
 
     h2 {
       margin: 0;
-      font: var(--text-headline-md);
       letter-spacing: 0;
     }
   }
@@ -49,21 +48,8 @@
   }
 
   &__icon-button {
-    display: grid;
-    width: var(--size-control-standard);
-    height: var(--size-control-standard);
-    padding: 0;
-    place-items: center;
     color: var(--color-text-secondary);
     font-size: 1.75rem;
-    background: transparent;
-    border: 0;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-
-    &:hover {
-      background: var(--color-surface-hover);
-    }
   }
 
   &__body {
@@ -96,7 +82,6 @@
       align-items: center;
       gap: var(--space-sm);
       margin: 0;
-      font: var(--text-label-lg);
       text-transform: uppercase;
     }
 
@@ -111,13 +96,8 @@
       border-radius: var(--radius-pill);
     }
 
-    button {
-      padding: var(--space-xs);
+    .btn {
       color: var(--color-primary);
-      font: var(--text-label-lg);
-      background: transparent;
-      border: 0;
-      cursor: pointer;
     }
   }
 
@@ -126,22 +106,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-sm);
-  }
-
-  &__active-chip,
-  &__choice {
-    min-height: 2rem;
-    padding: var(--space-xs) var(--space-md);
-    font: var(--text-label-lg);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-  }
-
-  &__active-chip,
-  &__choice--selected {
-    color: var(--color-on-primary);
-    background: var(--color-primary);
-    border: 1px solid var(--color-primary);
   }
 
   &__empty-filters,
@@ -162,16 +126,10 @@
   }
 
   &__group {
-    min-width: 0;
-    margin: 0;
     padding: var(--space-lg) 0 0;
-    border: 0;
 
     legend {
-      margin-bottom: var(--space-md);
-      padding: 0;
       color: var(--color-text-primary);
-      font: var(--text-label-lg);
     }
 
     legend small,
@@ -180,5 +138,4 @@
       font: var(--text-label-lg);
     }
   }
-
 }

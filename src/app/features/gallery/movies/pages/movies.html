@@ -6,7 +6,7 @@
           <div class="movies__filter-chips" [attr.aria-label]="'movies.filters.active' | translate">
             @for (chip of filterChips(); track chip.key) {
               <button
-                class="movies__filter-chip"
+                class="btn btn-secondary movies__filter-chip"
                 type="button"
                 [attr.aria-label]="'movies.filters.removeFilter' | translate: { filter: chip.value }"
                 (click)="removeFilters(chip.filterKeys)"
@@ -17,7 +17,7 @@
           </div>
         }
         <button
-          class="movies__filters-button"
+          class="btn btn-primary movies__filters-button"
           type="button"
           [attr.aria-label]="'movies.filters.openFilters' | translate: { count: store.activeFilterCount() }"
           (click)="openFilters()"
@@ -28,7 +28,7 @@
           }
         </button>
         <msh-movies-sort-select [sorting]="store.sorting()" (sortingChange)="store.applySorting($event)" />
-        <button class="movies__add-button" type="button" disabled>
+        <button class="btn btn-secondary movies__add-button" type="button" disabled>
           <span aria-hidden="true">+</span> {{ 'movies.addMovie' | translate }}
         </button>
       </div>

@@ -6,19 +6,7 @@
 }
 
 .sort-select {
-  display: inline-flex;
-  min-height: var(--size-control-compact);
-  align-items: center;
-  gap: var(--space-sm);
-  padding: 0 var(--space-md);
-  color: var(--color-on-surface-variant);
-  font: var(--text-label-md);
-  white-space: nowrap;
-  background: var(--color-surface-container-lowest);
-  border: 1px solid transparent;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-level-1);
-  cursor: pointer;
 
   strong {
     color: var(--color-on-surface);
@@ -49,16 +37,8 @@
     }
   }
 
-  &:focus-visible {
-    outline: 3px solid var(--color-focus-ring);
-    outline-offset: 2px;
-  }
-
   @include breakpoint.mobile {
-    min-height: var(--size-control-standard);
-    padding-inline: var(--space-md);
     color: var(--color-on-primary);
-    font: var(--text-label-lg);
     background: var(--color-primary);
     border-color: var(--color-primary);
     border-radius: var(--radius-xl);

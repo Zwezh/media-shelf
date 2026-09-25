@@ -37,21 +37,8 @@
     scrollbar-width: none;
   }
 
-  &__filter-chip,
-  &__filters-button,
-  &__add-button {
-    min-height: var(--size-control-standard);
-    padding: 0 var(--space-base);
-    font: var(--text-label-lg);
-    white-space: nowrap;
-    border-radius: var(--radius-md);
-  }
-
   &__filter-chip {
     color: var(--color-shell-text);
-    background: var(--color-surface);
-    border: var(--border-subtle);
-    cursor: pointer;
 
     span {
       color: var(--color-text-secondary);
@@ -60,18 +47,10 @@
 
   &__filters-button,
   &__add-button {
-    display: inline-flex;
     flex: 0 0 auto;
-    align-items: center;
-    gap: var(--space-sm);
   }
 
   &__filters-button {
-    color: var(--color-on-primary);
-    background: var(--color-primary);
-    border: 1px solid var(--color-primary);
-    cursor: pointer;
-
     strong {
       display: grid;
       min-width: 1.5rem;
@@ -85,12 +64,6 @@
   }
 
   &__add-button {
-    color: var(--color-text-muted);
-    font: var(--text-label-lg);
-    background: var(--color-surface-inset);
-    border: var(--border-subtle);
-    border-radius: var(--radius-md);
-
     span {
       font-size: 1.25rem;
     }
@@ -133,10 +106,5 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-md) var(--space-sm);
     }
-  }
-
-  button:focus-visible {
-    outline: 3px solid var(--color-focus-ring);
-    outline-offset: 2px;
   }
 }

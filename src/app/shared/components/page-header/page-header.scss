@@ -21,7 +21,6 @@
     h1 {
       margin: 0;
       color: var(--color-text-primary);
-      font: var(--text-headline-lg);
       letter-spacing: 0;
     }
 
@@ -29,7 +28,6 @@
       margin: 0;
       padding: var(--space-xs) var(--space-sm);
       color: var(--color-shell-text);
-      font: var(--text-label-lg);
       background: var(--color-pagination-page-size-background);
       border-radius: var(--radius-pill);
     }

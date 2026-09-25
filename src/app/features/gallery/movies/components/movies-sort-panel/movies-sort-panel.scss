@@ -17,11 +17,6 @@
 
   &__directions,
   &__options {
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    border: 0;
-
     legend {
       position: absolute;
       width: 1px;
@@ -41,37 +36,14 @@
     border-bottom: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
 
     > div {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-xs);
       padding: var(--space-xxs);
       background: var(--color-surface-container-low);
       border-radius: var(--radius-lg);
     }
-
-    button {
-      display: inline-flex;
-      min-height: 1.5rem;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-xs);
-      padding: 0 var(--space-sm);
-      color: var(--color-on-surface-variant);
-      font: var(--text-label-sm);
-      background: transparent;
-      border: 0;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-    }
   }
 
   &__direction--selected {
-    color: var(--color-on-primary) !important;
-    background: var(--color-primary) !important;
-
-    msh-icon {
-      filter: brightness(0) invert(1);
-    }
+    box-shadow: var(--shadow-level-1);
   }
 
   &__direction-label-long {
@@ -95,13 +67,6 @@
       cursor: pointer;
     }
 
-    input {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-    }
-
     label:has(input:focus-visible) {
       outline: 3px solid var(--color-focus-ring);
       outline-offset: -3px;
@@ -118,13 +83,11 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
-    font: var(--text-body-sm);
 
     small {
       display: none;
       padding: var(--space-xxs) var(--space-sm);
       color: var(--color-text-primary);
-      font: var(--text-label-sm);
       background: var(--color-surface-container-highest);
       border-radius: var(--radius-sm);
     }
@@ -132,7 +95,6 @@
 
   &__option-hint {
     color: var(--color-outline);
-    font: var(--text-code-sm);
     font-size: var(--font-size-label-sm);
     white-space: nowrap;
   }
@@ -167,34 +129,18 @@
       margin: 0;
       overflow: hidden;
       color: var(--color-on-surface-variant);
-      font: var(--text-label-sm);
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-  }
-
-  &__reset,
-  &__apply {
-    min-height: auto;
-    font: var(--text-label-sm);
-    border-radius: var(--radius-md);
-    cursor: pointer;
   }
 
   &__reset {
     flex: 0 0 auto;
     padding: 0;
     color: var(--color-primary);
-    background: transparent;
-    border: 0;
   }
 
   &__apply {
     display: none;
-  }
-
-  button:focus-visible {
-    outline: 3px solid var(--color-focus-ring);
-    outline-offset: 2px;
   }
 }

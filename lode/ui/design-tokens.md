@@ -2,6 +2,8 @@
 
 Global design tokens are native CSS custom properties split into focused SCSS partials under `src/styles/tokens/` and imported through `src/styles.scss`. `DESIGN.md` remains the visual source of truth; the token set mirrors its color palette, typography hierarchy, spacing, layout sizes, radii, elevations, borders, motion timings, and z-index layers.
 
+Token values are consumed by the reusable classes under `src/styles/components/`; application templates compose those primitives before adding feature-specific layout classes.
+
 ```scss
 @use 'styles/tokens';
 
@@ -41,4 +43,4 @@ Contracts:
 - `--radius-xl` is the 12px Stitch container/control tier used by popovers, bottom sheets, and prominent segmented controls; structural pill shapes remain restricted to `--radius-pill`.
 - Angular Material theming is not configured in the project; there is no Material token bridge yet.
 
-Related lodes: [UI summary](summary.md), [application shell](application-shell.md), [practices](../practices.md), [terminology](../terminology.md).
+Related lodes: [style primitives](style-primitives.md), [UI summary](summary.md), [application shell](application-shell.md), [practices](../practices.md), [terminology](../terminology.md).
