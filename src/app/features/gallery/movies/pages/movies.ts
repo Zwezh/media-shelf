@@ -11,6 +11,7 @@ import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { filter, take } from 'rxjs';
 import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-filters';
 import { MoviesFilterPanel, type MoviesFilterPanelData } from '../components/movies-filter-panel/movies-filter-panel';
+import { MoviesSortSelect } from '../components/movies-sort-select/movies-sort-select';
 import { MoviesStore } from '../data-access/movies.store';
 
 type FilterChip = {
@@ -21,7 +22,7 @@ type FilterChip = {
 };
 
 @Component({
-  imports: [EmptyState, Icon, MediaCard, PageHeader, PageStatus, Pagination, TranslatePipe],
+  imports: [EmptyState, Icon, MediaCard, MoviesSortSelect, PageHeader, PageStatus, Pagination, TranslatePipe],
   providers: [MoviesStore],
   selector: 'msh-movies',
   styleUrl: './movies.scss',

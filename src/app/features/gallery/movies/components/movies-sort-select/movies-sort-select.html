@@ -1,0 +1,14 @@
+<button
+  #trigger
+  class="btn btn-compact btn-mobile-standard btn-surface sort-select"
+  type="button"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="isOpen()"
+  (click)="open()"
+>
+  <span class="sort-select__desktop-label">
+    {{ 'movies.sorting.sortBy' | translate }}: <strong>{{ keyLabel() | translate }}</strong>
+  </span>
+  <span class="sort-select__mobile-label"> <msh-icon name="sort" /> {{ 'movies.sorting.mobileButton' | translate }} </span>
+  <msh-icon class="sort-select__chevron" name="sort-chevron" [size]="14" />
+</button>

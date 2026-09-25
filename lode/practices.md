@@ -1,6 +1,6 @@
 # Practices
 
-MediaShelf follows Angular 22 standalone-component defaults and SCSS global styles. Components omit `standalone: true` and `changeDetection: ChangeDetectionStrategy.OnPush` because both are Angular 22 defaults; explicit change detection metadata is reserved for deliberate eager checking with `ChangeDetectionStrategy.Eager`/`Default`. Global design decisions live in native CSS custom properties under `src/styles/tokens/`; component styles should read those values with `var(...)` and avoid introducing parallel SCSS `$variable` APIs for design tokens.
+MediaShelf follows Angular 22 standalone-component defaults and SCSS global styles. Components omit `standalone: true` and `changeDetection: ChangeDetectionStrategy.OnPush` because both are Angular 22 defaults; explicit change detection metadata is reserved for deliberate eager checking with `ChangeDetectionStrategy.Eager`/`Default`. Global design decisions live in native CSS custom properties under `src/styles/tokens/`; reusable button, typography, and form recipes live under `src/styles/components/`. Templates compose those classes, while component styles add layout and domain-specific states without introducing parallel SCSS `$variable` APIs or duplicating full control recipes.
 
 Application imports use the stable aliases configured in `tsconfig.json`. Cross-boundary imports select the most specific owner alias (`@msh-core/*`, `@msh-features/*`, `@msh-layout/*`, or `@msh-shared/*`); `@msh/*` is the fallback for app-level files. Local files in the same folder or tightly coupled subtree use `./` relative imports. Parent traversal must not cross application boundaries, and aliases do not override the dependency direction defined in `.codex/AGENTS.MD`. Layout owns only app-shell composition and may depend on core and shared, never features.
 
@@ -100,6 +100,7 @@ Invariants:
 - `src/styles.scss` is the Angular-configured global stylesheet.
 - Theme-aware values belong in color/elevation tokens; spacing, typography, sizing, radius, motion, and z-index stay theme-neutral unless the design spec changes.
 - Component SCSS uses expanded declarations and nested BEM selectors; responsive rules use the named mixins in `src/styles/abstracts/_breakpoints.scss` instead of local width literals.
+- Repeated controls compose the global `.btn*`, `.text-*`, and `.form-*` primitives. Feature SCSS may position or size them contextually but does not reimplement their base interaction, focus, disabled, or typography rules.
 - `tsconfig.json` is the source of truth for import aliases; instruction examples must stay synchronized with it.
 - New aliases represent stable top-level architectural boundaries, never individual features or temporary folders.
 - Barrels define supported public APIs; they never bulk-export an entire architectural layer or hide lazy-loading and dependency boundaries.

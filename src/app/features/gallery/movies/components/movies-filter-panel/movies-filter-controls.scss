@@ -1,33 +1,15 @@
 @use 'abstracts/breakpoints' as breakpoint;
 
 .filter-panel {
-  &__choice {
-    color: var(--color-text-primary);
-    background: var(--color-pagination-page-size-background);
-    border: 1px solid transparent;
-
-    &:hover:not(&--selected) {
-      border-color: var(--color-border-emphasis);
-    }
-  }
-
   &__options--grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   &__check-choice {
-    display: flex;
     min-height: 2rem;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-xs) var(--space-sm);
-    color: var(--color-text-primary);
-    font: var(--text-label-lg);
+    justify-content: flex-start;
     text-align: left;
-    background: var(--color-pagination-page-size-background);
-    border: 1px solid transparent;
-    border-radius: var(--radius-md);
 
     span {
       width: 1.125rem;
@@ -88,11 +70,6 @@
     }
   }
 
-  &__range {
-    width: 100%;
-    accent-color: var(--color-primary);
-  }
-
   &__range-labels {
     display: flex;
     justify-content: space-between;
@@ -101,25 +78,7 @@
   }
 
   &__text-field {
-    display: grid;
-    gap: var(--space-xs);
     margin-top: var(--space-md);
-
-    span {
-      color: var(--color-text-secondary);
-      font: var(--text-label-md);
-    }
-
-    input {
-      width: 100%;
-      min-height: var(--size-control-standard);
-      padding: var(--space-sm) var(--space-md);
-      color: var(--color-text-primary);
-      font: var(--text-body-md);
-      background: var(--color-surface);
-      border: var(--border-subtle);
-      border-radius: var(--radius-md);
-    }
   }
 
   @include breakpoint.mobile {

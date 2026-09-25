@@ -9,6 +9,7 @@ import { GalleryApi } from '../../data-access/gallery-api';
 import { type Media } from '../../models/media';
 import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-filters';
 import { type MoviesParams } from '../../models/movies-params';
+import { type MoviesSorting } from '../../models/movies-sorting';
 import { countActiveMovieFilters, extractMoviesFilters, removeMovieFilters, replaceMovieFilters } from '../../utils/movies-filters';
 import { DEFAULT_MOVIES_PARAMS, readMoviesParams, toMoviesQueryParams } from '../../utils/movies-params';
 
@@ -38,6 +39,7 @@ export const MoviesStore = signalStore(
     appliedFilters: computed(() => extractMoviesFilters(params())),
     page: computed(() => params().currentPage + 1),
     pageSize: computed(() => params().pageSize),
+    sorting: computed<MoviesSorting>(() => ({ direction: params().direction, key: params().key })),
     visibleMedia: computed(() => media()),
   })),
   withMethods(
@@ -62,6 +64,15 @@ export const MoviesStore = signalStore(
         void router.navigate([], {
           relativeTo: route,
           queryParams: toMoviesQueryParams(replaceMovieFilters(store.params(), filters)),
+        });
+      },
+      applySorting(sorting: MoviesSorting): void {
+        const params = store.params();
+        if (params.direction === sorting.direction && params.key === sorting.key) return;
+
+        void router.navigate([], {
+          relativeTo: route,
+          queryParams: toMoviesQueryParams({ ...params, ...sorting, currentPage: 0 }),
         });
       },
       clearFilters(): void {

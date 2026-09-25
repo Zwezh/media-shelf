@@ -13,11 +13,13 @@ import {
 import { FloatingPanelPlacement } from './floating-panel-config';
 
 @Component({
+  host: { '(window:resize)': 'positionAtAnchor()' },
   selector: 'msh-floating-panel-container',
   styleUrl: './floating-panel.scss',
   template: `
     <dialog
       #dialog
+      tabindex="-1"
       [attr.aria-label]="ariaLabel() || null"
       [attr.aria-labelledby]="ariaLabelledBy() || null"
       [class]="dialogClass()"
@@ -34,6 +36,7 @@ export class FloatingPanelContainer {
 
   readonly ariaLabel = input('');
   readonly ariaLabelledBy = input('');
+  readonly anchor = input<HTMLElement | undefined>();
   readonly closeOnBackdrop = input(true);
   readonly closeOnEscape = input(true);
   readonly panelClass = input<readonly string[]>([]);
@@ -50,11 +53,23 @@ export class FloatingPanelContainer {
 
   show(): void {
     const dialog = this.dialog().nativeElement;
+    this.positionAtAnchor();
     if (typeof dialog.showModal === 'function') {
       dialog.showModal();
     } else {
       dialog.setAttribute('open', '');
     }
+    dialog.focus({ preventScroll: true });
+  }
+
+  protected positionAtAnchor(): void {
+    const anchor = this.anchor();
+    if (!anchor || this.placement() !== 'anchored-responsive') return;
+
+    const bounds = anchor.getBoundingClientRect();
+    const viewportWidth = this.dialog().nativeElement.ownerDocument.documentElement.clientWidth;
+    this.dialog().nativeElement.style.setProperty('--floating-panel-anchor-top', `${bounds.bottom}px`);
+    this.dialog().nativeElement.style.setProperty('--floating-panel-anchor-right', `${Math.max(0, viewportWidth - bounds.right)}px`);
   }
 
   hide(): void {

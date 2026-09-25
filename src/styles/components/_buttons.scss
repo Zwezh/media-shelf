@@ -1,0 +1,188 @@
+@use '../abstracts/breakpoints' as breakpoint;
+
+.btn {
+  display: inline-flex;
+  min-height: var(--size-control-standard);
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 0 var(--space-base);
+  color: var(--color-on-surface);
+  font: var(--text-label-lg);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  appearance: none;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--easing-standard),
+    background-color var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+
+  &:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    color: var(--color-text-muted);
+    background: var(--color-surface-inset);
+    border-color: var(--color-border);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+}
+
+.btn-primary {
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+
+  &:active:not(:disabled, [aria-disabled='true']) {
+    background: var(--color-primary-active);
+    border-color: var(--color-primary-active);
+  }
+
+  msh-icon {
+    filter: brightness(0) invert(1);
+  }
+}
+
+.btn-secondary {
+  color: var(--color-on-surface);
+  background: var(--color-surface-container-lowest);
+  border-color: var(--color-border);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-strong);
+  }
+}
+
+.btn-surface {
+  color: var(--color-on-surface-variant);
+  background: var(--color-surface-container-lowest);
+  box-shadow: var(--shadow-level-1);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    color: var(--color-on-surface);
+    background: var(--color-surface-container-low);
+  }
+}
+
+.btn-ghost {
+  color: var(--color-on-surface-variant);
+  background: transparent;
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    color: var(--color-on-surface);
+    background: var(--color-surface-container-low);
+  }
+}
+
+.btn-toggle {
+  color: var(--color-on-surface);
+  background: var(--color-surface-container-low);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    border-color: var(--color-border-emphasis);
+  }
+}
+
+.btn-danger {
+  color: var(--color-danger);
+  background: var(--color-surface-container-lowest);
+  border-color: var(--color-badge-age-border);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--color-badge-age-bg);
+  }
+}
+
+.btn-overlay {
+  color: var(--color-on-primary);
+  background: color-mix(in srgb, var(--color-surface-container-lowest) 20%, transparent);
+  border-color: transparent;
+
+  msh-icon {
+    filter: brightness(0) invert(1);
+  }
+
+  &:hover:not(:disabled, [aria-disabled='true']),
+  &:focus-visible {
+    color: var(--color-on-surface);
+    background: var(--color-surface-container-lowest);
+
+    msh-icon {
+      filter: none;
+    }
+  }
+}
+
+.btn-overlay-danger:hover:not(:disabled, [aria-disabled='true']),
+.btn-overlay-danger:focus-visible {
+  color: var(--color-on-error);
+  background: var(--color-error);
+
+  msh-icon {
+    filter: brightness(0) invert(1);
+  }
+}
+
+.btn-compact {
+  min-height: var(--size-control-compact);
+  padding-inline: var(--space-md);
+  font: var(--text-label-md);
+}
+
+.btn-sm {
+  min-height: 2rem;
+  padding-inline: var(--space-md);
+  font: var(--text-label-lg);
+}
+
+.btn-xs {
+  min-height: 1.5rem;
+  padding-inline: var(--space-sm);
+  font: var(--text-label-sm);
+}
+
+.btn-icon {
+  width: var(--size-control-standard);
+  padding: 0;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.btn-group-uniform .btn {
+  min-height: var(--size-control-standard);
+  padding-inline: var(--space-base);
+  font: var(--text-label-lg);
+}
+
+@include breakpoint.mobile {
+  .btn-mobile-standard {
+    min-height: var(--size-control-standard);
+    padding-inline: var(--space-md);
+    font: var(--text-label-lg);
+  }
+}

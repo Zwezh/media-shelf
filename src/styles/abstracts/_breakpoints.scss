@@ -1,6 +1,8 @@
 $phone: 30rem;
 $mobile: 40rem;
 $tablet: 48rem;
+$desktop: 64rem;
+$gallery-wide: 80rem;
 $wide: 90rem;
 
 @mixin phone {
@@ -23,6 +25,30 @@ $wide: 90rem;
 
 @mixin wide {
   @media (min-width: $wide) {
+    @content;
+  }
+}
+
+@mixin mobile-up {
+  @media (min-width: $mobile) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin desktop-up {
+  @media (min-width: $desktop) {
+    @content;
+  }
+}
+
+@mixin gallery-wide-up {
+  @media (min-width: $gallery-wide) {
     @content;
   }
 }

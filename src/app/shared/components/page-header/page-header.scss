@@ -21,25 +21,41 @@
     h1 {
       margin: 0;
       color: var(--color-text-primary);
-      font: var(--text-headline-lg);
       letter-spacing: 0;
     }
 
-    p {
+    .page-header__count {
       margin: 0;
       padding: var(--space-xs) var(--space-sm);
       color: var(--color-shell-text);
-      font: var(--text-label-lg);
       background: var(--color-pagination-page-size-background);
+      border: var(--border-subtle);
+      border-color: transparent;
       border-radius: var(--radius-pill);
+
+      &--movie {
+        color: var(--color-badge-movie-text);
+        background: var(--color-badge-movie-bg);
+        border-color: var(--color-badge-movie-border);
+      }
+
+      &--series {
+        color: var(--color-badge-series-text);
+        background: var(--color-badge-series-bg);
+        border-color: var(--color-badge-series-border);
+      }
+
+      &--wishlist {
+        color: var(--color-badge-wish-text);
+        background: var(--color-badge-wish-bg);
+        border-color: var(--color-badge-wish-border);
+      }
     }
   }
 
   &__actions {
-    display: flex;
     min-width: 0;
     flex: 0 0 auto;
-    align-items: center;
   }
 
   @include breakpoint.mobile {

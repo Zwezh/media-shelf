@@ -3,10 +3,15 @@
     <div class="filter-panel__heading">
       <span class="filter-panel__heading-icon"><msh-icon name="filters" /></span>
       <div>
-        <h2 id="movies-filter-panel-title">{{ 'movies.filters.title' | translate }}</h2>
+        <h2 id="movies-filter-panel-title" class="text-headline-md">{{ 'movies.filters.title' | translate }}</h2>
       </div>
     </div>
-    <button class="filter-panel__icon-button" type="button" [attr.aria-label]="'common.close' | translate" (click)="close()">
+    <button
+      class="btn btn-icon btn-ghost filter-panel__icon-button"
+      type="button"
+      [attr.aria-label]="'common.close' | translate"
+      (click)="close()"
+    >
       <span aria-hidden="true">×</span>
     </button>
   </header>
@@ -14,17 +19,17 @@
   <div class="filter-panel__body">
     <section class="filter-panel__active" aria-labelledby="active-filters-title">
       <div class="filter-panel__section-heading">
-        <h3 id="active-filters-title">
+        <h3 id="active-filters-title" class="text-label-lg">
           {{ 'movies.filters.active' | translate }}
           <span>{{ selectedFilters().length }}</span>
         </h3>
-        <button type="button" (click)="reset()">{{ 'movies.filters.clearAll' | translate }}</button>
+        <button class="btn btn-xs btn-ghost" type="button" (click)="reset()">{{ 'movies.filters.clearAll' | translate }}</button>
       </div>
       @if (selectedFilters().length > 0) {
         <div class="filter-panel__chips">
           @for (filter of selectedFilters(); track filter.id) {
             <button
-              class="filter-panel__active-chip"
+              class="btn btn-sm btn-primary filter-panel__active-chip"
               type="button"
               [attr.aria-label]="'movies.filters.removeFilter' | translate: { filter: filter.label }"
               (click)="removeSelectedFilter(filter.id)"
@@ -38,8 +43,8 @@
       }
     </section>
 
-    <fieldset class="filter-panel__group">
-      <legend>
+    <fieldset class="form-fieldset filter-panel__group">
+      <legend class="form-legend">
         <span>{{ 'movies.filters.genres' | translate }}</span>
         <small>{{ 'movies.filters.selectedCount' | translate: { count: model().genres.length } }}</small>
       </legend>
@@ -51,8 +56,10 @@
         <div class="filter-panel__options">
           @for (genre of settingsApi.genresForFilters(); track genre) {
             <button
-              class="filter-panel__choice"
+              class="btn btn-sm filter-panel__choice"
               type="button"
+              [class.btn-primary]="model().genres.includes(genre)"
+              [class.btn-toggle]="!model().genres.includes(genre)"
               [class.filter-panel__choice--selected]="model().genres.includes(genre)"
               [attr.aria-pressed]="model().genres.includes(genre)"
               (click)="toggleGenre(genre)"
@@ -67,8 +74,8 @@
       }
     </fieldset>
 
-    <fieldset class="filter-panel__group">
-      <legend>{{ 'movies.filters.releaseRange' | translate }}</legend>
+    <fieldset class="form-fieldset filter-panel__group">
+      <legend class="form-legend">{{ 'movies.filters.releaseRange' | translate }}</legend>
       <div class="filter-panel__year-range">
         <label>
           <span>{{ 'movies.filters.fromYear' | translate }}</span>
@@ -87,23 +94,23 @@
       }
     </fieldset>
 
-    <fieldset class="filter-panel__group">
-      <legend>
+    <fieldset class="form-fieldset filter-panel__group">
+      <legend class="form-legend">
         <span>{{ 'movies.filters.minimumRating' | translate }}</span>
         <output for="movies-rating">{{ model().rating > 0 ? model().rating + '+' : ('movies.filters.any' | translate) }}</output>
       </legend>
-      <input id="movies-rating" class="filter-panel__range" type="range" step="0.5" [formField]="filterForm.rating" />
+      <input id="movies-rating" class="form-range filter-panel__range" type="range" step="0.5" [formField]="filterForm.rating" />
       <div class="filter-panel__range-labels" aria-hidden="true">
         <span>0</span><span>2.5</span><span>5</span><span>7.5</span><span>10</span>
       </div>
     </fieldset>
 
-    <fieldset class="filter-panel__group">
-      <legend>{{ 'movies.filters.quality' | translate }}</legend>
+    <fieldset class="form-fieldset filter-panel__group">
+      <legend class="form-legend">{{ 'movies.filters.quality' | translate }}</legend>
       <div class="filter-panel__options filter-panel__options--grid">
         @for (quality of qualityOptions; track quality) {
           <button
-            class="filter-panel__check-choice"
+            class="btn btn-toggle filter-panel__check-choice"
             type="button"
             [class.filter-panel__check-choice--selected]="model().quality.includes(quality)"
             [attr.aria-pressed]="model().quality.includes(quality)"
@@ -115,13 +122,15 @@
       </div>
     </fieldset>
 
-    <fieldset class="filter-panel__group">
-      <legend>{{ 'movies.filters.ageRating' | translate }}</legend>
+    <fieldset class="form-fieldset filter-panel__group">
+      <legend class="form-legend">{{ 'movies.filters.ageRating' | translate }}</legend>
       <div class="filter-panel__options">
         @for (ageRating of ageRatings; track ageRating) {
           <button
-            class="filter-panel__choice"
+            class="btn btn-sm filter-panel__choice"
             type="button"
+            [class.btn-primary]="model().ageRating.includes(ageRating)"
+            [class.btn-toggle]="!model().ageRating.includes(ageRating)"
             [class.filter-panel__choice--selected]="model().ageRating.includes(ageRating)"
             [attr.aria-pressed]="model().ageRating.includes(ageRating)"
             (click)="toggleAgeRating(ageRating)"
@@ -132,21 +141,25 @@
       </div>
     </fieldset>
 
-    <fieldset class="filter-panel__group">
-      <legend>{{ 'movies.filters.people' | translate }}</legend>
-      <label class="filter-panel__text-field">
+    <fieldset class="form-fieldset filter-panel__group">
+      <legend class="form-legend">{{ 'movies.filters.people' | translate }}</legend>
+      <label class="form-label filter-panel__text-field">
         <span>{{ 'movies.filters.actors' | translate }}</span>
-        <input [formField]="filterForm.actors" [placeholder]="'movies.filters.namesPlaceholder' | translate" />
+        <input class="form-control" [formField]="filterForm.actors" [placeholder]="'movies.filters.namesPlaceholder' | translate" />
       </label>
-      <label class="filter-panel__text-field">
+      <label class="form-label filter-panel__text-field">
         <span>{{ 'movies.filters.directors' | translate }}</span>
-        <input [formField]="filterForm.directors" [placeholder]="'movies.filters.namesPlaceholder' | translate" />
+        <input class="form-control" [formField]="filterForm.directors" [placeholder]="'movies.filters.namesPlaceholder' | translate" />
       </label>
     </fieldset>
   </div>
 
   <footer class="filter-panel__footer">
-    <button class="filter-panel__reset" type="button" (click)="reset()">{{ 'movies.filters.resetAll' | translate }}</button>
-    <button class="filter-panel__apply" type="submit" [disabled]="!canApply()">{{ 'movies.filters.apply' | translate }}</button>
+    <button class="btn btn-secondary filter-panel__reset" type="button" (click)="reset()">
+      {{ 'movies.filters.resetAll' | translate }}
+    </button>
+    <button class="btn btn-primary filter-panel__apply" type="submit" [disabled]="!canApply()">
+      {{ 'movies.filters.apply' | translate }}
+    </button>
   </footer>
 </form>

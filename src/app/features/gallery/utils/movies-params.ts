@@ -1,6 +1,8 @@
 import { type ParamMap } from '@angular/router';
 import { DEFAULT_PAGE_SIZE } from '@msh-core/config/media';
-import { type MoviesParams, type SortingDirection, type SortingKey } from '../models/movies-params';
+import { type MoviesParams } from '../models/movies-params';
+import { SORTING_DIRECTIONS } from '../models/sorting-direction';
+import { SORTING_KEYS } from '../models/sorting-key';
 
 export const DEFAULT_MOVIES_PARAMS: MoviesParams = {
   currentPage: 0,
@@ -11,15 +13,12 @@ export const DEFAULT_MOVIES_PARAMS: MoviesParams = {
 
 export type MoviesQueryParams = Record<string, number | string | readonly (number | string)[]>;
 
-const sortingDirections: readonly SortingDirection[] = ['asc', 'desc'];
-const sortingKeys: readonly SortingKey[] = ['addedDate', 'ageRating', 'enName', 'name', 'quality', 'rating', 'year'];
-
 export function readMoviesParams(paramMap: ParamMap): MoviesParams {
   return {
     ...readNumberArrayParam(paramMap, 'ageRating'),
     currentPage: readNonNegativeInteger(paramMap.get('currentPage')) ?? DEFAULT_MOVIES_PARAMS.currentPage,
-    direction: readValue(paramMap.get('direction'), sortingDirections) ?? DEFAULT_MOVIES_PARAMS.direction,
-    key: readValue(paramMap.get('key'), sortingKeys) ?? DEFAULT_MOVIES_PARAMS.key,
+    direction: readValue(paramMap.get('direction'), SORTING_DIRECTIONS) ?? DEFAULT_MOVIES_PARAMS.direction,
+    key: readValue(paramMap.get('key'), SORTING_KEYS) ?? DEFAULT_MOVIES_PARAMS.key,
     pageSize: readPositiveInteger(paramMap.get('pageSize')) ?? DEFAULT_MOVIES_PARAMS.pageSize,
     ...readStringParam(paramMap, 'actors'),
     ...readStringParam(paramMap, 'directors'),

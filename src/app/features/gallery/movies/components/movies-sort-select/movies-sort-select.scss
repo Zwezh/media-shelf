@@ -1,0 +1,66 @@
+@use 'abstracts/breakpoints' as breakpoint;
+
+:host {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.sort-select {
+  border-radius: var(--radius-lg);
+
+  strong {
+    color: var(--color-on-surface);
+    font: inherit;
+  }
+
+  &__mobile-label {
+    display: none;
+  }
+
+  &__chevron {
+    color: var(--color-primary);
+    transform: rotate(180deg);
+    transition: transform var(--duration-fast) var(--easing-standard);
+  }
+
+  &[aria-expanded='true'] {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: none;
+
+    strong {
+      color: var(--color-primary);
+    }
+
+    .sort-select__chevron {
+      transform: none;
+    }
+  }
+
+  @include breakpoint.mobile {
+    color: var(--color-on-primary);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    border-radius: var(--radius-xl);
+
+    &[aria-expanded='true'] {
+      color: var(--color-on-primary);
+      border-color: var(--color-primary);
+    }
+
+    &__desktop-label,
+    &__chevron {
+      display: none;
+    }
+
+    &__mobile-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+
+      msh-icon {
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
+}
