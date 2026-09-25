@@ -1,3 +1,6 @@
+import { type SortingDirection } from './sorting-direction';
+import { type SortingKey } from './sorting-key';
+
 export type MoviesParams = {
   ageRating?: number[];
   currentPage: number;
@@ -14,6 +17,5 @@ export type MoviesParams = {
   toYear?: number;
 };
 
-export type SortingDirection = 'asc' | 'desc';
-
-export type SortingKey = 'addedDate' | 'ageRating' | 'enName' | 'name' | 'quality' | 'rating' | 'year';
+export type { SortingDirection } from './sorting-direction';
+export type { SortingKey } from './sorting-key';

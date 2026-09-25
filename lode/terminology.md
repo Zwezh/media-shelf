@@ -17,8 +17,10 @@
 - Media model - The immutable card-ready projection produced by `toMedia`, including formatted year, duration, and poster fallback.
 - Movies params - The URL-backed movie request contract containing a zero-based API page index, required sorting values, page size, and optional filters.
 - Movies filters - The optional URL-backed `MoviesParams` subset for genres, years, minimum rating, age ratings, qualities, actors, and directors.
+- Movies sorting - The required URL-backed `{ key, direction }` pair that selects server-side media ordering and resets pagination when changed.
 - Settings resource - The cached app-wide `/settings` HTTP resource whose `genresForFilters` values populate filter choices and whose DTO remains reusable by the Settings feature.
 - Floating panel - A dynamically attached native-dialog container opened through `FloatingPanel`, with injected data, typed close results, responsive placement, cleanup, and focus restoration.
+- Anchored responsive panel - A floating-panel placement aligned below a desktop trigger that becomes a modal bottom sheet on mobile.
 - Active filter group - One applied filter category counted in the Filters badge; the from/to year pair counts as one group.
 - Movies page - The converted API result containing the current server page, its media records, and the collection-wide total count.
 - Archival pagination bar - The shared one-based pager that displays current page, total pages, total item count, and bounded page controls.

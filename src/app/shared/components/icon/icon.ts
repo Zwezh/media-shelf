@@ -1,7 +1,7 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 
-export type IconName = 'filters';
+export type IconName = 'arrow-down' | 'arrow-up' | 'filters' | 'sort' | 'sort-chevron';
 
 @Component({
   host: { 'aria-hidden': 'true' },

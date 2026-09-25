@@ -71,6 +71,7 @@ export class FloatingPanel {
 
   private configureContainer<TData>(containerRef: ComponentRef<FloatingPanelContainer>, config: FloatingPanelConfig<TData>): void {
     const panelClass = typeof config.panelClass === 'string' ? [config.panelClass] : (config.panelClass ?? []);
+    containerRef.setInput('anchor', config.anchor);
     containerRef.setInput('ariaLabel', config.ariaLabel ?? '');
     containerRef.setInput('ariaLabelledBy', config.ariaLabelledBy ?? '');
     containerRef.setInput('closeOnBackdrop', config.closeOnBackdrop ?? true);

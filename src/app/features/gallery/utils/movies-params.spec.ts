@@ -1,4 +1,6 @@
 import { convertToParamMap } from '@angular/router';
+import { SORTING_DIRECTIONS } from '../models/sorting-direction';
+import { SORTING_KEYS } from '../models/sorting-key';
 import { readMoviesParams, toMoviesQueryParams } from './movies-params';
 
 describe('movie query params', () => {
@@ -52,5 +54,13 @@ describe('movie query params', () => {
         quality: [],
       }),
     ).toEqual({ currentPage: 0, direction: 'desc', key: 'addedDate', pageSize: 30 });
+  });
+
+  it('accepts every shared sorting direction and key', () => {
+    for (const direction of SORTING_DIRECTIONS) {
+      for (const key of SORTING_KEYS) {
+        expect(readMoviesParams(convertToParamMap({ direction, key }))).toEqual(expect.objectContaining({ direction, key }));
+      }
+    }
   });
 });

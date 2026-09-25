@@ -65,6 +65,39 @@
       "toYear": "Do",
       "yearsChip": "Lata: {{value}}"
     },
+    "sorting": {
+      "active": "Aktywne",
+      "apply": "Zastosuj sortowanie",
+      "current": "Bieżące",
+      "direction": "Kierunek sortowania",
+      "directions": {
+        "asc": "Rosnąco",
+        "desc": "Malejąco"
+      },
+      "field": "Pole sortowania",
+      "hints": {
+        "addedDate": { "asc": "Najstarsze", "desc": "Najnowsze" },
+        "ageRating": { "asc": "0 → 18+", "desc": "18+ → 0" },
+        "enName": { "asc": "A → Z", "desc": "Z → A" },
+        "name": { "asc": "А → Я", "desc": "Я → А" },
+        "quality": { "asc": "SD → 4K", "desc": "4K → SD" },
+        "rating": { "asc": "0 → 10.0", "desc": "10.0 → 0" },
+        "year": { "asc": "Najstarsze → Najnowsze", "desc": "Najnowsze → Najstarsze" }
+      },
+      "keys": {
+        "addedDate": "Data dodania",
+        "ageRating": "Kategoria wiekowa",
+        "enName": "Nazwa",
+        "name": "Rosyjska nazwa",
+        "quality": "Jakość",
+        "rating": "Ocena",
+        "year": "Rok"
+      },
+      "mobileButton": "Sortowanie",
+      "reset": "Przywróć domyślne",
+      "sortBy": "Sortuj według",
+      "title": "Sortuj multimedia"
+    },
     "loadError": "Nie udało się załadować filmów.",
     "loading": "Ładowanie filmów…",
     "loadErrorMessage": "Sprawdź połączenie i spróbuj ponownie załadować bibliotekę filmów.",

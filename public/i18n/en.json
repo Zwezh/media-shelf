@@ -65,6 +65,39 @@
       "toYear": "To",
       "yearsChip": "Years: {{value}}"
     },
+    "sorting": {
+      "active": "Active",
+      "apply": "Apply Sorting",
+      "current": "Current",
+      "direction": "Sort direction",
+      "directions": {
+        "asc": "Ascending",
+        "desc": "Descending"
+      },
+      "field": "Sort field",
+      "hints": {
+        "addedDate": { "asc": "Oldest", "desc": "Newest" },
+        "ageRating": { "asc": "0 → 18+", "desc": "18+ → 0" },
+        "enName": { "asc": "A → Z", "desc": "Z → A" },
+        "name": { "asc": "А → Я", "desc": "Я → А" },
+        "quality": { "asc": "SD → 4K", "desc": "4K → SD" },
+        "rating": { "asc": "0 → 10.0", "desc": "10.0 → 0" },
+        "year": { "asc": "Oldest → Newest", "desc": "Newest → Oldest" }
+      },
+      "keys": {
+        "addedDate": "Added date",
+        "ageRating": "Age rating",
+        "enName": "Name",
+        "name": "Russian name",
+        "quality": "Quality",
+        "rating": "Rating",
+        "year": "Year"
+      },
+      "mobileButton": "Sorting",
+      "reset": "Reset to Default",
+      "sortBy": "Sort by",
+      "title": "Sort Media"
+    },
     "loadError": "Movies could not be loaded.",
     "loading": "Loading movies…",
     "loadErrorMessage": "Check your connection and try loading the movie library again.",

@@ -1,0 +1,78 @@
+<section class="sort-panel">
+  <div class="sort-panel__handle" aria-hidden="true"></div>
+  <header class="sort-panel__header">
+    <div>
+      <msh-icon name="sort" [size]="18" />
+      <h2 id="movies-sort-panel-title">{{ 'movies.sorting.title' | translate }}</h2>
+    </div>
+    <button type="button" [attr.aria-label]="'common.close' | translate" (click)="close()">
+      <span aria-hidden="true">×</span>
+    </button>
+  </header>
+
+  <fieldset class="sort-panel__directions">
+    <legend>{{ 'movies.sorting.direction' | translate }}</legend>
+    <div>
+      <button
+        type="button"
+        [attr.aria-pressed]="sorting().direction === 'asc'"
+        [class.sort-panel__direction--selected]="sorting().direction === 'asc'"
+        (click)="selectDirection('asc')"
+      >
+        <msh-icon name="arrow-up" [size]="16" />
+        {{ 'movies.sorting.directions.asc' | translate }}
+      </button>
+      <button
+        type="button"
+        [attr.aria-pressed]="sorting().direction === 'desc'"
+        [class.sort-panel__direction--selected]="sorting().direction === 'desc'"
+        (click)="selectDirection('desc')"
+      >
+        <msh-icon name="arrow-down" [size]="16" />
+        {{ 'movies.sorting.directions.desc' | translate }}
+      </button>
+    </div>
+  </fieldset>
+
+  <fieldset class="sort-panel__options">
+    <legend>{{ 'movies.sorting.field' | translate }}</legend>
+    @for (option of options; track option.key) {
+      <label [class.sort-panel__option--selected]="sorting().key === option.key">
+        <input
+          type="radio"
+          name="movies-sort-key"
+          [checked]="sorting().key === option.key"
+          [value]="option.key"
+          (change)="selectKey(option.key)"
+        />
+        <span class="sort-panel__option-label">
+          {{ option.labelKey | translate }}
+          @if (initialSorting.key === option.key) {
+            <small>{{ 'movies.sorting.current' | translate }}</small>
+          }
+        </span>
+        <span class="sort-panel__option-hint">{{ hintKey(option) | translate }}</span>
+        <span class="sort-panel__radio" aria-hidden="true">
+          @if (sorting().key === option.key) {
+            <span></span>
+          }
+        </span>
+      </label>
+    }
+  </fieldset>
+
+  <footer class="sort-panel__footer">
+    <p>
+      {{ 'movies.sorting.active' | translate }}:
+      {{ 'movies.sorting.keys.' + sorting().key | translate }}
+      {{ 'movies.sorting.directions.' + sorting().direction | translate }}
+    </p>
+    <button class="sort-panel__reset" type="button" (click)="reset()">
+      {{ 'movies.sorting.reset' | translate }}
+    </button>
+    <button class="sort-panel__apply" type="button" [disabled]="!canApply()" (click)="apply()">
+      <span aria-hidden="true">✓</span>
+      {{ 'movies.sorting.apply' | translate }}
+    </button>
+  </footer>
+</section>

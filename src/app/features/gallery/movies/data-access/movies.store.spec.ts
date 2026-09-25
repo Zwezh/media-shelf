@@ -186,6 +186,51 @@ describe('MoviesStore', () => {
     });
   });
 
+  it('applies URL-backed sorting from page zero while preserving the other params', () => {
+    const initialParamMap = convertToParamMap({
+      currentPage: '4',
+      direction: 'desc',
+      genres: ['Drama'],
+      key: 'addedDate',
+      pageSize: '30',
+      search: 'Dune',
+    });
+    const navigate = vi.fn(() => Promise.resolve(true));
+
+    TestBed.configureTestingModule({
+      providers: [
+        MoviesStore,
+        ...provideI18nTesting(),
+        { provide: GalleryApi, useValue: { getMovies: vi.fn(() => of({ currentPage: 4, media: [media], totalCount: 150 })) } },
+        {
+          provide: ActivatedRoute,
+          useValue: { queryParamMap: of(initialParamMap), snapshot: { queryParamMap: initialParamMap } },
+        },
+        { provide: Router, useValue: { navigate } },
+      ],
+    });
+
+    const store = TestBed.inject(MoviesStore);
+    expect(store.sorting()).toEqual({ direction: 'desc', key: 'addedDate' });
+
+    store.applySorting({ direction: 'asc', key: 'rating' });
+    expect(navigate).toHaveBeenLastCalledWith([], {
+      relativeTo: expect.anything(),
+      queryParams: {
+        currentPage: 0,
+        direction: 'asc',
+        genres: ['Drama'],
+        key: 'rating',
+        pageSize: 30,
+        search: 'Dune',
+      },
+    });
+
+    navigate.mockClear();
+    store.applySorting({ direction: 'desc', key: 'addedDate' });
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
   it('replaces an out-of-range URL page with the last available page', () => {
     const initialParamMap = convertToParamMap({ currentPage: '100', direction: 'desc', key: 'addedDate', pageSize: '30' });
     const queryParamMap = new BehaviorSubject(initialParamMap);

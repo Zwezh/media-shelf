@@ -53,4 +53,30 @@ describe('FloatingPanel', () => {
     expect(document.activeElement).toBe(trigger);
     trigger.remove();
   });
+
+  it('positions an anchored responsive panel from its trigger', () => {
+    TestBed.configureTestingModule({});
+    const anchor = document.createElement('button');
+    vi.spyOn(anchor, 'getBoundingClientRect').mockReturnValue({
+      bottom: 140,
+      height: 40,
+      left: 100,
+      right: 300,
+      top: 100,
+      width: 200,
+      x: 100,
+      y: 100,
+      toJSON: () => ({}),
+    });
+
+    TestBed.inject(FloatingPanel).open(TestPanelContent, {
+      anchor,
+      data: { label: 'Sorting' },
+      placement: 'anchored-responsive',
+    });
+
+    const dialog = document.querySelector<HTMLDialogElement>('dialog');
+    expect(dialog?.classList).toContain('floating-panel--anchored-responsive');
+    expect(dialog?.style.getPropertyValue('--floating-panel-anchor-top')).toBe('140px');
+  });
 });

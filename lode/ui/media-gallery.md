@@ -19,6 +19,7 @@ flowchart LR
   URL[URL query params] --> Store[MoviesStore]
   Settings[/settings] --> FilterPanel[Signal Form filter panel]
   FilterPanel -->|apply typed filters| URL
+  SortSelect[Responsive sort select] -->|apply key + direction| URL
   Store --> API
   API --> Endpoint[/movies]
   Endpoint --> DTO[MoviesPageDto]
@@ -44,6 +45,10 @@ Invariants:
 - `toMedia` always supplies card-ready age-rating text: finite numeric ratings receive a `+` suffix, while missing, null, or unknown values become `--`.
 - `MoviesStore` is provided by the Movies page and owns the current server page, total count, request params, and loading/error state. Each distinct URL parameter set triggers one API request; the store does not poll unchanged data.
 - Missing or invalid required movie params resolve in memory to `currentPage=0`, `pageSize=30`, `direction=desc`, and `key=addedDate`. Store initialization does not rewrite the URL, so opening `/gallery/movies` keeps that clean path while the API request still receives all defaults.
+- Sorting keys and directions derive from exported readonly gallery-domain allow-lists shared by URL parsing and the sorting UI. Supported keys are added date, age rating, English name, Russian name, quality, rating, and year.
+- The Movies toolbar places the sort trigger between Filters and Add movie. Its applied value comes from store params; changing the key or direction preserves filters, search, and page size, resets the API page to zero, navigates with normalized query params, and relies on the server for ordering.
+- Desktop sorting uses an end-aligned anchored popover and applies direction/key changes immediately. Mobile sorting uses a modal bottom sheet whose draft is committed only by Apply Sorting; dismissal discards the draft. Reset restores `addedDate desc`.
+- The sort trigger exposes dialog and expanded semantics, uses the shared chevron icon for closed/open state, and gains a primary border while expanded. Direction buttons use arrow icons and fields use native radio controls so selection is not color-only.
 - URL and API `currentPage` values are zero-based, while `Pagination` remains one-based. The store adds one for display and subtracts one from page-change events.
 - After each response, the last valid API index is `max(0, ceil(totalCount / pageSize) - 1)`. An oversized URL index is replaced with that value, and route reactivity requests the corrected last page.
 - Optional `actors`, `directors`, `fromYear`, `genres`, `rating`, `search`, and `toYear` values are restored from the URL and forwarded to the API. `ageRating`, `genres`, and `quality` are repeated URL/API values; actors and directors are normalized comma-separated strings.

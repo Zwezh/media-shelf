@@ -35,6 +35,7 @@ Contracts:
 - Backdrop and Escape dismissal return `undefined`; an explicit result is supplied by content calling `close(result)`.
 - Closing detaches the Angular view, destroys the container and its content, removes the host element, completes the result stream, and restores the previously focused element when it still exists.
 - `responsive` placement is a full-height end sheet on desktop and a full-height sheet on mobile; neither mode uses a top offset.
+- `anchored-responsive` accepts an `HTMLElement` anchor. It opens beneath and end-aligned with the trigger on desktop, updates its anchor coordinates on resize, and becomes a content-height modal bottom sheet with a scrim on mobile.
 - Enter motion uses design motion tokens and is removed for reduced-motion preferences.
 
 Rationale and lessons:
