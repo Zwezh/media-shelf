@@ -1,6 +1,6 @@
 <section class="movies" aria-labelledby="movies-title">
   <div class="movies__content">
-    <msh-page-header titleKey="movies.title" headingId="movies-title" [itemCount]="store.totalCount()">
+    <msh-page-header titleKey="movies.title" headingId="movies-title" badgeTone="movie" [itemCount]="store.totalCount()">
       <div class="movies__toolbar">
         @if (filterChips().length > 0) {
           <div class="movies__filter-chips" [attr.aria-label]="'movies.filters.active' | translate">

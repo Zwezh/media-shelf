@@ -16,6 +16,12 @@
     "primaryNavigation": "Основная навигация"
   },
   "media": {
+    "actions": {
+      "delete": "Удалить «{{title}}»",
+      "edit": "Изменить «{{title}}»",
+      "label": "Действия для «{{title}}»",
+      "view": "Открыть «{{title}}»"
+    },
     "duration": "{{hours}} ч {{minutes}} мин",
     "moreActions": "Другие действия для {{title}}",
     "posterAlt": "Постер «{{title}}»",

@@ -15,9 +15,8 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-base);
+    width: 100%;
     min-height: 3.5rem;
-    max-width: 90rem;
-    margin-inline: auto;
     padding: var(--space-md) var(--size-shell-inline-padding);
   }
 

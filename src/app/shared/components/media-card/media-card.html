@@ -7,34 +7,65 @@
       (error)="usePlaceholder($event)"
     />
     <div class="media-card__topline">
-      <msh-media-badge [tone]="media().type">{{ 'media.type.' + media().type | translate }}</msh-media-badge>
-      <div class="media-card__topline-end">
+      <div class="media-card__topline-start">
+        <msh-media-badge [tone]="media().type">{{ 'media.type.' + media().type | translate }}</msh-media-badge>
         <msh-media-badge tone="quality">{{ media().quality }}</msh-media-badge>
-        <msh-media-badge tone="age">{{ media().ageRating }}</msh-media-badge>
       </div>
+      <msh-media-badge tone="age">{{ media().ageRating }}</msh-media-badge>
     </div>
-    <div class="media-card__poster-footer">
-      <msh-media-rating [rating]="media().rating" />
-      <span>
-        @if (media().type === 'series') {
-          {{ 'media.series' | translate }}
-        } @else {
-          {{ 'media.duration' | translate: durationParams() }}
-        }
-      </span>
+    <div class="media-card__overlay">
+      <div class="media-card__overlay-meta">
+        <span>
+          @if (media().type === 'series') {
+            {{ 'media.series' | translate }}
+          } @else {
+            {{ 'media.duration' | translate: durationParams() }}
+          }
+        </span>
+        <span>{{ media().quality }}</span>
+      </div>
+      <div class="media-card__actions" [attr.aria-label]="'media.actions.label' | translate: { title: displayTitle() }" role="group">
+        <button
+          class="btn btn-xs btn-overlay media-card__action"
+          type="button"
+          [attr.aria-label]="'media.actions.view' | translate: { title: displayTitle() }"
+          [title]="'media.actions.view' | translate: { title: displayTitle() }"
+          (click)="viewRequested.emit(media())"
+        >
+          <msh-icon name="view" [size]="16" />
+        </button>
+        <button
+          class="btn btn-xs btn-overlay media-card__action"
+          type="button"
+          [attr.aria-label]="'media.actions.edit' | translate: { title: displayTitle() }"
+          [title]="'media.actions.edit' | translate: { title: displayTitle() }"
+          (click)="editRequested.emit(media())"
+        >
+          <msh-icon name="edit" [size]="16" />
+        </button>
+        <button
+          class="btn btn-xs btn-overlay btn-overlay-danger media-card__action"
+          type="button"
+          [attr.aria-label]="'media.actions.delete' | translate: { title: displayTitle() }"
+          [title]="'media.actions.delete' | translate: { title: displayTitle() }"
+          (click)="deleteRequested.emit(media())"
+        >
+          <msh-icon name="delete" [size]="16" />
+        </button>
+      </div>
     </div>
   </div>
   <div class="media-card__details">
-    <h2>{{ displayTitle() }}</h2>
-    <p>
-      {{ media().year }}
-      @if (media().director) {
-        · {{ media().director }}
-      }
-    </p>
+    <div>
+      <div class="media-card__heading">
+        <h2 class="text-headline-sm">{{ displayTitle() }}</h2>
+        <span class="text-label-sm">{{ media().year }}</span>
+      </div>
+      <p class="text-body-sm">{{ media().genres.slice(0, 2).join(', ') }}</p>
+    </div>
     <div class="media-card__metadata">
-      <span>{{ media().genres.slice(0, 2).join(' · ') }}</span>
-      <button type="button" [attr.aria-label]="'media.moreActions' | translate: { title: displayTitle() }" disabled>⋮</button>
+      <msh-media-rating [rating]="media().rating" />
+      <span class="text-label-sm">{{ media().director }}</span>
     </div>
   </div>
 </article>

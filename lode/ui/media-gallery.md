@@ -29,6 +29,7 @@ flowchart LR
   Grid --> Card[MediaCard]
   Card --> Badge[MediaBadge]
   Card --> Rating[MediaRating]
+  Card --> Actions[View/Edit/Delete outputs]
   Header[PageHeader] --> Grid
   Status[PageStatus] --> Grid
   Empty[EmptyState] --> Grid
@@ -53,7 +54,7 @@ Invariants:
 - After each response, the last valid API index is `max(0, ceil(totalCount / pageSize) - 1)`. An oversized URL index is replaced with that value, and route reactivity requests the corrected last page.
 - Optional `actors`, `directors`, `fromYear`, `genres`, `rating`, `search`, and `toYear` values are restored from the URL and forwarded to the API. `ageRating`, `genres`, and `quality` are repeated URL/API values; actors and directors are normalized comma-separated strings.
 - `SettingsApi` owns one cached `httpResource` for the singular `/settings` DTO. The filter panel reads its alphabetized `genresForFilters` values and renders explicit loading and error states.
-- The Movies header contains only its title/count group, removable applied-filter chips, the Filters trigger with an active-group count, and the disabled Add Movie action. A from/to year pair counts as one active group.
+- The Movies header contains only its title/count group, removable applied-filter chips, the Filters trigger with an active-group count, and the disabled Add Movie action. Its count uses the movie badge palette; `PageHeader` also exposes neutral, series, and wishlist badge tones for future gallery routes. A from/to year pair counts as one active group.
 - `MoviesFilterPanel` uses Angular Signal Forms for draft state. Opening restores applied URL filters and captures them as the comparison baseline; Apply remains disabled until the valid normalized draft differs from that baseline. Reset All changes only the draft; Apply normalizes the result, resets `currentPage` to zero, navigates, and closes. Removing a header chip navigates immediately.
 - The filter panel covers genres, release years, a `0–10` minimum-rating slider in `0.5` steps, age ratings, qualities, actors, and directors. Desktop uses a full-height right sheet; mobile uses a full-height sheet with a scrollable body and persistent equal-width Reset/Apply actions. Filter actions use the lazy public `filters.svg` asset through the shared `Icon` component.
 - Invalid required URL values fall back to defaults. Pagination currently changes only `currentPage`; the route stream triggers the resulting API request.
@@ -61,15 +62,19 @@ Invariants:
 - Movies, Series, and Wishlist share the typed `GalleryEndpoint` contract; Movies currently requests `movies`.
 - Poster selection prefers `posterUrl`, then `compactPosterUrl`, then `MEDIA_POSTER_PLACEHOLDER`.
 - Runtime image failures also replace the source with `/poster-placeholder.svg` and cannot retry recursively.
-- Cards keep a 2:3 poster ratio; mobile uses exactly two columns and wider canvases use fluid columns capped at six on large desktop.
+- The grid spans the gallery canvas with a uniform 16px gutter and explicit responsive column counts: two by default, three from 640px, four from 768px, five from 1024px, and six from 1280px. Cards stretch evenly within their row and retain the canonical 2:3 poster ratio.
+- Cards use the Stitch surface contract: an 8px clipped container, Level-1 resting elevation, a strong border/Level-2 elevation/2px lift on hover or focus-within, a primary active border, and a 5% poster zoom. Reduced-motion preferences remove transforms and transitions.
+- Poster badges place media type and quality at the start and age rating at the end. A bottom scrim contains duration/type metadata and View, Edit, and Delete buttons. The scrim appears on hover or keyboard focus and stays visible on devices without hover capability.
+- View, Edit, and Delete are enabled accessible buttons with localized names and dedicated icons. `MediaCard` emits the selected immutable `Media` through `viewRequested`, `editRequested`, and `deleteRequested`; routing and mutations remain the consuming feature's responsibility because no detail/edit/delete endpoint contract exists yet.
+- The metadata shelf below the poster uses 8px padding and a minimum 84px height. It renders a single-line title/year row, a single-line two-genre summary, and a rating/director row, all with ellipsis protection for narrow cards.
 - The top action bar always shows the title, loaded item count, and disabled `Add movie` placeholder.
-- Gallery subnavigation is sticky beneath the application header, using the matching desktop or mobile header-height token as its offset.
-- `PageHeader` owns page identity and action layout; callers project feature-specific actions.
+- Gallery subnavigation is sticky beneath the application header, uses the matching desktop or mobile header-height token as its offset, and spans the available width without an inner maximum-width cap.
+- `PageHeader` owns page identity and action layout; callers project feature-specific actions. Its action group normalizes nested shared buttons to the standard control height, padding, and label typography.
 - `PageStatus` uses polite `status` semantics while loading and assertive `alert` semantics for errors.
 - A successfully loaded empty Movies collection renders `EmptyState` with “There are no movies available.” and omits the grid and pagination.
 - The quick search-preview helper is not rendered.
 - The grid starts directly below the page header without a separate visible-count summary or header divider. Each URL-driven load reports success or failure through localized auto-hiding toasts, and failures also use the page error state.
-- Pagination follows the same full-width band pattern as gallery navigation: its surface and shadow span the viewport while a centered 90rem inner row owns the content. The row is at least 56px tall and uses 24px desktop side padding, a 13px visible-range summary, a compact lavender page-size badge, and 32px numbered controls beside text First/Last boundaries and chevrons. Controls never emit values outside the valid range; middle pages retain both adjacent pages between endpoint anchors and ellipses, the active page uses the archival indigo fill, and mobile centers the metadata above a horizontally scrollable control row.
+- Pagination follows the same full-width band pattern as gallery navigation: its surface, shadow, and inner row span the available width. The row is at least 56px tall and uses 24px desktop side padding, a 13px visible-range summary, a compact lavender page-size badge, and 32px numbered controls beside text First/Last boundaries and chevrons. Controls never emit values outside the valid range; middle pages retain both adjacent pages between endpoint anchors and ellipses, the active page uses the archival indigo fill, and mobile centers the metadata above a horizontally scrollable control row.
 - All user-facing controls have accessible names and visible focus treatment.
 
 Related lodes: [UI summary](summary.md), [design tokens](design-tokens.md), [floating panels](floating-panels.md), [routing](../routing/summary.md), [practices](../practices.md).

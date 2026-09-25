@@ -110,6 +110,36 @@
   }
 }
 
+.btn-overlay {
+  color: var(--color-on-primary);
+  background: color-mix(in srgb, var(--color-surface-container-lowest) 20%, transparent);
+  border-color: transparent;
+
+  msh-icon {
+    filter: brightness(0) invert(1);
+  }
+
+  &:hover:not(:disabled, [aria-disabled='true']),
+  &:focus-visible {
+    color: var(--color-on-surface);
+    background: var(--color-surface-container-lowest);
+
+    msh-icon {
+      filter: none;
+    }
+  }
+}
+
+.btn-overlay-danger:hover:not(:disabled, [aria-disabled='true']),
+.btn-overlay-danger:focus-visible {
+  color: var(--color-on-error);
+  background: var(--color-error);
+
+  msh-icon {
+    filter: brightness(0) invert(1);
+  }
+}
+
 .btn-compact {
   min-height: var(--size-control-compact);
   padding-inline: var(--space-md);
@@ -135,6 +165,18 @@
 
 .btn-block {
   width: 100%;
+}
+
+.btn-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.btn-group-uniform .btn {
+  min-height: var(--size-control-standard);
+  padding-inline: var(--space-base);
+  font: var(--text-label-lg);
 }
 
 @include breakpoint.mobile {

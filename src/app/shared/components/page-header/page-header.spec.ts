@@ -23,4 +23,11 @@ describe('PageHeader', () => {
     expect(heading.textContent).toContain('Movies');
     expect(fixture.nativeElement.querySelector('p').textContent).toContain('30 items');
   });
+
+  it('applies the requested semantic count badge tone', () => {
+    fixture.componentRef.setInput('badgeTone', 'movie');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.page-header__count--movie')).toBeTruthy();
+  });
 });

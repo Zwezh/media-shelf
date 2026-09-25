@@ -1,14 +1,17 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 
-export type IconName = 'arrow-down' | 'arrow-up' | 'filters' | 'sort' | 'sort-chevron';
+export type IconName = 'arrow-down' | 'arrow-up' | 'delete' | 'edit' | 'filters' | 'sort' | 'sort-chevron' | 'view';
 
 const ICON_ASPECT_RATIOS: Readonly<Record<IconName, number>> = {
   'arrow-down': 1,
   'arrow-up': 1,
+  delete: 1,
+  edit: 1,
   filters: 1,
   sort: 1,
   'sort-chevron': 9 / 14,
+  view: 1,
 };
 
 @Component({

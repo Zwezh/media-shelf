@@ -72,6 +72,7 @@
   --color-primary-hover: var(--palette-indigo-700);
   --color-primary-active: var(--palette-indigo-800);
   --color-on-primary: var(--palette-white);
+  --color-on-error: var(--palette-white);
 
   --color-secondary: var(--palette-emerald-600);
   --color-warning: var(--palette-amber-600);
@@ -173,6 +174,7 @@
   --color-primary-hover: #dad7ff;
   --color-primary-active: var(--palette-indigo-200);
   --color-on-primary: #0f0069;
+  --color-on-error: #690005;
 
   --color-secondary: #68dba9;
   --color-warning: #ffb77d;

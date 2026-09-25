@@ -6,6 +6,10 @@ Reusable visual components live under `src/styles/components/` and are loaded on
 <button class="btn btn-primary">Apply</button>
 <button class="btn btn-secondary">Reset</button>
 <button class="btn btn-icon btn-ghost" aria-label="Close">×</button>
+<div class="btn-group btn-group-uniform">
+  <button class="btn btn-primary">Filter</button>
+  <button class="btn btn-compact btn-secondary">Sort</button>
+</div>
 
 <label class="form-label">
   Director
@@ -29,8 +33,9 @@ flowchart LR
 ## Button contract
 
 - Every shared button starts with `.btn`.
-- Visual variants are `.btn-primary`, `.btn-secondary`, `.btn-surface`, `.btn-ghost`, and `.btn-danger`.
+- Visual variants are `.btn-primary`, `.btn-secondary`, `.btn-surface`, `.btn-ghost`, `.btn-danger`, and the poster-scrim pair `.btn-overlay`/`.btn-overlay-danger`.
 - Size and shape modifiers are `.btn-compact`, `.btn-sm`, `.btn-xs`, `.btn-icon`, `.btn-block`, and `.btn-mobile-standard`.
+- `.btn-group` supplies shared inline action layout. Adding `.btn-group-uniform` normalizes every nested `.btn` to the standard control height, padding, and label role, including buttons rendered by projected child components.
 - `.btn` centrally owns alignment, spacing, typography, border geometry, transitions, focus visibility, and disabled state. Variants own semantic colors and hover/active behavior.
 - Feature selectors may adjust placement, flex growth, or a design-specific radius, but must not recreate the entire button recipe.
 

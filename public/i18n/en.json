@@ -16,6 +16,12 @@
     "primaryNavigation": "Primary navigation"
   },
   "media": {
+    "actions": {
+      "delete": "Delete {{title}}",
+      "edit": "Edit {{title}}",
+      "label": "Actions for {{title}}",
+      "view": "View {{title}}"
+    },
     "duration": "{{hours}}h {{minutes}}m",
     "moreActions": "More actions for {{title}}",
     "posterAlt": "{{title}} poster",
