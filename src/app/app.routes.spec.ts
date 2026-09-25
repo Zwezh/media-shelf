@@ -4,17 +4,61 @@ import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { GalleryApi } from './features/gallery/data-access/gallery-api';
+import { type Media } from './features/gallery/models/media';
+import { type MovieDetails } from './features/gallery/models/movie-details';
 import { APP_NAVIGATION_ITEMS, routes } from './app.routes';
 import { provideI18nTesting } from './testing/i18n-testing';
 
+const media: Media = {
+  ageRating: '12+',
+  director: 'Director',
+  durationMinutes: 120,
+  genres: ['Drama'],
+  id: 'movie-1',
+  originalTitle: 'Original title',
+  posterUrl: '/poster.jpg',
+  quality: '4K',
+  rating: 8,
+  title: 'Movie title',
+  type: 'movie',
+  year: '2025',
+};
+
+const movieDetails: MovieDetails = {
+  actors: ['Actor'],
+  addedDate: new Date('2025-01-01T00:00:00Z'),
+  ageRating: '12+',
+  backdropUrl: '',
+  countries: ['United States'],
+  description: 'Description',
+  directors: ['Director'],
+  durationMinutes: 120,
+  extension: 'mkv',
+  genres: ['Drama'],
+  id: 'movie-1',
+  kpId: 1,
+  originalTitle: 'Original title',
+  posterUrl: '/poster.jpg',
+  quality: '4K',
+  rating: 8,
+  sequelsAndPrequels: [],
+  similarMovies: [],
+  title: 'Movie title',
+  type: 'movie',
+  year: '2025',
+};
+
 describe('root routes', () => {
+  let getMovies: ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
+    getMovies = vi.fn(() => of({ currentPage: 0, media: [], totalCount: 0 }));
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
         provideRouter(routes),
         provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies: () => of({ currentPage: 0, media: [], totalCount: 0 }) } },
+        { provide: GalleryApi, useValue: { getMovie: () => of(movieDetails), getMovies } },
       ],
     });
   });
@@ -30,6 +74,7 @@ describe('root routes', () => {
   it.each([
     ['/gallery', 'Movies'],
     ['/gallery/movies', 'Movies'],
+    ['/gallery/movies/movie-1', 'Movie title'],
     ['/gallery/wishlist', 'Wishlist'],
     ['/statistics', 'Statistics'],
     ['/settings', 'Settings'],
@@ -38,6 +83,19 @@ describe('root routes', () => {
     await harness.navigateByUrl(path);
 
     expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe(heading);
+  });
+
+  it('navigates from a movie card to details while preserving collection query parameters', async () => {
+    getMovies.mockReturnValue(of({ currentPage: 1, media: [media], totalCount: 31 }));
+    const harness = await RouterTestingHarness.create('/gallery/movies?currentPage=1&direction=desc&key=addedDate&pageSize=30');
+    const router = TestBed.inject(Router);
+    const viewButton = harness.routeNativeElement?.querySelector<HTMLButtonElement>('.media-card__action');
+
+    viewButton?.click();
+    await harness.fixture.whenStable();
+
+    expect(router.url).toBe('/gallery/movies/movie-1?currentPage=1&direction=desc&key=addedDate&pageSize=30');
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Movie title');
   });
 
   it.each(['/', '/wishlist', '/missing'])('redirects %s to the gallery', async (path) => {

@@ -33,6 +33,50 @@
     },
     "untitled": "Bez tytułu"
   },
+  "movieDetails": {
+    "actions": {
+      "auxiliaryLabel": "Niedostępne działania multimedialne",
+      "delete": "Usuń",
+      "edit": "Edytuj",
+      "label": "Działania filmu",
+      "openPath": "Ścieżka",
+      "playTrailer": "Odtwórz zwiastun"
+    },
+    "additionalInformation": {
+      "addedDate": "Dodano do biblioteki",
+      "extension": "Rozszerzenie",
+      "quality": "Jakość",
+      "title": "Informacje dodatkowe"
+    },
+    "backToMovies": "Wróć do filmów",
+    "breadcrumbs": {
+      "current": "Szczegóły filmu",
+      "label": "Okruszki nawigacyjne"
+    },
+    "emptyValue": "Brak danych",
+    "genres": "Gatunki",
+    "kinopoiskLinkLabel": "Otwórz ocenę {{rating}} filmu {{title}} w Kinopoisk w nowej karcie",
+    "loadError": "Nie udało się załadować szczegółów filmu.",
+    "loadErrorMessage": "Sprawdź połączenie i spróbuj ponownie załadować ten film.",
+    "loadErrorTitle": "Nie udało się załadować filmu",
+    "loading": "Ładowanie szczegółów filmu…",
+    "loadSuccessMessage": "Szczegóły filmu są aktualne.",
+    "loadSuccessTitle": "Film załadowany",
+    "production": {
+      "actors": "Aktorzy",
+      "countries": "Kraje pochodzenia",
+      "director": "Reżyser",
+      "noActors": "Nie podano aktorów.",
+      "originalRelease": "Pierwotna premiera",
+      "title": "Produkcja i obsada"
+    },
+    "related": {
+      "sequelsAndPrequels": "Kontynuacje i prequele",
+      "similarMovies": "Podobne filmy"
+    },
+    "retry": "Spróbuj ponownie",
+    "synopsis": "Opis"
+  },
   "movies": {
     "addMovie": "Dodaj film",
     "empty": "Brak dostępnych filmów.",
@@ -135,6 +179,7 @@
     "summary": "Wyświetlanie {{firstItem}}–{{lastItem}} z {{totalItems}} elementów"
   },
   "routes": {
+    "movieDetailsTitle": "Szczegóły filmu | MediaShelf",
     "moviesTitle": "Filmy | MediaShelf",
     "settingsTitle": "Ustawienia | MediaShelf",
     "statisticsTitle": "Statystyki | MediaShelf",

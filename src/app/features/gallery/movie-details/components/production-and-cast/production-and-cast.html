@@ -1,0 +1,30 @@
+@let currentMovie = movie();
+<msh-detail-card headingId="production-cast-title" titleKey="movieDetails.production.title">
+  <dl class="production__metadata">
+    <div>
+      <dt>{{ 'movieDetails.production.director' | translate }}</dt>
+      <dd>{{ directors() || ('movieDetails.emptyValue' | translate) }}</dd>
+    </div>
+    <div>
+      <dt>{{ 'movieDetails.production.countries' | translate }}</dt>
+      <dd>{{ countries() || ('movieDetails.emptyValue' | translate) }}</dd>
+    </div>
+    <div>
+      <dt>{{ 'movieDetails.production.originalRelease' | translate }}</dt>
+      <dd>{{ currentMovie.year }}</dd>
+    </div>
+  </dl>
+
+  <section class="production__actors" aria-labelledby="actors-title">
+    <h3 id="actors-title">{{ 'movieDetails.production.actors' | translate }}</h3>
+    @if (currentMovie.actors.length > 0) {
+      <ul>
+        @for (actor of currentMovie.actors; track $index) {
+          <li>{{ actor }}</li>
+        }
+      </ul>
+    } @else {
+      <p>{{ 'movieDetails.production.noActors' | translate }}</p>
+    }
+  </section>
+</msh-detail-card>

@@ -43,7 +43,7 @@
     } @else {
       <div class="movies__grid">
         @for (item of store.visibleMedia(); track item.id) {
-          <msh-media-card [media]="item" />
+          <msh-media-card [media]="item" (viewRequested)="viewMovie($event)" />
         }
       </div>
     }

@@ -33,6 +33,50 @@
     },
     "untitled": "Untitled"
   },
+  "movieDetails": {
+    "actions": {
+      "auxiliaryLabel": "Unavailable media actions",
+      "delete": "Delete",
+      "edit": "Edit",
+      "label": "Movie actions",
+      "openPath": "Path",
+      "playTrailer": "Play trailer"
+    },
+    "additionalInformation": {
+      "addedDate": "Added to Library",
+      "extension": "Extension",
+      "quality": "Quality",
+      "title": "Additional information"
+    },
+    "backToMovies": "Back to movies",
+    "breadcrumbs": {
+      "current": "Movie details",
+      "label": "Breadcrumb"
+    },
+    "emptyValue": "Not available",
+    "genres": "Genres",
+    "kinopoiskLinkLabel": "Open the {{rating}} Kinopoisk rating for {{title}} in a new tab",
+    "loadError": "Movie details could not be loaded.",
+    "loadErrorMessage": "Check your connection and try loading this movie again.",
+    "loadErrorTitle": "Movie load failed",
+    "loading": "Loading movie details…",
+    "loadSuccessMessage": "The movie details are up to date.",
+    "loadSuccessTitle": "Movie loaded",
+    "production": {
+      "actors": "Actors",
+      "countries": "Countries of Origin",
+      "director": "Director",
+      "noActors": "No actors are listed.",
+      "originalRelease": "Original Release",
+      "title": "Production & Cast"
+    },
+    "related": {
+      "sequelsAndPrequels": "Sequels & prequels",
+      "similarMovies": "Similar movies"
+    },
+    "retry": "Try again",
+    "synopsis": "Synopsis"
+  },
   "movies": {
     "addMovie": "Add movie",
     "empty": "There are no movies available.",
@@ -135,6 +179,7 @@
     "summary": "Showing {{firstItem}}–{{lastItem}} of {{totalItems}} items"
   },
   "routes": {
+    "movieDetailsTitle": "Movie details | MediaShelf",
     "moviesTitle": "Movies | MediaShelf",
     "settingsTitle": "Settings | MediaShelf",
     "statisticsTitle": "Statistics | MediaShelf",

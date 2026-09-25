@@ -91,4 +91,25 @@ describe('GalleryApi', () => {
     expect(mediaTitle).toBe('Movie title');
     http.verify();
   });
+
+  it('loads one movie by its encoded ID and converts the detail response', () => {
+    TestBed.configureTestingModule({
+      providers: [GalleryApi, provideEnvironment(testEnvironment), provideHttpClient(), provideHttpClientTesting()],
+    });
+
+    const api = TestBed.inject(GalleryApi);
+    const http = TestBed.inject(HttpTestingController);
+    let title = '';
+
+    api.getMovie('movie/one').subscribe((movie) => {
+      title = movie.title;
+    });
+
+    const request = http.expectOne('http://localhost:4200/api/movies/movie%2Fone');
+    expect(request.request.params.keys()).toEqual([]);
+    request.flush(mediaDto);
+
+    expect(title).toBe('Movie title');
+    http.verify();
+  });
 });

@@ -18,6 +18,11 @@ export const GALLERY_ROUTES: Routes = [
         loadComponent: () => import('./movies/pages/movies').then((module) => module.Movies),
       },
       {
+        path: 'movies/:id',
+        title: 'routes.movieDetailsTitle',
+        loadComponent: () => import('./movie-details/pages/movie-details').then((module) => module.MovieDetailsPage),
+      },
+      {
         path: 'wishlist',
         title: 'routes.wishlistTitle',
         data: { navigation: { labelKey: 'navigation.wishlist', order: 2 } satisfies NavigationMetadata },

@@ -1,0 +1,44 @@
+@use 'abstracts/breakpoints' as breakpoint;
+
+@include breakpoint.tablet {
+  .movie-hero__content {
+    grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+    gap: var(--space-xl);
+  }
+}
+
+@include breakpoint.mobile {
+  .movie-hero {
+    &__content {
+      grid-template-columns: 1fr;
+      padding: var(--space-xl) var(--size-shell-inline-padding-mobile) var(--space-2xl);
+    }
+
+    &__poster-column {
+      width: min(100%, 20rem);
+      margin-inline: auto;
+    }
+
+    &__genres {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+}
+
+@include breakpoint.phone {
+  .movie-hero {
+    &__primary-actions,
+    &__auxiliary-actions {
+      grid-template-columns: 1fr;
+    }
+
+    &__heading h1 {
+      font: var(--text-headline-lg);
+    }
+
+    &__heading p {
+      font: var(--text-title-md);
+    }
+  }
+}

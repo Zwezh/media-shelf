@@ -4,6 +4,7 @@ import { patchState, signalStore, withComputed, withHooks, withMethods, withStat
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, distinctUntilChanged, EMPTY, map, pipe, switchMap, tap } from 'rxjs';
+import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { GalleryApi } from '../../data-access/gallery-api';
 import { type Media } from '../../models/media';
@@ -12,9 +13,6 @@ import { type MoviesParams } from '../../models/movies-params';
 import { type MoviesSorting } from '../../models/movies-sorting';
 import { countActiveMovieFilters, extractMoviesFilters, removeMovieFilters, replaceMovieFilters } from '../../utils/movies-filters';
 import { DEFAULT_MOVIES_PARAMS, readMoviesParams, toMoviesQueryParams } from '../../utils/movies-params';
-
-const LOAD_SUCCESS_TOAST_DELAY_MS = 2_500;
-const LOAD_ERROR_TOAST_DELAY_MS = 5_000;
 
 type MoviesState = {
   readonly media: readonly Media[];
@@ -108,7 +106,7 @@ export const MoviesStore = signalStore(
                 patchState(store, { hasError: false, isLoading: false, media, totalCount });
                 toastStore.success({
                   autoHide: true,
-                  delay: LOAD_SUCCESS_TOAST_DELAY_MS,
+                  delay: TOAST_AUTO_HIDE_DELAY_MS.success,
                   message: String(translate.instant('movies.loadSuccessMessage')),
                   title: String(translate.instant('movies.loadSuccessTitle')),
                 });
@@ -117,7 +115,7 @@ export const MoviesStore = signalStore(
                 patchState(store, { hasError: true, isLoading: false, media: [], totalCount: 0 });
                 toastStore.error({
                   autoHide: true,
-                  delay: LOAD_ERROR_TOAST_DELAY_MS,
+                  delay: TOAST_AUTO_HIDE_DELAY_MS.error,
                   message: String(translate.instant('movies.loadErrorMessage')),
                   title: String(translate.instant('movies.loadErrorTitle')),
                 });
