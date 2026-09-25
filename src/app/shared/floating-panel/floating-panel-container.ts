@@ -19,6 +19,7 @@ import { FloatingPanelPlacement } from './floating-panel-config';
   template: `
     <dialog
       #dialog
+      tabindex="-1"
       [attr.aria-label]="ariaLabel() || null"
       [attr.aria-labelledby]="ariaLabelledBy() || null"
       [class]="dialogClass()"
@@ -58,6 +59,7 @@ export class FloatingPanelContainer {
     } else {
       dialog.setAttribute('open', '');
     }
+    dialog.focus({ preventScroll: true });
   }
 
   protected positionAtAnchor(): void {

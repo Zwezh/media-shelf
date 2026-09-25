@@ -41,13 +41,30 @@
         font-size: 1.5rem;
         background: transparent;
         border: 0;
-        border-radius: var(--radius-md);
+        border-radius: var(--radius-xl);
         cursor: pointer;
       }
     }
 
     &__directions {
-      padding: var(--space-lg);
+      padding: var(--space-base) var(--space-lg);
+      background: var(--color-surface-container-low);
+      border-bottom: 0;
+
+      > div {
+        gap: var(--space-xs);
+        padding: var(--space-xs);
+        background: var(--color-surface-container);
+        border-radius: var(--radius-xl);
+      }
+
+      button {
+        min-height: var(--size-control-standard);
+        gap: var(--space-sm);
+        padding: 0 var(--space-md);
+        font: var(--text-label-lg);
+        border-radius: var(--radius-lg);
+      }
 
       legend {
         position: static;
@@ -62,10 +79,27 @@
       }
     }
 
-    &__options label {
-      min-height: 3.5rem;
-      grid-template-columns: minmax(0, 1fr) auto;
-      padding: 0 var(--space-lg);
+    &__direction-label-short {
+      display: none;
+    }
+
+    &__direction-label-long {
+      display: inline;
+    }
+
+    &__options {
+      padding-block: 0;
+
+      label {
+        min-height: 3.25rem;
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 0 var(--space-lg);
+        border-bottom: var(--border-subtle);
+      }
+    }
+
+    &__option-label {
+      font: var(--text-title-md);
     }
 
     &__option-hint {
@@ -102,7 +136,7 @@
       display: block;
       min-height: auto;
       padding: var(--space-lg) var(--space-lg) calc(var(--space-lg) + env(safe-area-inset-bottom));
-      background: var(--color-surface);
+      background: var(--color-surface-container-lowest);
     }
 
     &__footer p,
@@ -120,6 +154,9 @@
       color: var(--color-on-primary);
       background: var(--color-primary);
       border: 1px solid var(--color-primary);
+      border-radius: var(--radius-xl);
+      min-height: var(--size-control-standard);
+      font: var(--text-label-lg);
 
       &:disabled {
         color: var(--color-text-muted);

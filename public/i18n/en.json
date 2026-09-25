@@ -74,6 +74,10 @@
         "asc": "Ascending",
         "desc": "Descending"
       },
+      "directionsShort": {
+        "asc": "Asc",
+        "desc": "Desc"
+      },
       "field": "Sort field",
       "hints": {
         "addedDate": { "asc": "Oldest", "desc": "Newest" },

@@ -79,4 +79,23 @@ describe('FloatingPanel', () => {
     expect(dialog?.classList).toContain('floating-panel--anchored-responsive');
     expect(dialog?.style.getPropertyValue('--floating-panel-anchor-top')).toBe('140px');
   });
+
+  it('dismisses on external scroll without reacting to panel content scroll', () => {
+    TestBed.configureTestingModule({});
+    const panel = TestBed.inject(FloatingPanel);
+    const ref = panel.open(TestPanelContent, {
+      closeOnScroll: true,
+      data: { label: 'Sorting' },
+      placement: 'anchored-responsive',
+    });
+    let didClose = false;
+    ref.closed.subscribe(() => (didClose = true));
+
+    document.querySelector('msh-test-panel-content')?.dispatchEvent(new Event('scroll'));
+    expect(didClose).toBe(false);
+
+    document.dispatchEvent(new Event('scroll'));
+    expect(didClose).toBe(true);
+    expect(document.querySelector('msh-floating-panel-host')).toBeNull();
+  });
 });

@@ -20,7 +20,8 @@
         (click)="selectDirection('asc')"
       >
         <msh-icon name="arrow-up" [size]="16" />
-        {{ 'movies.sorting.directions.asc' | translate }}
+        <span class="sort-panel__direction-label-short">{{ 'movies.sorting.directionsShort.asc' | translate }}</span>
+        <span class="sort-panel__direction-label-long">{{ 'movies.sorting.directions.asc' | translate }}</span>
       </button>
       <button
         type="button"
@@ -29,7 +30,8 @@
         (click)="selectDirection('desc')"
       >
         <msh-icon name="arrow-down" [size]="16" />
-        {{ 'movies.sorting.directions.desc' | translate }}
+        <span class="sort-panel__direction-label-short">{{ 'movies.sorting.directionsShort.desc' | translate }}</span>
+        <span class="sort-panel__direction-label-long">{{ 'movies.sorting.directions.desc' | translate }}</span>
       </button>
     </div>
   </fieldset>

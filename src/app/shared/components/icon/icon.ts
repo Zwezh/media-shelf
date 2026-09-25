@@ -3,6 +3,14 @@ import { Component, computed, input } from '@angular/core';
 
 export type IconName = 'arrow-down' | 'arrow-up' | 'filters' | 'sort' | 'sort-chevron';
 
+const ICON_ASPECT_RATIOS: Readonly<Record<IconName, number>> = {
+  'arrow-down': 1,
+  'arrow-up': 1,
+  filters: 1,
+  sort: 1,
+  'sort-chevron': 9 / 14,
+};
+
 @Component({
   host: { 'aria-hidden': 'true' },
   imports: [NgOptimizedImage],
@@ -17,11 +25,12 @@ export type IconName = 'arrow-down' | 'arrow-up' | 'filters' | 'sort' | 'sort-ch
       display: block;
     }
   `,
-  template: '<img alt="" loading="lazy" [height]="size()" [ngSrc]="source()" [width]="size()" />',
+  template: '<img alt="" loading="lazy" [height]="size()" [ngSrc]="source()" [width]="width()" />',
 })
 export class Icon {
   readonly name = input.required<IconName>();
   readonly size = input(14);
 
   protected readonly source = computed(() => `/icons/${this.name()}.svg`);
+  protected readonly width = computed(() => Math.round(this.size() * ICON_ASPECT_RATIOS[this.name()]));
 }

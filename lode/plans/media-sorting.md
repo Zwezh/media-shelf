@@ -36,13 +36,16 @@ flowchart LR
 - Keep the exact server values: `addedDate`, `ageRating`, `enName`, `name`, `quality`, `rating`, and `year`; `enName` is presented as Name and `name` as Russian name.
 - The trigger is rendered between Filters and Add movie. Its closed label is `Sort by: <field>`; `aria-expanded="true"` adds the primary border and rotates the supplied chevron icon upward.
 - The supplied `9 × 14` chevron lives at `/icons/sort-chevron.svg`, is exposed through the shared `Icon` union, and rotates in CSS instead of duplicating up/down chevron files.
+- `Icon` preserves the chevron's intrinsic 9:14 aspect ratio when scaling it, so `NgOptimizedImage` does not distort the glyph or report an image-ratio warning.
 - Ascending and Descending use explicit arrow-up and arrow-down assets through `Icon`; placeholder rectangles or font glyphs are not used. The mobile trigger and panel heading use the sort asset.
 - Styling composes existing typography, spacing, surface, primary, border, radius, elevation, focus, and motion tokens; component SCSS does not hard-code attachment colors.
+- Visual styling follows the sorting-specific Stitch export: the desktop menu is 18rem wide with compact 36px rows, `body-sm` option names, 11px code-style hints/footer copy, abbreviated localized Asc/Desc labels, an 8px radius, and Level-3 elevation. The mobile sheet restores `title-md` option names, full direction labels, 40px segmented controls, a 12px top radius, and safe-area footer padding.
 - Sort field descriptions are direction-aware (`Oldest`/`Newest`, `A → Z`/`Z → A`, low/high rating, quality, age rating, and year). Avoid a hard-coded current year in translations; use stable descriptive copy or compute a year in TypeScript if the product later requires numeric endpoints.
 
 ## Responsive interaction
 
 - Desktop/tablet: open an anchored popover beneath the trigger, aligned to its end edge and clamped to the viewport. Direction or field changes apply immediately while the popover remains open; Reset to Default immediately applies `addedDate desc`. Escape or backdrop dismissal closes it and restores trigger focus.
+- Scrolling outside the open sort panel dismisses it and restores trigger focus, preventing the anchored menu from becoming visually detached. Scroll events originating inside the mobile sheet remain available for its independently scrollable option list.
 - Mobile: use the attachment's modal bottom sheet with scrim, drag-handle decoration, title/close header, direction segmented control, radio-style field list, Current badge, and persistent full-width Apply Sorting action. Changes remain draft-only until Apply; close/Escape discards them, and Reset returns the draft to `addedDate desc`.
 - The shared floating-panel contract owns an `anchored-responsive` placement, keeping global overlay lifecycle out of the feature. It accepts the trigger element as an anchor, uses a transparent backdrop and anchored dimensions above the mobile breakpoint, and switches to a bottom-aligned, content-height modal sheet with scrim and safe-area padding on mobile.
 - The sheet body scrolls independently when vertical space is limited. All controls retain at least the project standard touch target and visible focus treatment.

@@ -41,9 +41,11 @@ export class FloatingPanel {
     containerRef.changeDetectorRef.detectChanges();
 
     let finished = false;
+    let removeScrollListener = (): void => undefined;
     const panelRef = new FloatingPanelRef<TResult, TComponent>((result) => {
       if (finished) return;
       finished = true;
+      removeScrollListener();
       containerRef.instance.hide();
       this.applicationRef.detachView(containerRef.hostView);
       containerRef.destroy();
@@ -64,6 +66,15 @@ export class FloatingPanel {
     containerRef.instance.dismissed.subscribe(() => panelRef.close());
     containerRef.changeDetectorRef.detectChanges();
     containerRef.instance.show();
+    if (config.closeOnScroll) {
+      const handleScroll = (event: Event): void => {
+        const target = event.target;
+        if (target instanceof Node && host.contains(target)) return;
+        panelRef.close();
+      };
+      this.document.addEventListener('scroll', handleScroll, true);
+      removeScrollListener = () => this.document.removeEventListener('scroll', handleScroll, true);
+    }
     this.activePanel = panelRef as FloatingPanelRef<unknown, unknown>;
 
     return panelRef;

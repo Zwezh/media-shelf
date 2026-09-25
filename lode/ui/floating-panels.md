@@ -29,13 +29,14 @@ flowchart LR
 Contracts:
 
 - `FloatingPanelConfig` controls data, accessible naming, backdrop/Escape dismissal, placement, panel classes, and focus restoration.
+- Callers may opt into `closeOnScroll`; captured scroll events outside the panel close it, while internal panel scrolling is ignored. Listener cleanup is part of the same close lifecycle as view and host teardown.
 - Content injects `FLOATING_PANEL_DATA` and `FloatingPanelRef`; callers receive the same reference with the dynamically created component instance and a completing `closed` observable.
 - Opening a second panel closes and destroys the active panel before attaching the next one.
 - Native dialog modality provides top-layer rendering and prevents interaction with background content.
 - Backdrop and Escape dismissal return `undefined`; an explicit result is supplied by content calling `close(result)`.
 - Closing detaches the Angular view, destroys the container and its content, removes the host element, completes the result stream, and restores the previously focused element when it still exists.
 - `responsive` placement is a full-height end sheet on desktop and a full-height sheet on mobile; neither mode uses a top offset.
-- `anchored-responsive` accepts an `HTMLElement` anchor. It opens beneath and end-aligned with the trigger on desktop, updates its anchor coordinates on resize, and becomes a content-height modal bottom sheet with a scrim on mobile.
+- `anchored-responsive` accepts an `HTMLElement` anchor. It opens beneath and end-aligned with the trigger, updates its anchor coordinates on resize, and becomes a content-height modal bottom sheet with a scrim on mobile. Feature-specific `panelClass` values may narrow the shared maximum width and radius; Movies sorting uses an 18rem-wide, 8px-radius desktop panel.
 - Enter motion uses design motion tokens and is removed for reduced-motion preferences.
 
 Rationale and lessons:

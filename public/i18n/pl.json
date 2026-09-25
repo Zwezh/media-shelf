@@ -74,6 +74,10 @@
         "asc": "Rosnąco",
         "desc": "Malejąco"
       },
+      "directionsShort": {
+        "asc": "Rosn.",
+        "desc": "Malej."
+      },
       "field": "Pole sortowania",
       "hints": {
         "addedDate": { "asc": "Najstarsze", "desc": "Najnowsze" },

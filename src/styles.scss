@@ -3,13 +3,16 @@
 html {
   background: var(--color-background);
   color: var(--color-text-primary);
-  font: var(--text-body-lg);
+  font-family: var(--font-family-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   background: var(--color-shell-background);
+  font: var(--text-body-md);
 }
 
 *,

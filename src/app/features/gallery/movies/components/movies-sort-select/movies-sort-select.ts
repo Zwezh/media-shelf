@@ -34,7 +34,9 @@ export class MoviesSortSelect {
     const panelRef = this.floatingPanel.open<MoviesSortPanel, MoviesSortPanelData, MoviesSorting>(MoviesSortPanel, {
       anchor: this.trigger().nativeElement,
       ariaLabelledBy: 'movies-sort-panel-title',
+      closeOnScroll: true,
       data: { mode, sorting: this.sorting() },
+      panelClass: 'floating-panel--movies-sort',
       placement: 'anchored-responsive',
     });
     const liveSubscription = panelRef.componentInstance?.sortingChange.subscribe((sorting) => this.sortingChange.emit(sorting));

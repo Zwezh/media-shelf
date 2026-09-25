@@ -47,17 +47,26 @@
   --color-surface-hover: var(--palette-slate-50);
   --color-surface-active: var(--palette-slate-100);
   --color-surface-raised: var(--palette-white);
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f3ff;
+  --color-surface-container: #eaedff;
+  --color-surface-container-high: #e2e7ff;
+  --color-surface-container-highest: #dae2fd;
   --color-scrim: rgba(15, 23, 42, 0.85);
 
   --color-text-primary: var(--palette-slate-900);
   --color-text-secondary: var(--palette-slate-500);
   --color-text-muted: var(--palette-slate-400);
   --color-text-inverse: #eef0ff;
+  --color-on-surface: #131b2e;
+  --color-on-surface-variant: #464555;
 
   --color-border: var(--palette-slate-200);
   --color-border-strong: var(--palette-slate-300);
   --color-border-emphasis: var(--palette-slate-400);
   --color-focus-ring: var(--palette-indigo-200);
+  --color-outline: #777587;
+  --color-outline-variant: #c7c4d8;
 
   --color-primary: var(--palette-indigo-600);
   --color-primary-hover: var(--palette-indigo-700);
@@ -139,17 +148,26 @@
   --color-surface-hover: var(--palette-slate-700);
   --color-surface-active: var(--palette-slate-600);
   --color-surface-raised: #283044;
+  --color-surface-container-lowest: #283044;
+  --color-surface-container-low: var(--palette-slate-800);
+  --color-surface-container: var(--palette-slate-700);
+  --color-surface-container-high: var(--palette-slate-600);
+  --color-surface-container-highest: var(--palette-slate-500);
   --color-scrim: rgba(2, 6, 23, 0.88);
 
   --color-text-primary: #eef0ff;
   --color-text-secondary: var(--palette-slate-300);
   --color-text-muted: var(--palette-slate-400);
   --color-text-inverse: var(--palette-slate-900);
+  --color-on-surface: #eef0ff;
+  --color-on-surface-variant: var(--palette-slate-300);
 
   --color-border: var(--palette-slate-700);
   --color-border-strong: var(--palette-slate-600);
   --color-border-emphasis: var(--palette-slate-500);
   --color-focus-ring: rgba(199, 210, 254, 0.45);
+  --color-outline: var(--palette-slate-400);
+  --color-outline-variant: var(--palette-slate-600);
 
   --color-primary: #c3c0ff;
   --color-primary-hover: #dad7ff;

@@ -15,6 +15,10 @@
   box-shadow: var(--shadow-level-4);
   overflow: hidden;
 
+  &:focus {
+    outline: none;
+  }
+
   &::backdrop {
     background: color-mix(in srgb, var(--color-scrim) 58%, transparent);
   }
@@ -36,15 +40,23 @@
   &--anchored-responsive {
     position: fixed;
     inset: calc(var(--floating-panel-anchor-top) + var(--space-sm)) max(var(--space-base), var(--floating-panel-anchor-right)) auto auto;
-    width: min(28rem, calc(100vw - (2 * var(--space-base))));
+    width: min(34rem, calc(100vw - (2 * var(--space-base))));
     max-height: calc(100dvh - var(--floating-panel-anchor-top) - (2 * var(--space-base)));
     margin: 0;
-    border: var(--border-subtle);
-    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-level-3);
 
     &::backdrop {
       background: transparent;
     }
+  }
+
+  &--movies-sort {
+    width: min(18rem, calc(100vw - (2 * var(--space-base))));
+    border-color: var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-level-3);
   }
 
   @include breakpoint.mobile {
@@ -64,11 +76,16 @@
       max-height: min(85dvh, 44rem);
       margin: auto 0 0;
       border: 0;
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 
       &::backdrop {
         background: color-mix(in srgb, var(--color-scrim) 58%, transparent);
       }
+    }
+
+    &--movies-sort {
+      width: 100%;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
   }
 }
