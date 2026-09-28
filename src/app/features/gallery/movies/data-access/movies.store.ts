@@ -4,7 +4,6 @@ import { patchState, signalStore, withComputed, withHooks, withMethods, withStat
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, switchMap, tap } from 'rxjs';
-import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { GalleryApi } from '../../data-access/gallery-api';
 import { type Media } from '../../models/media';
@@ -62,8 +61,6 @@ export const MoviesStore = signalStore(
                 const totalCount = Math.max(0, store.totalCount() - 1);
                 patchState(store, { isDeleting: false, media, totalCount });
                 toastStore.success({
-                  autoHide: true,
-                  delay: TOAST_AUTO_HIDE_DELAY_MS.success,
                   message: String(translate.instant('movies.delete.successMessage')),
                   title: String(translate.instant('movies.delete.successTitle')),
                 });
@@ -79,8 +76,6 @@ export const MoviesStore = signalStore(
               catchError(() => {
                 patchState(store, { isDeleting: false });
                 toastStore.error({
-                  autoHide: true,
-                  delay: TOAST_AUTO_HIDE_DELAY_MS.error,
                   message: String(translate.instant('movies.delete.errorMessage')),
                   title: String(translate.instant('movies.delete.errorTitle')),
                 });
@@ -111,8 +106,6 @@ export const MoviesStore = signalStore(
 
                 patchState(store, { hasError: false, isLoading: false, media, totalCount });
                 toastStore.success({
-                  autoHide: true,
-                  delay: TOAST_AUTO_HIDE_DELAY_MS.success,
                   message: String(translate.instant('movies.loadSuccessMessage')),
                   title: String(translate.instant('movies.loadSuccessTitle')),
                 });
@@ -120,8 +113,6 @@ export const MoviesStore = signalStore(
               catchError(() => {
                 patchState(store, { hasError: true, isLoading: false, media: [], totalCount: 0 });
                 toastStore.error({
-                  autoHide: true,
-                  delay: TOAST_AUTO_HIDE_DELAY_MS.error,
                   message: String(translate.instant('movies.loadErrorMessage')),
                   title: String(translate.instant('movies.loadErrorTitle')),
                 });

@@ -39,7 +39,7 @@ flowchart LR
 - Preserve the prototype's responsive hierarchy: breadcrumb band, backdrop/hero, 2:3 poster and actions, primary metadata/synopsis, a 7/5 desktop details grid, then related-media lists.
 - Render hero data available from `MediaDto`: media type, quality, Kinopoisk rating, age rating, duration, localized/original titles, year, genres, description, poster, and backdrop. The rating is a link to `https://www.kinopoisk.ru/film/{kpId}` that opens in a new tab. Do not add IMDb content or invent tagline, file size, audio, screenplay, character names, exact release date, or storage data.
 - Omit Rapid Telemetry Counters, `#toggleQuickInspector`, the “Vault Verified • Disk Pool 02” status, and the prototype's combined “Connected Media & Recommendations” section.
-- Edit navigates to `/gallery/movies/:id/edit` with collection query parameters preserved. Delete opens the shared confirmation dialog and calls `DELETE /movies/:id` only after explicit confirmation. Keep Auxiliary Stream / Path visible as disabled placeholders until trailer and filesystem contracts exist.
+- Edit navigates to `/gallery/movies/:id/edit` with collection query parameters preserved. Delete delegates shared dialog configuration and lifecycle handling to `MovieDeletionCoordinator` and calls `DELETE /movies/:id` only after explicit confirmation. Keep Auxiliary Stream / Path visible as disabled placeholders until trailer and filesystem contracts exist.
 - Use semantic design tokens and existing button/typography primitives; add detail-specific layout styles without importing the prototype's Tailwind classes or remote assets.
 - Dynamic poster and backdrop failures fall back safely. The decorative backdrop has empty alternative text; the poster alternative names the movie.
 

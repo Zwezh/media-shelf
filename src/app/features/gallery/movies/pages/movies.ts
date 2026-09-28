@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { EmptyState } from '@msh-shared/components/empty-state/empty-state';
-import { ConfirmationDialog, type ConfirmationDialogData } from '@msh-shared/components/confirmation-dialog/confirmation-dialog';
 import { MediaCard } from '@msh-shared/components/media-card/media-card';
 import type { MediaCardModel } from '@msh-shared/components/media-card/media-card.model';
 import { Icon } from '@msh-shared/components/icon/icon';
@@ -15,6 +14,7 @@ import { RequiresAuth } from '@msh-shared/directives/requires-auth';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { filter, take } from 'rxjs';
 import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-filters';
+import { MovieDeletionCoordinator } from '../../services/movie-deletion-coordinator';
 import { MoviesFilterPanel, type MoviesFilterPanelData } from '../components/movies-filter-panel/movies-filter-panel';
 import { MoviesSortSelect } from '../components/movies-sort-select/movies-sort-select';
 import { MoviesStore } from '../data-access/movies.store';
@@ -36,6 +36,7 @@ type FilterChip = {
 export class Movies {
   private readonly destroyRef = inject(DestroyRef);
   private readonly floatingPanel = inject(FloatingPanel);
+  private readonly movieDeletion = inject(MovieDeletionCoordinator);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly authSession = inject(AuthSession);
@@ -52,26 +53,11 @@ export class Movies {
   }
 
   protected confirmDelete(media: MediaCardModel): void {
-    this.floatingPanel
-      .open<ConfirmationDialog, ConfirmationDialogData, boolean>(ConfirmationDialog, {
-        ariaDescribedBy: 'confirmation-message',
-        ariaLabelledBy: 'confirmation-title',
-        data: {
-          cancelKey: 'common.cancel',
-          confirmKey: 'movies.delete.confirm',
-          messageKey: 'movies.delete.message',
-          messageParams: { title: media.title },
-          titleKey: 'movies.delete.title',
-        },
-        owner: this.destroyRef,
-        placement: 'center',
-      })
-      .closed.pipe(
-        take(1),
-        filter((confirmed) => confirmed === true),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => this.store.deleteMovie(media.id));
+    this.movieDeletion.confirm({
+      onConfirmed: () => this.store.deleteMovie(media.id),
+      owner: this.destroyRef,
+      title: media.title,
+    });
   }
 
   protected editMovie(media: MediaCardModel): void {

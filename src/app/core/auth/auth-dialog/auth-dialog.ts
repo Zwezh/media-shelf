@@ -5,7 +5,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { Icon } from '@msh-shared/components/icon/icon';
 import { FormValidationMessage } from '@msh-shared/components/form-validation-message/form-validation-message';
-import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { AuthApi } from '../auth-api';
@@ -74,8 +73,6 @@ export class AuthDialog {
 
   private showToast(type: 'error' | 'success', titleKey: string, messageKey: string): void {
     this.toastStore[type]({
-      autoHide: true,
-      delay: type === 'success' ? TOAST_AUTO_HIDE_DELAY_MS.success : TOAST_AUTO_HIDE_DELAY_MS.error,
       message: String(this.translate.instant(messageKey)),
       title: String(this.translate.instant(titleKey)),
     });

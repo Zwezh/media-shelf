@@ -6,7 +6,6 @@ import { AuthDialog } from '@msh-core/auth/auth-dialog/auth-dialog';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { NavigationItem } from '@msh-core/navigation';
 import { Icon } from '@msh-shared/components/icon/icon';
-import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { ToastStore } from '@msh-shared/services/toast-store';
 
@@ -38,8 +37,6 @@ export class Header {
   protected signOut(): void {
     this.authSession.signOut();
     this.toastStore.success({
-      autoHide: true,
-      delay: TOAST_AUTO_HIDE_DELAY_MS.success,
       message: String(this.translate.instant('auth.toasts.signOutSuccessMessage')),
       title: String(this.translate.instant('auth.toasts.signOutSuccessTitle')),
     });

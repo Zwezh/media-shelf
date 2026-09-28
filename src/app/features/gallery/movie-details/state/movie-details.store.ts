@@ -4,7 +4,6 @@ import { patchState, signalStore, withHooks, withMethods, withState } from '@ngr
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, switchMap, tap } from 'rxjs';
-import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { GalleryApi } from '../../data-access/gallery-api';
 import { type MovieDetails } from '../../models/movie-details';
@@ -43,8 +42,6 @@ export const MovieDetailsStore = signalStore(
               tap((movie) => {
                 patchState(store, { hasError: false, isLoading: false, movie });
                 toastStore.success({
-                  autoHide: true,
-                  delay: TOAST_AUTO_HIDE_DELAY_MS.success,
                   message: String(translate.instant('movieDetails.loadSuccessMessage')),
                   title: String(translate.instant('movieDetails.loadSuccessTitle')),
                 });
@@ -52,8 +49,6 @@ export const MovieDetailsStore = signalStore(
               catchError(() => {
                 patchState(store, { hasError: true, isLoading: false, movie: null });
                 toastStore.error({
-                  autoHide: true,
-                  delay: TOAST_AUTO_HIDE_DELAY_MS.error,
                   message: String(translate.instant('movieDetails.loadErrorMessage')),
                   title: String(translate.instant('movieDetails.loadErrorTitle')),
                 });
@@ -73,8 +68,6 @@ export const MovieDetailsStore = signalStore(
               tap(() => {
                 patchState(store, { isDeleting: false });
                 toastStore.success({
-                  autoHide: true,
-                  delay: TOAST_AUTO_HIDE_DELAY_MS.success,
                   message: String(translate.instant('movieDetails.delete.successMessage')),
                   title: String(translate.instant('movieDetails.delete.successTitle')),
                 });
@@ -83,8 +76,6 @@ export const MovieDetailsStore = signalStore(
               catchError(() => {
                 patchState(store, { isDeleting: false });
                 toastStore.error({
-                  autoHide: true,
-                  delay: TOAST_AUTO_HIDE_DELAY_MS.error,
                   message: String(translate.instant('movieDetails.delete.errorMessage')),
                   title: String(translate.instant('movieDetails.delete.errorTitle')),
                 });

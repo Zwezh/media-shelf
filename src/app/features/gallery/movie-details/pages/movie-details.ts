@@ -1,12 +1,9 @@
 import { Component, computed, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ConfirmationDialog, type ConfirmationDialogData } from '@msh-shared/components/confirmation-dialog/confirmation-dialog';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
-import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
-import { filter, take } from 'rxjs';
 import { type MovieDetails } from '../../models/movie-details';
+import { MovieDeletionCoordinator } from '../../services/movie-deletion-coordinator';
 import { AdditionalInformation } from '../components/additional-information/additional-information';
 import { MovieDetailsHero } from '../components/movie-details-hero/movie-details-hero';
 import { ProductionAndCast } from '../components/production-and-cast/production-and-cast';
@@ -22,7 +19,7 @@ import { MovieDetailsStore } from '../state/movie-details.store';
 })
 export class MovieDetailsPage {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly floatingPanel = inject(FloatingPanel);
+  private readonly movieDeletion = inject(MovieDeletionCoordinator);
   private readonly router = inject(Router);
   protected readonly store = inject(MovieDetailsStore);
   protected readonly breadcrumbTitle = computed(() => this.store.movie()?.title ?? '');
@@ -32,25 +29,10 @@ export class MovieDetailsPage {
   }
 
   protected confirmDelete(movie: MovieDetails): void {
-    this.floatingPanel
-      .open<ConfirmationDialog, ConfirmationDialogData, boolean>(ConfirmationDialog, {
-        ariaDescribedBy: 'confirmation-message',
-        ariaLabelledBy: 'confirmation-title',
-        data: {
-          cancelKey: 'common.cancel',
-          confirmKey: 'movieDetails.delete.confirm',
-          messageKey: 'movieDetails.delete.message',
-          messageParams: { title: movie.title },
-          titleKey: 'movieDetails.delete.title',
-        },
-        owner: this.destroyRef,
-        placement: 'center',
-      })
-      .closed.pipe(
-        take(1),
-        filter((confirmed) => confirmed === true),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => this.store.deleteMovie(movie.id));
+    this.movieDeletion.confirm({
+      onConfirmed: () => this.store.deleteMovie(movie.id),
+      owner: this.destroyRef,
+      title: movie.title,
+    });
   }
 }

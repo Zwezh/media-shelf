@@ -26,7 +26,8 @@ flowchart LR
   Store --> KinopoiskAPI[KinopoiskApi autofill]
   GalleryAPI --> Toasts[ToastStore]
   GalleryAPI --> Details
-  Details -->|Delete| Confirm[Confirmation dialog]
+  Details -->|Delete| Coordinator[MovieDeletionCoordinator]
+  Coordinator --> Confirm[Confirmation dialog]
   Confirm --> GalleryAPI
   GalleryAPI --> List
   Auth[AuthSession + route guard] --> Add
@@ -160,10 +161,11 @@ Provide `MovieEditorStore` at the editor route/page. State owns `mode`, loaded D
 
 Create a shared `ConfirmationDialog` on the existing native-dialog `FloatingPanel` infrastructure with typed data (`titleKey`, `messageKey`, confirm/cancel keys, tone) and boolean result. It owns heading semantics and initial focus, while `FloatingPanel` continues to own modality, Escape/backdrop behavior, cleanup, and focus restoration.
 
-- Enable Delete on movie details and emit Edit/Delete outputs from `MovieDetailsHero`; the page owns routing and dialog orchestration.
+- Enable Delete on movie details and emit Edit/Delete outputs from `MovieDetailsHero`; the page owns routing while `MovieDeletionCoordinator` owns shared deletion-dialog orchestration for list and detail callers.
 - Confirmed deletion calls `GalleryApi.deleteMovie(movie.id)`. Cancel/Escape/backdrop performs no mutation.
 - During deletion, prevent duplicate confirmation/action. Success shows a localized toast and navigates to `/gallery/movies` with preserved query parameters. Failure stays on details and shows an error toast.
 - The dialog wording includes the movie title and clearly identifies the irreversible action; confirmation uses the danger button style and is never the initially focused control.
+- `MovieDeletionCoordinator.confirm()` centralizes dialog data, placement, one-result filtering, owner destruction cleanup, and confirmed callback execution. Pages supply only the title, owner `DestroyRef`, and context-specific store action.
 
 ## Maintenance workflow
 

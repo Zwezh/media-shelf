@@ -6,7 +6,6 @@ import { patchState, signalStore, withComputed, withHooks, withMethods, withStat
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, switchMap, tap } from 'rxjs';
-import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { GalleryApi } from '../../data-access/gallery-api';
 import { type MediaDto } from '../../models/media.dto';
@@ -57,8 +56,6 @@ export const MovieEditorStore = signalStore(
     ) => {
       const showToast = (type: 'error' | 'success', titleKey: string, messageKey: string): void => {
         toastStore[type]({
-          autoHide: true,
-          delay: type === 'success' ? TOAST_AUTO_HIDE_DELAY_MS.success : TOAST_AUTO_HIDE_DELAY_MS.error,
           message: String(translate.instant(messageKey)),
           title: String(translate.instant(titleKey)),
         });

@@ -6,9 +6,10 @@ The Movies page at `/gallery/movies` injects a feature-scoped NgRx `MoviesStore`
 @Service()
 export class GalleryApi {
   getMovies(params: MoviesParams): Observable<MoviesPage> {
-    return this.http
-      .get<unknown>(this.toEndpointUrl('movies'), { params: toMoviesQueryParams(params) })
-      .pipe(map(parseMoviesPageDto), map((response) => this.toMoviesPage(response, params.currentPage)));
+    return this.http.get<unknown>(this.toEndpointUrl('movies'), { params: toMoviesQueryParams(params) }).pipe(
+      map(parseMoviesPageDto),
+      map((response) => this.toMoviesPage(response, params.currentPage)),
+    );
   }
 }
 ```
@@ -71,7 +72,7 @@ Invariants:
 - The grid spans the gallery canvas with a uniform 16px gutter and explicit responsive column counts: two by default, three from 640px, four from 768px, five from 1024px, and six from 1280px. Cards stretch evenly within their row and retain the canonical 2:3 poster ratio.
 - Cards use the Stitch surface contract: an 8px clipped container, Level-1 resting elevation, a strong border/Level-2 elevation/2px lift on hover or focus-within, a primary active border, and a 5% poster zoom. Reduced-motion preferences remove transforms and transitions.
 - Poster badges place media type and quality at the start and age rating at the end. A bottom scrim contains duration/type metadata and View, Edit, and Delete buttons. The scrim appears on hover or keyboard focus and stays visible on devices without hover capability.
-- View, Edit, and Delete are accessible card buttons with localized names and dedicated icons. View remains public; the shared `mshRequiresAuth` directive disables Edit and Delete while signed out and combines session state with deletion's in-flight disabled state. `MediaCard` emits its selected immutable presentation model; the Movies page opens details or editing with collection query parameters preserved, and Delete requires explicit shared-dialog confirmation before `MoviesStore` removes the item. Deletion reports localized success or failure.
+- View, Edit, and Delete are accessible card buttons with localized names and dedicated icons. View remains public; the shared `mshRequiresAuth` directive disables Edit and Delete while signed out and combines session state with deletion's in-flight disabled state. `MediaCard` emits its selected immutable presentation model; the Movies page opens details or editing with collection query parameters preserved. `MovieDeletionCoordinator` owns the shared confirmation-dialog lifecycle for both list and detail deletion, then invokes the caller's store action only after explicit confirmation. Deletion reports localized success or failure.
 - `GET /movies/{id}` returns `MediaDto`, which `GalleryApi` converts to an immutable detail-specific model. `MovieDetailsStore` owns route-ID loading, stale-request cancellation, retry, page state, and success/error toasts.
 - The detail page adapts the Stitch prototype into a responsive hero, a shared `DetailCard` 7/5 metadata grid, and conditional Similar movies and Sequels & prequels name lists. Unsupported telemetry is omitted; Edit and Delete are enabled only for an authenticated session, while Trailer and Path remain visible and disabled.
 - Detail conversion trims `similarMovies` and `sequelsAndPrequels` titles and removes empty or whitespace-only entries. Each related block is rendered only when its normalized list contains an item.

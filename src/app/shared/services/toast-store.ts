@@ -17,14 +17,15 @@ export class ToastStore {
 
   show(options: ToastOptions): ToastId {
     const id = ++this.nextId;
-    const delay = this.normalizeDelay(options.delay);
+    const type = options.type ?? 'info';
+    const delay = this.normalizeDelay(options.delay, type);
     const toast: ToastMessage = {
       id,
       title: options.title,
       message: options.message,
-      type: options.type ?? 'info',
+      type,
       closable: options.closable ?? true,
-      autoHide: options.autoHide ?? false,
+      autoHide: options.autoHide ?? true,
       delay,
       action: options.action,
     };
@@ -82,8 +83,11 @@ export class ToastStore {
     return this.show({ ...options, type });
   }
 
-  private normalizeDelay(delay: number | undefined): number {
-    return delay !== undefined && Number.isFinite(delay) && delay > 0 ? delay : TOAST_AUTO_HIDE_DELAY_MS.default;
+  private normalizeDelay(delay: number | undefined, type: ToastType): number {
+    if (delay !== undefined && Number.isFinite(delay) && delay > 0) return delay;
+    if (type === 'success') return TOAST_AUTO_HIDE_DELAY_MS.success;
+    if (type === 'error') return TOAST_AUTO_HIDE_DELAY_MS.error;
+    return TOAST_AUTO_HIDE_DELAY_MS.default;
   }
 
   private cancelTimer(id: ToastId): void {

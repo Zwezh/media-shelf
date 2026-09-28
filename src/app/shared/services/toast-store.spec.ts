@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from './toast-store';
 
 describe('ToastStore', () => {
@@ -14,7 +15,7 @@ describe('ToastStore', () => {
     vi.useRealTimers();
   });
 
-  it('adds typed toasts in creation order with closable defaults', () => {
+  it('adds typed toasts with closable, auto-hide, and type-specific delay defaults', () => {
     store.info({ title: 'Indexed' });
     store.success({ title: 'Saved' });
     store.warning({ title: 'Low space' });
@@ -22,10 +23,17 @@ describe('ToastStore', () => {
 
     expect(store.toasts().map(({ type }) => type)).toEqual(['info', 'success', 'warning', 'error']);
     expect(store.toasts().every(({ closable }) => closable)).toBe(true);
+    expect(store.toasts().every(({ autoHide }) => autoHide)).toBe(true);
+    expect(store.toasts().map(({ delay }) => delay)).toEqual([
+      TOAST_AUTO_HIDE_DELAY_MS.default,
+      TOAST_AUTO_HIDE_DELAY_MS.success,
+      TOAST_AUTO_HIDE_DELAY_MS.default,
+      TOAST_AUTO_HIDE_DELAY_MS.error,
+    ]);
   });
 
   it('auto-hides after the default 5 second delay', () => {
-    store.show({ title: 'Temporary', autoHide: true });
+    store.show({ title: 'Temporary' });
 
     vi.advanceTimersByTime(4_999);
     expect(store.toasts()).toHaveLength(1);
@@ -35,8 +43,8 @@ describe('ToastStore', () => {
   });
 
   it('uses a custom delay and normalizes non-positive delays to the default', () => {
-    store.show({ title: 'Custom', autoHide: true, delay: 1_000 });
-    store.show({ title: 'Normalized', autoHide: true, delay: 0 });
+    store.show({ title: 'Custom', delay: 1_000 });
+    store.show({ title: 'Normalized', delay: 0 });
 
     vi.advanceTimersByTime(1_000);
     expect(store.toasts().map(({ title }) => title)).toEqual(['Normalized']);
@@ -46,8 +54,8 @@ describe('ToastStore', () => {
   });
 
   it('dismisses one toast and clears all remaining timers', () => {
-    const firstId = store.show({ title: 'First', autoHide: true, delay: 1_000 });
-    store.show({ title: 'Second', autoHide: true, delay: 1_000 });
+    const firstId = store.show({ title: 'First', delay: 1_000 });
+    store.show({ title: 'Second', delay: 1_000 });
 
     store.dismiss(firstId);
     expect(store.toasts().map(({ title }) => title)).toEqual(['Second']);
@@ -55,6 +63,14 @@ describe('ToastStore', () => {
     store.clear();
     vi.runAllTimers();
     expect(store.toasts()).toHaveLength(0);
+  });
+
+  it('keeps a toast visible when auto-hide is explicitly disabled', () => {
+    store.show({ title: 'Persistent', autoHide: false });
+
+    vi.advanceTimersByTime(TOAST_AUTO_HIDE_DELAY_MS.default);
+
+    expect(store.toasts()).toHaveLength(1);
   });
 
   it('runs an action and dismisses its toast', () => {
