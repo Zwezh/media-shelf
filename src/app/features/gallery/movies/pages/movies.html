@@ -28,8 +28,14 @@
           }
         </button>
         <msh-movies-sort-select [sorting]="store.sorting()" (sortingChange)="store.applySorting($event)" />
-        <button class="btn btn-secondary movies__add-button" type="button" (click)="addMovie()">
-          <span aria-hidden="true">+</span> {{ 'movies.addMovie' | translate }}
+        <button
+          class="btn btn-secondary movies__add-button"
+          type="button"
+          [mshRequiresAuth]="false"
+          [title]="(authSession.isAuthenticated() ? 'movies.addMovie' : 'auth.requiredForWrite') | translate"
+          (click)="addMovie()"
+        >
+          <msh-icon name="add" [size]="18" /> {{ 'movies.addMovie' | translate }}
         </button>
       </div>
     </msh-page-header>

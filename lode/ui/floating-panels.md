@@ -24,6 +24,7 @@ flowchart LR
   Ref[FloatingPanelRef] --> Content
   Content -->|close result| Ref
   Confirmation[Confirmation dialog] -->|true or false| Ref
+  Authentication[Authorization dialog] -->|authenticated or dismissed| Ref
   Ref -->|closed observable| Caller
   Ref --> Cleanup[Detach view, destroy component, restore focus]
 ```
@@ -43,6 +44,7 @@ Contracts:
 - `anchored-responsive` accepts an `HTMLElement` anchor. It opens beneath and end-aligned with the trigger, updates its anchor coordinates on resize, and becomes a content-height modal bottom sheet with a scrim on mobile. Feature-specific `panelClass` values may narrow the shared maximum width and radius; Movies sorting uses an 18rem-wide, 8px-radius desktop panel.
 - Enter motion uses design motion tokens and is removed for reduced-motion preferences.
 - Shared destructive confirmations use `ConfirmationDialog` with translated title/message/action keys and a boolean result. Cancel receives initial focus; confirmation is danger-styled, while Escape and backdrop dismissal return no affirmative result.
+- Header Sign In uses a centered `AuthDialog` labelled and described through the native dialog. It focuses the secret-key field, provides a password visibility toggle, and closes affirmatively only after a valid access token starts the session. It intentionally omits the prototype's Forgot key and workstation-persistence controls.
 
 Rationale and lessons:
 
@@ -50,4 +52,4 @@ Rationale and lessons:
 - The native dialog supplies semantics and modality without adding Angular CDK or duplicating its full overlay system.
 - Panel content owns its header, body, footer, and result contract; the shared container owns only lifecycle and placement.
 
-Related lodes: [UI summary](summary.md), [media gallery](media-gallery.md), [application shell](application-shell.md), [practices](../practices.md).
+Related lodes: [authentication](../auth/summary.md), [UI summary](summary.md), [media gallery](media-gallery.md), [application shell](application-shell.md), [practices](../practices.md).

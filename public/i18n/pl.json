@@ -3,7 +3,48 @@
     "cancel": "Anuluj",
     "close": "Zamknij",
     "dismissNotification": "Zamknij powiadomienie",
-    "itemCount": "Elementy: {{count}}"
+    "itemCount": "Elementy: {{count}}",
+    "validation": {
+      "email": "Wprowadź prawidłowy adres e-mail.",
+      "max": "Wartość przekracza dozwolone maksimum.",
+      "maxDate": "Wybierz datę nie późniejszą niż dozwolona.",
+      "maxLength": "Wartość jest zbyt długa.",
+      "min": "Wartość jest mniejsza niż dozwolone minimum.",
+      "minDate": "Wybierz datę nie wcześniejszą niż dozwolona.",
+      "minLength": "Wartość jest zbyt krótka.",
+      "parse": "Wprowadź wartość w oczekiwanym formacie.",
+      "pattern": "Użyj wymaganego formatu.",
+      "range": "Wartość jest poza dozwolonym zakresem.",
+      "required": "Pole wymagane.",
+      "value": "Wprowadź prawidłową wartość."
+    }
+  },
+  "auth": {
+    "actions": {
+      "signIn": "Zaloguj się",
+      "signingIn": "Logowanie…",
+      "signOut": "Wyloguj się"
+    },
+    "dialog": {
+      "description": "Wprowadź główny klucz tajny, aby odblokować chronione działania w bibliotece.",
+      "hideSecret": "Ukryj klucz tajny",
+      "hint": "Klucz jest wymieniany na krótkotrwały token dostępu i nigdy nie jest przechowywany.",
+      "secretKey": "Główny klucz tajny",
+      "showSecret": "Pokaż klucz tajny",
+      "title": "Autoryzuj dostęp"
+    },
+    "requiredForWrite": "Zaloguj się, aby dodawać lub zmieniać elementy biblioteki",
+    "toasts": {
+      "signInErrorMessage": "Sprawdź klucz tajny i połączenie, a następnie spróbuj ponownie.",
+      "signInErrorTitle": "Logowanie nie powiodło się",
+      "signInSuccessMessage": "Chronione działania w bibliotece są dostępne w tej sesji strony.",
+      "signInSuccessTitle": "Zalogowano",
+      "signOutSuccessMessage": "Token dostępu został usunięty.",
+      "signOutSuccessTitle": "Wylogowano"
+    },
+    "validation": {
+      "secretKeyRequired": "Wprowadź główny klucz tajny."
+    }
   },
   "footer": {
     "description": "MediaShelf — system zarządzania archiwum multimediów",
@@ -149,6 +190,8 @@
       "autofillErrorTitle": "Automatyczne uzupełnianie nie powiodło się",
       "autofillSuccessMessage": "Dostępne metadane Kinopoisk zostały zastosowane do formularza.",
       "autofillSuccessTitle": "Film uzupełniony",
+      "duplicateErrorMessage": "Film o tej samej nazwie już istnieje.",
+      "duplicateErrorTitle": "Film już istnieje",
       "loadErrorMessage": "Wróć do biblioteki lub spróbuj ponownie załadować film.",
       "loadErrorTitle": "Nie udało się załadować filmu",
       "saveErrorMessage": "Zmiany pozostały w formularzu. Spróbuj zapisać ponownie.",
@@ -160,7 +203,7 @@
       "duration": "Wprowadź nieujemny czas trwania.",
       "kpId": "Wprowadź prawidłowe ID Kinopoisk.",
       "rating": "Wprowadź ocenę od 0 do 10.",
-      "required": "To pole jest wymagane.",
+      "required": "Pole wymagane.",
       "year": "Wprowadź rok od 1888 do 2100."
     }
   },

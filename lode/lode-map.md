@@ -13,6 +13,8 @@
 - [routing/summary.md](routing/summary.md) - Root URL contract and lazy feature boundaries.
 - [i18n/summary.md](i18n/summary.md) - Runtime language initialization, translation resources, and key contracts.
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
+- [auth/summary.md](auth/summary.md) - Persisted JWT session, authorization dialog, interceptor, guarded routes, and protected-control contract.
+- [storage/summary.md](storage/summary.md) - Guarded localStorage wrapper and centralized token/language key contract.
 - [plans/media-sorting.md](plans/media-sorting.md) - Responsive, URL-backed Movies sorting contract and structure.
 - [plans/movie-details.md](plans/movie-details.md) - Movie details route, API/store flow, prototype adaptation, components, navigation, and verification contract.
 - [plans/movie-editor.md](plans/movie-editor.md) - Movie add/edit routes, Signal Form and store flow, Kinopoisk autofill, CRUD mutations, confirmation deletion, and verification contract.
@@ -41,10 +43,14 @@ flowchart TD
   I18n --> I18nSummary[summary.md]
   Root --> CI[ci]
   CI --> CISummary[summary.md]
+  Root --> Auth[auth]
+  Auth --> AuthSummary[summary.md]
+  Root --> Storage[storage]
+  Storage --> StorageSummary[summary.md]
   Root --> Plans[plans]
   Plans --> MediaSorting[media-sorting.md]
   Plans --> MovieDetails[movie-details.md]
   Plans --> MovieEditor[movie-editor.md]
 ```
 
-Related lodes: [summary](summary.md), [UI tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md), [routing](routing/summary.md), [CI](ci/summary.md), [media sorting plan](plans/media-sorting.md), [movie details plan](plans/movie-details.md), [movie editor plan](plans/movie-editor.md).
+Related lodes: [summary](summary.md), [authentication](auth/summary.md), [browser storage](storage/summary.md), [UI tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md), [routing](routing/summary.md), [CI](ci/summary.md), [media sorting plan](plans/media-sorting.md), [movie details plan](plans/movie-details.md), [movie editor plan](plans/movie-editor.md).

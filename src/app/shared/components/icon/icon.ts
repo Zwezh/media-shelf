@@ -1,17 +1,39 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 
-export type IconName = 'arrow-down' | 'arrow-up' | 'delete' | 'edit' | 'filters' | 'sort' | 'sort-chevron' | 'view';
+export type IconName =
+  | 'add'
+  | 'arrow-down'
+  | 'arrow-up'
+  | 'delete'
+  | 'edit'
+  | 'filters'
+  | 'key'
+  | 'login'
+  | 'logout'
+  | 'shield'
+  | 'sort'
+  | 'sort-chevron'
+  | 'view'
+  | 'visibility'
+  | 'visibility-off';
 
 const ICON_ASPECT_RATIOS: Readonly<Record<IconName, number>> = {
+  add: 1,
   'arrow-down': 1,
   'arrow-up': 1,
   delete: 1,
   edit: 1,
   filters: 1,
+  key: 1,
+  login: 1,
+  logout: 1,
+  shield: 1,
   sort: 1,
   'sort-chevron': 9 / 14,
   view: 1,
+  visibility: 1,
+  'visibility-off': 1,
 };
 
 @Component({

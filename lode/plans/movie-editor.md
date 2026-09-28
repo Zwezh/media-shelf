@@ -13,7 +13,7 @@ export const MOVIE_EDITOR_ROUTES = {
 
 ```mermaid
 flowchart LR
-  List[Movies list] -->|Add movie| Add[/gallery/movies/new]
+  List[Movies list] -->|Authenticated Add movie| Add[/gallery/movies/new]
   Details[Movie details] -->|Edit| Edit[/gallery/movies/:id/edit]
   Add --> Editor[Movie editor]
   Edit --> Editor
@@ -29,6 +29,8 @@ flowchart LR
   Details -->|Delete| Confirm[Confirmation dialog]
   Confirm --> GalleryAPI
   GalleryAPI --> List
+  Auth[AuthSession + route guard] --> Add
+  Auth --> Edit
 ```
 
 ## Routes and navigation
@@ -40,6 +42,7 @@ flowchart LR
 5. On add cancellation/discard, navigate back through browser history. On edit discard, return to `/gallery/movies/:id` with query parameters preserved.
 6. After save, navigate to the saved movie detail route. `POST /movies` and `PUT /movies` are expected to return the saved `MediaDto`; if the backend returns no body, its contract must be extended to return the generated/current ID.
 7. Breadcrumbs are `Gallery / Movies / Add media` for add and `Gallery / Movies / {name}` for edit. The edit label uses the Russian/display `MediaDto.name`, falls back to localized “Edit media” while loading, has `aria-current="page"`, and has no leading icon.
+8. Both editor routes require an active persisted JWT session. The shared authorization directive also disables Save and PoiskKino autofill if the token expires while the editor remains open.
 
 ## MediaShelf API contract
 
@@ -86,8 +89,8 @@ type MovieEditorModel = {
 };
 ```
 
-- Trimmed `name` is required. Validate numeric strings before converting: every comma-separated year is an integer from 1888–2100 with at most a start/end pair, rating is 0–10, movie length is a non-negative integer, Kinopoisk ID is a positive integer, and age rating is empty or non-negative.
-- Use `submit(movieForm, async () => ...)`; submitting marks invalid fields touched, focuses the first invalid control, and does not call the API when invalid.
+- Every visible field in Sections 1–5 except `ageRating` is required; `ageRating`, `sequelsAndPrequels`, and `similarMovies` are optional. Required text rejects whitespace-only values, genres requires at least one selection, and the Save controls remain disabled while the form is invalid. Validate numeric strings before converting: every comma-separated year is an integer from 1888–2100 with at most a start/end pair, rating is 0–10, movie length is a non-negative integer, and Kinopoisk ID is a positive integer.
+- Use `submit(movieForm, async () => ...)`; submitting marks invalid fields touched, focuses the first invalid control, and does not call the API when invalid. `FormValidationMessage` consumes each Signal Form field state and prefers its first validator-provided translation key; errors without custom copy map by kind (`required`, parse, email, pattern, min/max, date, length, schema, and custom range) to specific shared translations. Required editor fields display the concise localized equivalent of “Required field.”
 - Convert comma/newline-separated directors, countries, actors, similar movies, and sequels/prequels into trimmed, non-empty, de-duplicated arrays. Section 4 Actors and both Section 6 relationships are plain `input type="text"` controls as requested.
 - Edit seeds all fields from `MediaDto`, including `id`, `isSeries`, `compactPosterUrl`, and array data. The editor always submits `isSeries: false`; preserve the loaded `id` and compact poster URL on edit.
 - On add, initialize `addedDate` to the current local date, arrays to empty values, strings to empty values, `isSeries` to false, and derive `compactPosterUrl` from the autofill preview URL or fall back to `posterUrl` before submission.
@@ -150,7 +153,7 @@ Provide `MovieEditorStore` at the editor route/page. State owns `mode`, loaded D
 - The page owns the writable form-model signal required by Signal Forms and resets it only when the store publishes a new load/autofill seed; ordinary typing remains local and synchronous.
 - `autofill(kpId, currentModel)` reads the live form signal when the response arrives and merges returned fields into that latest draft. It never restores the click-time snapshot, changes local-only fields (`id`, `addedDate`, `quality`, `extension`), or clears existing values when optional Kinopoisk data is absent.
 - The PoiskKino movie response is parsed from `unknown`. An invalid required movie response fails autofill, while documented nullable metadata is converted to empty optional values so the merge retains current form values.
-- `save(dto)` selects POST or PUT from route mode, prevents duplicate submissions, shows localized success/error toasts, and navigates only after success.
+- `save(dto)` selects POST or PUT from route mode, prevents duplicate submissions, shows localized success/error toasts, and navigates only after success. In add mode, the exact `409` response `{ message: "A movie with the same name already exists.", error: "Conflict", statusCode: 409 }` produces the dedicated localized duplicate-movie toast, leaves the draft intact, and does not navigate; other failures use the generic save error.
 - Keep API transport in services, mapping in pure converters, request orchestration in stores, and route/form event wiring in page containers.
 
 ## Common confirmation dialog and deletion
@@ -176,4 +179,4 @@ Changes to the editor keep raw DTO CRUD in `GalleryApi`, third-party transport i
 - Confirmation tests cover focus, accessible naming, cancel/Escape/backdrop, one delete request after confirmation, failure retention, success toast, and preserved-query navigation.
 - Acceptance requires no Save draft, animation toggle, description paragraph, or live media preview; breadcrumbs have no icon; all six requested sections and exact action labels are present; add/edit/delete/autofill work end to end.
 
-Related lodes: [movie details](movie-details.md), [media gallery](../ui/media-gallery.md), [floating panels](../ui/floating-panels.md), [toast notifications](../ui/toast-notifications.md), [routing](../routing/summary.md), [practices](../practices.md), [terminology](../terminology.md).
+Related lodes: [authentication](../auth/summary.md), [movie details](movie-details.md), [media gallery](../ui/media-gallery.md), [floating panels](../ui/floating-panels.md), [toast notifications](../ui/toast-notifications.md), [routing](../routing/summary.md), [practices](../practices.md), [terminology](../terminology.md).

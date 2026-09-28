@@ -3,10 +3,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MEDIA_POSTER_PLACEHOLDER } from '@msh-core/config/media';
 import { Icon } from '@msh-shared/components/icon/icon';
 import { MediaBadge } from '@msh-shared/components/media-badge/media-badge';
+import { RequiresAuth } from '@msh-shared/directives/requires-auth';
 import { type MovieDetails } from '../../../models/movie-details';
 
 @Component({
-  imports: [Icon, MediaBadge, TranslatePipe],
+  imports: [Icon, MediaBadge, RequiresAuth, TranslatePipe],
   selector: 'msh-movie-details-hero',
   styleUrls: ['./movie-details-hero.scss', './movie-details-hero-responsive.scss'],
   templateUrl: './movie-details-hero.html',

@@ -54,11 +54,6 @@
   }
 }
 
-.artwork-error {
-  color: var(--color-danger);
-  font: var(--text-body-sm);
-}
-
 @include breakpoint.mobile {
   .artwork-autofill__controls {
     grid-template-columns: 1fr;

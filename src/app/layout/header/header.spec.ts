@@ -2,7 +2,11 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
+import { AuthSession } from '@msh-core/auth/auth-session';
 import { NavigationItem } from '@msh-core/navigation';
+import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
+import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
+import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { Header } from './header';
 
@@ -19,6 +23,7 @@ describe('Header', () => {
   ];
 
   beforeEach(async () => {
+    resetTestAuthStorage();
     await TestBed.configureTestingModule({
       imports: [Header],
       providers: [
@@ -64,5 +69,26 @@ describe('Header', () => {
 
     expect(activeLink.textContent?.trim()).toBe('Gallery');
     expect(activeLink.getAttribute('aria-current')).toBe('page');
+  });
+
+  it('opens sign in and swaps to sign out for an authenticated session', () => {
+    const open = vi.spyOn(TestBed.inject(FloatingPanel), 'open').mockImplementation(() => new FloatingPanelRef<unknown>(() => undefined));
+    const fixture = TestBed.createComponent(Header);
+    fixture.componentRef.setInput('navigationItems', navigationItems);
+    fixture.detectChanges();
+
+    const authButton = () => (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.app-header__auth button')!;
+    expect(authButton().textContent).toContain('Sign In');
+    authButton().click();
+    expect(open).toHaveBeenCalledOnce();
+
+    TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
+    fixture.detectChanges();
+    expect(authButton().textContent).toContain('Sign Out');
+
+    authButton().click();
+    fixture.detectChanges();
+    expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(false);
+    expect(authButton().textContent).toContain('Sign In');
   });
 });

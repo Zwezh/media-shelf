@@ -42,6 +42,12 @@
   scrollbar-width: none;
 }
 
+.app-header__auth {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding-left: var(--space-md);
+}
+
 .app-header__navigation::-webkit-scrollbar {
   display: none;
 }
@@ -92,5 +98,26 @@
 
   .app-header__navigation {
     margin-left: var(--space-base);
+  }
+
+  .app-header__auth {
+    padding-left: var(--space-sm);
+
+    .btn {
+      width: var(--size-control-standard);
+      padding: 0;
+    }
+
+    span:not(msh-icon) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   }
 }

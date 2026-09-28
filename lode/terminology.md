@@ -33,6 +33,10 @@
 - Movie editor - The shared add/edit Signal Form at `/gallery/movies/new` and `/gallery/movies/:id/edit`, backed by `MovieEditorStore` and complete `MediaDto` conversion.
 - Kinopoisk autofill - Movie-editor metadata loaded by Kinopoisk ID from PoiskKino's `GET /v1.4/movie/{id}` endpoint with `X-API-KEY` authentication.
 - Confirmation dialog - Shared `FloatingPanel` content that returns an explicit boolean decision while native dialog modality, dismissal, cleanup, and focus restoration remain infrastructure concerns.
+- Auth session - The expiring JWT state persisted under `StorageKey.Token`; it survives reloads and is cleared by Sign Out, JWT expiry, invalid restoration, or authenticated 401 responses.
+- Storage key - A centralized `StorageKey` enum member used by `BrowserStorage`; current exact keys are `token` and `language`.
+- Form validation message - The shared Signal Form component that renders the first validator-provided translated error after a field becomes touched and invalid, or maps standard error kinds to specific shared translations when custom copy is absent.
+- Protected control - A write-action control whose native disabled state is centrally combined with `AuthSession` through `mshRequiresAuth`.
 
 ```scss
 .movie-badge {

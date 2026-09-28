@@ -1,4 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { AuthSession } from '@msh-core/auth/auth-session';
+import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { type MovieDetails } from '../../../models/movie-details';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { MovieDetailsHero } from './movie-details-hero';
@@ -28,8 +30,11 @@ const movie: MovieDetails = {
 };
 
 describe('MovieDetailsHero', () => {
+  beforeEach(resetTestAuthStorage);
+
   it('renders enabled edit/delete actions and disabled auxiliary actions without IMDb content', async () => {
     TestBed.configureTestingModule({ providers: provideI18nTesting() });
+    TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
     const fixture = TestBed.createComponent(MovieDetailsHero);
     fixture.componentRef.setInput('movie', movie);
 
@@ -49,5 +54,15 @@ describe('MovieDetailsHero', () => {
     expect(buttons.filter((button) => !button.disabled)).toHaveLength(2);
     expect(element.textContent).toContain('Play trailer');
     expect(element.textContent).toContain('Path');
+  });
+
+  it('disables edit and delete while signed out', async () => {
+    TestBed.configureTestingModule({ providers: provideI18nTesting() });
+    const fixture = TestBed.createComponent(MovieDetailsHero);
+    fixture.componentRef.setInput('movie', movie);
+    await fixture.whenStable();
+
+    const buttons = [...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button')];
+    expect(buttons.every((button) => button.disabled)).toBe(true);
   });
 });

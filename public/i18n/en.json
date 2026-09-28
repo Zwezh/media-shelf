@@ -3,7 +3,48 @@
     "cancel": "Cancel",
     "close": "Close",
     "dismissNotification": "Dismiss notification",
-    "itemCount": "{{count}} items"
+    "itemCount": "{{count}} items",
+    "validation": {
+      "email": "Enter a valid email address.",
+      "max": "The value exceeds the allowed maximum.",
+      "maxDate": "Choose a date on or before the allowed maximum.",
+      "maxLength": "The value is too long.",
+      "min": "The value is below the allowed minimum.",
+      "minDate": "Choose a date on or after the allowed minimum.",
+      "minLength": "The value is too short.",
+      "parse": "Enter a value in the expected format.",
+      "pattern": "Use the required format.",
+      "range": "The value is outside the allowed range.",
+      "required": "Required field.",
+      "value": "Enter a valid value."
+    }
+  },
+  "auth": {
+    "actions": {
+      "signIn": "Sign In",
+      "signingIn": "Signing in…",
+      "signOut": "Sign Out"
+    },
+    "dialog": {
+      "description": "Enter the master secret key to unlock protected library actions.",
+      "hideSecret": "Hide secret key",
+      "hint": "The key is exchanged for a short-lived access token and is never stored.",
+      "secretKey": "Master secret key",
+      "showSecret": "Show secret key",
+      "title": "Authorize access"
+    },
+    "requiredForWrite": "Sign in to add or modify library items",
+    "toasts": {
+      "signInErrorMessage": "Check the secret key and connection, then try again.",
+      "signInErrorTitle": "Sign in failed",
+      "signInSuccessMessage": "Protected library actions are now available for this page session.",
+      "signInSuccessTitle": "Signed in",
+      "signOutSuccessMessage": "The access token has been cleared.",
+      "signOutSuccessTitle": "Signed out"
+    },
+    "validation": {
+      "secretKeyRequired": "Enter the master secret key."
+    }
   },
   "footer": {
     "description": "MediaShelf — Archival Media Management Suite",
@@ -149,6 +190,8 @@
       "autofillErrorTitle": "Auto-fill failed",
       "autofillSuccessMessage": "Available Kinopoisk metadata was applied to the form.",
       "autofillSuccessTitle": "Movie filled",
+      "duplicateErrorMessage": "A movie with the same name already exists.",
+      "duplicateErrorTitle": "Movie already exists",
       "loadErrorMessage": "Return to the library or try loading this movie again.",
       "loadErrorTitle": "Movie load failed",
       "saveErrorMessage": "Your changes remain in the form. Try saving again.",
@@ -160,7 +203,7 @@
       "duration": "Enter a non-negative runtime.",
       "kpId": "Enter a valid Kinopoisk ID.",
       "rating": "Enter a rating from 0 to 10.",
-      "required": "This field is required.",
+      "required": "Required field.",
       "year": "Enter a year from 1888 to 2100."
     }
   },

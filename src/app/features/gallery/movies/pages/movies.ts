@@ -2,6 +2,7 @@ import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthSession } from '@msh-core/auth/auth-session';
 import { EmptyState } from '@msh-shared/components/empty-state/empty-state';
 import { ConfirmationDialog, type ConfirmationDialogData } from '@msh-shared/components/confirmation-dialog/confirmation-dialog';
 import { MediaCard } from '@msh-shared/components/media-card/media-card';
@@ -10,6 +11,7 @@ import { Icon } from '@msh-shared/components/icon/icon';
 import { PageHeader } from '@msh-shared/components/page-header/page-header';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
 import { Pagination } from '@msh-shared/components/pagination/pagination';
+import { RequiresAuth } from '@msh-shared/directives/requires-auth';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { filter, take } from 'rxjs';
 import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-filters';
@@ -25,7 +27,7 @@ type FilterChip = {
 };
 
 @Component({
-  imports: [EmptyState, Icon, MediaCard, MoviesSortSelect, PageHeader, PageStatus, Pagination, TranslatePipe],
+  imports: [EmptyState, Icon, MediaCard, MoviesSortSelect, PageHeader, PageStatus, Pagination, RequiresAuth, TranslatePipe],
   providers: [MoviesStore],
   selector: 'msh-movies',
   styleUrl: './movies.scss',
@@ -36,6 +38,7 @@ export class Movies {
   private readonly floatingPanel = inject(FloatingPanel);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  protected readonly authSession = inject(AuthSession);
   protected readonly store = inject(MoviesStore);
   protected readonly filterChips = computed<readonly FilterChip[]>(() => toFilterChips(this.store.appliedFilters()));
 

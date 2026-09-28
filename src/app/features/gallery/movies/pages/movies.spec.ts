@@ -2,8 +2,10 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
+import { AuthSession } from '@msh-core/auth/auth-session';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
+import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import type { Media } from '../../models/media';
 import { MoviesStore } from '../data-access/movies.store';
 import { Movies } from './movies';
@@ -24,6 +26,8 @@ const media: Media = {
 };
 
 describe('Movies page', () => {
+  beforeEach(resetTestAuthStorage);
+
   it('wires card edit and confirmed delete actions', async () => {
     const store = createStore();
     const navigate = vi.fn(() => Promise.resolve(true));
@@ -37,6 +41,7 @@ describe('Movies page', () => {
       ],
     });
     TestBed.overrideComponent(Movies, { set: { providers: [{ provide: MoviesStore, useValue: store }] } });
+    TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
     const fixture = TestBed.createComponent(Movies);
     await fixture.whenStable();
     const actions = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.media-card__action');
@@ -69,6 +74,25 @@ describe('Movies page', () => {
     (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.movies__error .btn')?.click();
 
     expect(store.retry).toHaveBeenCalledOnce();
+  });
+
+  it('disables Add movie and explains the sign-in requirement while signed out', async () => {
+    const store = createStore();
+    TestBed.configureTestingModule({
+      providers: [
+        ...provideI18nTesting(),
+        { provide: ActivatedRoute, useValue: {} },
+        { provide: FloatingPanel, useValue: { open: vi.fn() } },
+        { provide: Router, useValue: { navigate: vi.fn() } },
+      ],
+    });
+    TestBed.overrideComponent(Movies, { set: { providers: [{ provide: MoviesStore, useValue: store }] } });
+    const fixture = TestBed.createComponent(Movies);
+    await fixture.whenStable();
+
+    const addButton = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.movies__add-button')!;
+    expect(addButton.disabled).toBe(true);
+    expect(addButton.title).toBe('Sign in to add or modify library items');
   });
 });
 

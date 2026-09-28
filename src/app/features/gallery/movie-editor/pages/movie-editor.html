@@ -24,7 +24,12 @@
         <button class="btn btn-ghost" type="button" [disabled]="store.isBusy()" (click)="discard()">
           {{ 'movieEditor.actions.discard' | translate }}
         </button>
-        <button class="btn btn-primary" type="submit" form="movie-editor-form" [disabled]="store.isBusy() || store.hasLoadError()">
+        <button
+          class="btn btn-primary"
+          type="submit"
+          form="movie-editor-form"
+          [mshRequiresAuth]="movieForm().invalid() || store.isBusy() || store.hasLoadError()"
+        >
           {{ 'movieEditor.actions.save' | translate }}
         </button>
       </div>
@@ -79,7 +84,7 @@
             <button class="btn btn-ghost" type="button" [disabled]="store.isBusy()" (click)="discard()">
               {{ 'movieEditor.actions.discard' | translate }}
             </button>
-            <button class="btn btn-primary" type="submit" [disabled]="store.isBusy()">
+            <button class="btn btn-primary" type="submit" [mshRequiresAuth]="movieForm().invalid() || store.isBusy()">
               {{ store.isSaving() ? ('movieEditor.actions.saving' | translate) : ('movieEditor.actions.save' | translate) }}
             </button>
           </div>

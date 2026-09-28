@@ -1,8 +1,9 @@
 import { Location } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { GalleryApi } from '../../data-access/gallery-api';
@@ -86,6 +87,47 @@ describe('MovieEditorStore', () => {
     expect(addMovie).toHaveBeenCalledWith(movie);
     expect(navigate).toHaveBeenCalledWith(['/gallery/movies', 'movie-1'], { queryParamsHandling: 'preserve' });
     expect(TestBed.inject(ToastStore).toasts().at(-1)).toEqual(expect.objectContaining({ title: 'Movie saved', type: 'success' }));
+  });
+
+  it('shows the duplicate-name conflict and keeps the add form in place', () => {
+    const addMovie = vi.fn(() =>
+      throwError(
+        () =>
+          new HttpErrorResponse({
+            error: { error: 'Conflict', message: 'A movie with the same name already exists.', statusCode: 409 },
+            status: 409,
+            statusText: 'Conflict',
+          }),
+      ),
+    );
+    const navigate = vi.fn(() => Promise.resolve(true));
+    TestBed.configureTestingModule({
+      providers: [
+        MovieEditorStore,
+        ...provideI18nTesting(),
+        { provide: GalleryApi, useValue: { addMovie } },
+        { provide: KinopoiskApi, useValue: {} },
+        { provide: Router, useValue: { navigate } },
+        { provide: Location, useValue: { back: vi.fn() } },
+        {
+          provide: ActivatedRoute,
+          useValue: { paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
+        },
+      ],
+    });
+
+    const store = TestBed.inject(MovieEditorStore);
+    store.save(movie);
+
+    expect(store.isSaving()).toBe(false);
+    expect(navigate).not.toHaveBeenCalled();
+    expect(TestBed.inject(ToastStore).toasts().at(-1)).toEqual(
+      expect.objectContaining({
+        message: 'A movie with the same name already exists.',
+        title: 'Movie already exists',
+        type: 'error',
+      }),
+    );
   });
 
   it('merges delayed autofill data into the latest editor draft', () => {

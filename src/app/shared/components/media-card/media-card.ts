@@ -1,13 +1,14 @@
 import { Component, computed, input, output } from '@angular/core';
 import { TranslatePipe, translate } from '@ngx-translate/core';
 import { MEDIA_POSTER_PLACEHOLDER } from '@msh-core/config/media';
+import { RequiresAuth } from '@msh-shared/directives/requires-auth';
 import { Icon } from '../icon/icon';
 import { MediaBadge } from '../media-badge/media-badge';
 import { MediaRating } from '../media-rating/media-rating';
 import type { MediaCardModel } from './media-card.model';
 
 @Component({
-  imports: [Icon, MediaBadge, MediaRating, TranslatePipe],
+  imports: [Icon, MediaBadge, MediaRating, RequiresAuth, TranslatePipe],
   selector: 'msh-media-card',
   styleUrl: './media-card.scss',
   templateUrl: './media-card.html',

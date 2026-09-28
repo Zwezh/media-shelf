@@ -42,7 +42,8 @@ Contracts:
 - The viewport uses the toast z-index token, safe-area insets, a 28 rem maximum width, and a responsive viewport-relative width.
 - URL-driven Movies loads use localized success and error toasts; these auto-hide after 2.5 and 5 seconds respectively. Loading and error state also remain visible in-page, and unchanged query parameters do not trigger background requests.
 - Route-driven movie-detail loads use the same 2.5-second success and 5-second error durations. Detail failures retain an in-page error with Retry and Back to movies actions.
-- Movie editor load, autofill, save, and movie deletion flows use localized toast feedback. Full autofill is success, optional-enrichment loss is warning, and failed base autofill/save/delete requests are errors.
+- Movie editor load, autofill, save, and movie deletion flows use localized toast feedback. Full autofill is success, optional-enrichment loss is warning, and failed base autofill/save/delete requests are errors. An add-mode duplicate-name `409 Conflict` has dedicated localized title/message copy and keeps the editor draft in place.
+- Successful sign-in and sign-out use localized success toasts; a rejected key, malformed authentication response, or invalid/expired returned JWT uses the localized sign-in error toast without exposing the key or token.
 
 Rationale and lessons:
 
@@ -51,4 +52,4 @@ Rationale and lessons:
 - Auto-hide is opt-in; its 5-second fallback keeps status feedback readable without forcing a duration on persistent notifications.
 - The implementation adapts Figma node `32:560` geometry and elevation while using MediaShelf semantic tokens instead of raw component colors.
 
-Related lodes: [UI summary](summary.md), [design tokens](design-tokens.md), [application shell](application-shell.md), [project practices](../practices.md).
+Related lodes: [authentication](../auth/summary.md), [UI summary](summary.md), [design tokens](design-tokens.md), [application shell](application-shell.md), [project practices](../practices.md).

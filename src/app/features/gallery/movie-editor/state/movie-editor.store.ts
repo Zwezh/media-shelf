@@ -1,4 +1,5 @@
 import { Location } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, type Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
@@ -112,9 +113,13 @@ export const MovieEditorStore = signalStore(
                   queryParamsHandling: 'preserve',
                 });
               }),
-              catchError(() => {
+              catchError((error: unknown) => {
                 patchState(store, { isSaving: false });
-                showToast('error', 'movieEditor.toasts.saveErrorTitle', 'movieEditor.toasts.saveErrorMessage');
+                if (store.mode() === 'add' && isDuplicateMovieConflict(error)) {
+                  showToast('error', 'movieEditor.toasts.duplicateErrorTitle', 'movieEditor.toasts.duplicateErrorMessage');
+                } else {
+                  showToast('error', 'movieEditor.toasts.saveErrorTitle', 'movieEditor.toasts.saveErrorMessage');
+                }
                 return EMPTY;
               }),
             ),
@@ -159,3 +164,10 @@ export const MovieEditorStore = signalStore(
     },
   })),
 );
+
+function isDuplicateMovieConflict(error: unknown): boolean {
+  if (!(error instanceof HttpErrorResponse) || error.status !== 409) return false;
+  if (typeof error.error !== 'object' || error.error === null || Array.isArray(error.error)) return false;
+  const payload = error.error as Record<string, unknown>;
+  return payload['message'] === 'A movie with the same name already exists.' && payload['statusCode'] === 409;
+}

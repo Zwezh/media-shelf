@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authenticatedGuard } from '@msh-core/auth/authenticated-guard';
 import { NavigationMetadata } from '@msh-core/navigation';
 
 export const GALLERY_ROUTES: Routes = [
@@ -19,12 +20,14 @@ export const GALLERY_ROUTES: Routes = [
       },
       {
         path: 'movies/new',
+        canActivate: [authenticatedGuard],
         title: 'routes.movieAddTitle',
         data: { mode: 'add' },
         loadComponent: () => import('./movie-editor/pages/movie-editor').then((module) => module.MovieEditorPage),
       },
       {
         path: 'movies/:id/edit',
+        canActivate: [authenticatedGuard],
         title: 'routes.movieEditTitle',
         data: { mode: 'edit' },
         loadComponent: () => import('./movie-editor/pages/movie-editor').then((module) => module.MovieEditorPage),

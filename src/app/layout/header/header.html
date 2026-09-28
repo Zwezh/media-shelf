@@ -19,4 +19,18 @@
       }
     </ul>
   </nav>
+
+  <div class="app-header__auth">
+    @if (authSession.isAuthenticated()) {
+      <button class="btn btn-secondary btn-sm" type="button" (click)="signOut()">
+        <msh-icon name="logout" [size]="18" />
+        <span>{{ 'auth.actions.signOut' | translate }}</span>
+      </button>
+    } @else {
+      <button class="btn btn-primary btn-sm" type="button" (click)="openSignIn()">
+        <msh-icon name="login" [size]="18" />
+        <span>{{ 'auth.actions.signIn' | translate }}</span>
+      </button>
+    }
+  </div>
 </header>

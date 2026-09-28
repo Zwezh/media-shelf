@@ -11,7 +11,7 @@
       </div>
       <div class="artwork-autofill__controls">
         <label class="form-label">
-          <span>{{ 'movieEditor.fields.kpId' | translate }}</span>
+          <span>{{ 'movieEditor.fields.kpId' | translate }} *</span>
           <input
             id="movie-editor-kp-id"
             class="form-control"
@@ -20,17 +20,22 @@
             [formField]="form().kpId"
           />
         </label>
-        <button class="btn btn-primary" type="button" [disabled]="!canAutofill()" (click)="autofillRequested.emit()">
+        <button class="btn btn-primary" type="button" [mshRequiresAuth]="!canAutofill()" (click)="autofillRequested.emit()">
           {{ isAutofilling() ? ('movieEditor.actions.autofilling' | translate) : ('movieEditor.actions.autofill' | translate) }}
         </button>
       </div>
-      @if (form().kpId().touched() && form().kpId().invalid()) {
-        <small id="movie-editor-kp-id-error" class="artwork-error">{{ 'movieEditor.validation.kpId' | translate }}</small>
-      }
+      <msh-form-validation-message [field]="form().kpId()" messageId="movie-editor-kp-id-error" />
     </div>
     <label class="form-label">
-      <span>{{ 'movieEditor.fields.posterUrl' | translate }}</span>
-      <input class="form-control" type="url" [formField]="form().posterUrl" />
+      <span>{{ 'movieEditor.fields.posterUrl' | translate }} *</span>
+      <input
+        id="movie-editor-poster-url"
+        class="form-control"
+        type="url"
+        aria-describedby="movie-editor-poster-url-error"
+        [formField]="form().posterUrl"
+      />
+      <msh-form-validation-message [field]="form().posterUrl()" messageId="movie-editor-poster-url-error" />
     </label>
     @if (posterUrl()) {
       <img
@@ -41,8 +46,15 @@
       />
     }
     <label class="form-label">
-      <span>{{ 'movieEditor.fields.backdropUrl' | translate }}</span>
-      <input class="form-control" type="url" [formField]="form().backdropUrl" />
+      <span>{{ 'movieEditor.fields.backdropUrl' | translate }} *</span>
+      <input
+        id="movie-editor-backdrop-url"
+        class="form-control"
+        type="url"
+        aria-describedby="movie-editor-backdrop-url-error"
+        [formField]="form().backdropUrl"
+      />
+      <msh-form-validation-message [field]="form().backdropUrl()" messageId="movie-editor-backdrop-url-error" />
     </label>
     @if (backdropUrl()) {
       <img class="artwork-preview artwork-preview--backdrop" [src]="backdropUrl()" alt="" (error)="useImageFallback($event)" />

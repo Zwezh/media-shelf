@@ -22,6 +22,7 @@ flowchart TD
   App --> Main[MainContent]
   App --> Footer[Footer]
   Routes[Root route metadata] --> Header
+  Header --> Auth[Sign In / Sign Out]
   Main --> Outlet[RouterOutlet]
   Package[package.json version] --> Footer
 ```
@@ -30,7 +31,8 @@ Contracts:
 
 - The desktop header is 56 px high with 24 px inline padding; at 48 rem and below it is 64 px high with 16 px padding.
 - The application header is sticky at the viewport top and remains above feature-level sticky navigation.
-- Mobile navigation remains in the header and scrolls horizontally. There is no bottom navigation or placeholder for future account controls.
+- Mobile navigation remains in the header and scrolls horizontally. The right-side authentication action becomes icon-only visually while retaining its translated accessible text.
+- The header renders Sign In for an empty session and Sign Out for an authenticated session restored from storage when valid. Sign In opens the authorization dialog; Sign Out clears both signal and persisted token state and reports success through the global toast viewport.
 - The header receives root navigation items from `App`; it does not import route configuration.
 - `Gallery` remains active for `/gallery` child URLs such as `/gallery/wishlist`.
 - The main content shell is full width and adds no feature padding.
@@ -39,4 +41,4 @@ Contracts:
 - Nunito Sans weights 400, 600, 700, and 800 are bundled locally through `@fontsource/nunito-sans`.
 - Shell components use `--color-shell-*` and `--size-shell-*` tokens rather than hard-coded layout values.
 
-Related lodes: [UI summary](summary.md), [design tokens](design-tokens.md), [routing](../routing/summary.md).
+Related lodes: [authentication](../auth/summary.md), [UI summary](summary.md), [design tokens](design-tokens.md), [routing](../routing/summary.md).

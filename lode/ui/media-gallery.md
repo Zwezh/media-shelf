@@ -33,6 +33,7 @@ flowchart LR
   Actions -->|View + preserved query| Details[/movies/:id]
   Actions -->|Edit + preserved query| Editor[/movies/:id/edit]
   Actions -->|Confirmed delete| Delete[DELETE /movies/id]
+  Session[AuthSession] -->|enables protected actions| Actions
   Header[PageHeader] --> Grid
   Status[PageStatus] --> Grid
   Empty[EmptyState] --> Grid
@@ -70,13 +71,13 @@ Invariants:
 - The grid spans the gallery canvas with a uniform 16px gutter and explicit responsive column counts: two by default, three from 640px, four from 768px, five from 1024px, and six from 1280px. Cards stretch evenly within their row and retain the canonical 2:3 poster ratio.
 - Cards use the Stitch surface contract: an 8px clipped container, Level-1 resting elevation, a strong border/Level-2 elevation/2px lift on hover or focus-within, a primary active border, and a 5% poster zoom. Reduced-motion preferences remove transforms and transitions.
 - Poster badges place media type and quality at the start and age rating at the end. A bottom scrim contains duration/type metadata and View, Edit, and Delete buttons. The scrim appears on hover or keyboard focus and stays visible on devices without hover capability.
-- View, Edit, and Delete are accessible card buttons with localized names and dedicated icons. `MediaCard` emits its selected immutable presentation model; the Movies page opens details or editing with collection query parameters preserved, and Delete requires explicit shared-dialog confirmation before `MoviesStore` removes the item. Deletion disables mutating card actions while in flight and reports localized success or failure.
+- View, Edit, and Delete are accessible card buttons with localized names and dedicated icons. View remains public; the shared `mshRequiresAuth` directive disables Edit and Delete while signed out and combines session state with deletion's in-flight disabled state. `MediaCard` emits its selected immutable presentation model; the Movies page opens details or editing with collection query parameters preserved, and Delete requires explicit shared-dialog confirmation before `MoviesStore` removes the item. Deletion reports localized success or failure.
 - `GET /movies/{id}` returns `MediaDto`, which `GalleryApi` converts to an immutable detail-specific model. `MovieDetailsStore` owns route-ID loading, stale-request cancellation, retry, page state, and success/error toasts.
-- The detail page adapts the Stitch prototype into a responsive hero, a shared `DetailCard` 7/5 metadata grid, and conditional Similar movies and Sequels & prequels name lists. Unsupported telemetry is omitted; Edit, Delete, Trailer, and Path controls remain visible and disabled.
+- The detail page adapts the Stitch prototype into a responsive hero, a shared `DetailCard` 7/5 metadata grid, and conditional Similar movies and Sequels & prequels name lists. Unsupported telemetry is omitted; Edit and Delete are enabled only for an authenticated session, while Trailer and Path remain visible and disabled.
 - Detail conversion trims `similarMovies` and `sequelsAndPrequels` titles and removes empty or whitespace-only entries. Each related block is rendered only when its normalized list contains an item.
 - The hero rating is Kinopoisk-only: `kpId` produces a safe new-tab link to `https://www.kinopoisk.ru/film/{kpId}`. No IMDb content is shown.
 - The metadata shelf below the poster uses 8px padding and a minimum 84px height. It renders a single-line title/year row, a single-line two-genre summary, and a rating/director row, all with ellipsis protection for narrow cards.
-- The top action bar always shows the title, loaded item count, and enabled `Add movie` navigation action.
+- The top action bar always shows the title, loaded item count, and an add-icon `Add movie` action. The shared authentication directive disables it while signed out, and its localized tooltip explains that sign-in is required.
 - Gallery subnavigation is sticky beneath the application header, uses the matching desktop or mobile header-height token as its offset, and spans the available width without an inner maximum-width cap.
 - `PageHeader` owns page identity and action layout; callers project feature-specific actions. Its action group normalizes nested shared buttons to the standard control height, padding, and label typography.
 - `PageStatus` uses polite `status` semantics while loading and assertive `alert` semantics for errors. Movie-list failures add a keyboard-operable Retry action that repeats the current normalized request.
@@ -86,4 +87,4 @@ Invariants:
 - Pagination follows the same full-width band pattern as gallery navigation: its surface, shadow, and inner row span the available width. The row is at least 56px tall and uses 24px desktop side padding, a 13px visible-range summary, a compact lavender page-size badge, and 32px numbered controls beside text First/Last boundaries and chevrons. Controls never emit values outside the valid range; middle pages retain both adjacent pages between endpoint anchors and ellipses, the active page uses the archival indigo fill, and mobile centers the metadata above a horizontally scrollable control row.
 - All user-facing controls have accessible names and visible focus treatment.
 
-Related lodes: [UI summary](summary.md), [design tokens](design-tokens.md), [floating panels](floating-panels.md), [routing](../routing/summary.md), [practices](../practices.md).
+Related lodes: [authentication](../auth/summary.md), [UI summary](summary.md), [design tokens](design-tokens.md), [floating panels](floating-panels.md), [routing](../routing/summary.md), [practices](../practices.md).

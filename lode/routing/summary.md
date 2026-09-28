@@ -32,6 +32,8 @@ flowchart LR
   GalleryRoutes --> Wishlist[/gallery/wishlist]
   Statistics --> StatisticsRoutes[statistics.routes.ts]
   Settings --> SettingsRoutes[settings.routes.ts]
+  AuthGuard[Authenticated guard] --> MovieAdd
+  AuthGuard --> MovieEdit
 ```
 
 Invariants:
@@ -40,6 +42,7 @@ Invariants:
 - Movies and Wishlist are gallery-owned children rendered inside `GalleryLayout`.
 - Movie details is a lazy gallery child without navigation metadata, so it reuses the Gallery layout while adding no subnavigation tab.
 - Movie add/edit pages are lazy Gallery children without navigation metadata and share `MovieEditorPage`; `movies/new` must remain before `movies/:id`.
+- Movie add/edit routes use `authenticatedGuard`. A signed-out attempt returns a `/gallery/movies` `UrlTree` with the attempted route's collection query parameters; backend authorization remains authoritative.
 - Movies reads request parameters from its child route query string and preserves them across reloads. `currentPage` is a zero-based API index; pagination translates its one-based page before navigation, and an index beyond the collection is replaced with the last valid index.
 - Gallery subnavigation contains only child routes with valid `navigation` metadata; redirects are excluded.
 - Header links are derived only from valid root `navigation.labelKey` metadata; redirects, wildcard routes, and gallery children are excluded.
@@ -48,4 +51,4 @@ Invariants:
 - Every root path and redirect is covered by `src/app/app.routes.spec.ts`.
 - New root features update `src/app/app.routes.ts`, route tests, and this routing contract together.
 
-Related lodes: [project summary](../summary.md), [practices](../practices.md), [application shell](../ui/application-shell.md), [media gallery](../ui/media-gallery.md).
+Related lodes: [authentication](../auth/summary.md), [project summary](../summary.md), [practices](../practices.md), [application shell](../ui/application-shell.md), [media gallery](../ui/media-gallery.md).

@@ -1,11 +1,12 @@
 import { Component, input } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FormValidationMessage } from '@msh-shared/components/form-validation-message/form-validation-message';
 import type { MovieEditorForm } from '../../models/movie-editor-form.model';
 import { MovieEditorSection } from '../movie-editor-section/movie-editor-section';
 
 @Component({
-  imports: [FormField, MovieEditorSection, TranslatePipe],
+  imports: [FormField, FormValidationMessage, MovieEditorSection, TranslatePipe],
   selector: 'msh-movie-editor-production-cast',
   styleUrl: '../movie-editor-form-section.scss',
   templateUrl: './production-cast.html',

@@ -5,26 +5,40 @@
 >
   <div class="editor-fields editor-fields--three">
     <label class="form-label editor-field">
-      <span>{{ 'movieEditor.fields.quality' | translate }}</span>
-      <select class="form-control" [formField]="form().quality">
+      <span>{{ 'movieEditor.fields.quality' | translate }} *</span>
+      <select id="movie-editor-quality" class="form-control" aria-describedby="movie-editor-quality-error" [formField]="form().quality">
         <option value="">{{ 'movieEditor.fields.notSet' | translate }}</option>
         @for (quality of qualityOptions; track quality) {
           <option [value]="quality">{{ quality }}</option>
         }
       </select>
+      <msh-form-validation-message [field]="form().quality()" messageId="movie-editor-quality-error" />
     </label>
     <label class="form-label editor-field">
-      <span>{{ 'movieEditor.fields.extension' | translate }}</span>
-      <select class="form-control" [formField]="form().extension">
+      <span>{{ 'movieEditor.fields.extension' | translate }} *</span>
+      <select
+        id="movie-editor-extension"
+        class="form-control"
+        aria-describedby="movie-editor-extension-error"
+        [formField]="form().extension"
+      >
         <option value="">{{ 'movieEditor.fields.notSet' | translate }}</option>
         @for (extension of extensionOptions; track extension) {
           <option [value]="extension">{{ extension }}</option>
         }
       </select>
+      <msh-form-validation-message [field]="form().extension()" messageId="movie-editor-extension-error" />
     </label>
     <label class="form-label editor-field">
-      <span>{{ 'movieEditor.fields.addedDate' | translate }}</span>
-      <input class="form-control" type="date" [formField]="form().addedDate" />
+      <span>{{ 'movieEditor.fields.addedDate' | translate }} *</span>
+      <input
+        id="movie-editor-added-date"
+        class="form-control"
+        type="date"
+        aria-describedby="movie-editor-added-date-error"
+        [formField]="form().addedDate"
+      />
+      <msh-form-validation-message [field]="form().addedDate()" messageId="movie-editor-added-date-error" />
     </label>
   </div>
 </msh-movie-editor-section>

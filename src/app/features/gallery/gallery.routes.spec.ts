@@ -1,3 +1,4 @@
+import { authenticatedGuard } from '@msh-core/auth/authenticated-guard';
 import { GALLERY_NAVIGATION_ITEMS, GALLERY_ROUTES } from './gallery.routes';
 
 describe('gallery routes', () => {
@@ -18,5 +19,7 @@ describe('gallery routes', () => {
 
     expect(children.find((route) => route.path === 'movies/new')?.data?.['mode']).toBe('add');
     expect(children.find((route) => route.path === 'movies/:id/edit')?.data?.['mode']).toBe('edit');
+    expect(children.find((route) => route.path === 'movies/new')?.canActivate).toContain(authenticatedGuard);
+    expect(children.find((route) => route.path === 'movies/:id/edit')?.canActivate).toContain(authenticatedGuard);
   });
 });
