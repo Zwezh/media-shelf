@@ -1,4 +1,5 @@
 import { Component, computed, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ToastId, ToastMessage, ToastType } from '@msh-shared/models/toast.model';
 
 const TOAST_ICONS: Readonly<Record<ToastType, string>> = {
@@ -9,7 +10,7 @@ const TOAST_ICONS: Readonly<Record<ToastType, string>> = {
 };
 
 @Component({
-  imports: [],
+  imports: [TranslatePipe],
   selector: 'msh-toast',
   styleUrl: './toast.scss',
   templateUrl: './toast.html',

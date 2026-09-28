@@ -10,6 +10,7 @@ import { GalleryApi } from './gallery-api';
 const testEnvironment = {
   ...environment,
   apiUrl: 'http://localhost:4200/api/',
+  kinopoiskToken: 'test-token',
   production: false,
 };
 
@@ -110,6 +111,54 @@ describe('GalleryApi', () => {
     request.flush(mediaDto);
 
     expect(title).toBe('Movie title');
+    http.verify();
+  });
+
+  it('loads a raw movie DTO and sends exact add, update, and delete mutations', () => {
+    TestBed.configureTestingModule({
+      providers: [GalleryApi, provideEnvironment(testEnvironment), provideHttpClient(), provideHttpClientTesting()],
+    });
+
+    const api = TestBed.inject(GalleryApi);
+    const http = TestBed.inject(HttpTestingController);
+
+    api.getMovieDto('movie/one').subscribe();
+    const getRequest = http.expectOne('http://localhost:4200/api/movies/movie%2Fone');
+    expect(getRequest.request.method).toBe('GET');
+    getRequest.flush(mediaDto);
+
+    api.addMovie(mediaDto).subscribe();
+    const postRequest = http.expectOne('http://localhost:4200/api/movies');
+    expect(postRequest.request.method).toBe('POST');
+    expect(postRequest.request.body).toEqual(mediaDto);
+    postRequest.flush(mediaDto);
+
+    api.updateMovie(mediaDto).subscribe();
+    const putRequest = http.expectOne('http://localhost:4200/api/movies');
+    expect(putRequest.request.method).toBe('PUT');
+    expect(putRequest.request.body).toEqual(mediaDto);
+    putRequest.flush(mediaDto);
+
+    api.deleteMovie('movie/one').subscribe();
+    const deleteRequest = http.expectOne('http://localhost:4200/api/movies/movie%2Fone');
+    expect(deleteRequest.request.method).toBe('DELETE');
+    deleteRequest.flush(null);
+
+    http.verify();
+  });
+
+  it('rejects malformed transport responses before conversion', () => {
+    TestBed.configureTestingModule({
+      providers: [GalleryApi, provideEnvironment(testEnvironment), provideHttpClient(), provideHttpClientTesting()],
+    });
+    const api = TestBed.inject(GalleryApi);
+    const http = TestBed.inject(HttpTestingController);
+    const error = vi.fn();
+
+    api.getMovies(params).subscribe({ error });
+    http.expectOne(({ url }) => url === 'http://localhost:4200/api/movies').flush({ currentPage: 0, list: null, totalCount: 1 });
+
+    expect(error).toHaveBeenCalledWith(expect.any(TypeError));
     http.verify();
   });
 });

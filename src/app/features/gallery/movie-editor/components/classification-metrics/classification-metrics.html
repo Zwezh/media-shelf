@@ -1,0 +1,43 @@
+<msh-movie-editor-section
+  headingId="movie-editor-classification"
+  titleKey="movieEditor.sections.classification.title"
+  eyebrowKey="movieEditor.sections.classification.eyebrow"
+>
+  <div class="editor-fields editor-fields--three">
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.rating' | translate }}</span>
+      <input
+        id="movie-editor-rating"
+        class="form-control"
+        inputmode="decimal"
+        aria-describedby="movie-editor-rating-error"
+        [formField]="form().rating"
+      />
+      @if (form().rating().touched() && form().rating().invalid()) {
+        <small id="movie-editor-rating-error" class="editor-error">{{ 'movieEditor.validation.rating' | translate }}</small>
+      }
+    </label>
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.ageRating' | translate }}</span>
+      <select class="form-control" [formField]="form().ageRating">
+        <option value="">{{ 'movieEditor.fields.notSet' | translate }}</option>
+        @for (rating of ageRatings; track rating) {
+          <option [value]="rating">{{ rating }}+</option>
+        }
+      </select>
+    </label>
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.movieLength' | translate }}</span>
+      <input
+        id="movie-editor-duration"
+        class="form-control"
+        inputmode="numeric"
+        aria-describedby="movie-editor-duration-error"
+        [formField]="form().movieLength"
+      />
+      @if (form().movieLength().touched() && form().movieLength().invalid()) {
+        <small id="movie-editor-duration-error" class="editor-error">{{ 'movieEditor.validation.duration' | translate }}</small>
+      }
+    </label>
+  </div>
+</msh-movie-editor-section>

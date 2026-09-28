@@ -38,6 +38,7 @@
           class="btn btn-xs btn-overlay media-card__action"
           type="button"
           [attr.aria-label]="'media.actions.edit' | translate: { title: displayTitle() }"
+          [disabled]="actionsDisabled()"
           [title]="'media.actions.edit' | translate: { title: displayTitle() }"
           (click)="editRequested.emit(media())"
         >
@@ -47,6 +48,7 @@
           class="btn btn-xs btn-overlay btn-overlay-danger media-card__action"
           type="button"
           [attr.aria-label]="'media.actions.delete' | translate: { title: displayTitle() }"
+          [disabled]="actionsDisabled()"
           [title]="'media.actions.delete' | translate: { title: displayTitle() }"
           (click)="deleteRequested.emit(media())"
         >

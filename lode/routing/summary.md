@@ -1,6 +1,6 @@
 # Routing Summary
 
-The root router exposes three lazy feature boundaries: `/gallery`, `/statistics`, and `/settings`. Gallery loads a feature layout whose children are `/gallery/movies`, `/gallery/movies/:id`, and `/gallery/wishlist`; visiting `/gallery` redirects to Movies, whose required request state is canonicalized as query parameters. Movie-card View navigation preserves those query parameters on the detail URL so the Movies breadcrumb returns to the same collection state. `/`, the obsolete `/wishlist` URL, and other unmatched URLs first redirect through `/gallery` and settle on `/gallery/movies`. Root and gallery navigation are each derived from translation-key `navigation` metadata at their own route level, and route titles are translation keys resolved by `TranslatedTitleStrategy`.
+The root router exposes three lazy feature boundaries: `/gallery`, `/statistics`, and `/settings`. Gallery loads a feature layout whose children include `/gallery/movies`, static `/gallery/movies/new`, `/gallery/movies/:id`, `/gallery/movies/:id/edit`, and `/gallery/wishlist`; the static add route precedes the parameterized detail route. Movie list, editor, and detail navigation preserve collection query parameters. Editor routes carry an explicit `add` or `edit` mode in route data and omit navigation metadata, so Gallery subnavigation remains unchanged. `/`, the obsolete `/wishlist` URL, and other unmatched URLs redirect through `/gallery` to Movies. Route titles are translation keys resolved by `TranslatedTitleStrategy`.
 
 Router navigation uses Angular's progressive View Transitions integration with a short global fade/vertical shift. Unsupported browsers navigate normally, and reduced-motion preference disables the animation.
 
@@ -27,6 +27,8 @@ flowchart LR
   Gallery --> GalleryRoutes[gallery.routes.ts]
   GalleryRoutes --> Movies[/gallery/movies]
   Movies --> MovieDetails[/gallery/movies/:id]
+  Movies --> MovieAdd[/gallery/movies/new]
+  MovieDetails --> MovieEdit[/gallery/movies/:id/edit]
   GalleryRoutes --> Wishlist[/gallery/wishlist]
   Statistics --> StatisticsRoutes[statistics.routes.ts]
   Settings --> SettingsRoutes[settings.routes.ts]
@@ -37,6 +39,7 @@ Invariants:
 - Root feature entries use `loadChildren`; feature pages use `loadComponent`.
 - Movies and Wishlist are gallery-owned children rendered inside `GalleryLayout`.
 - Movie details is a lazy gallery child without navigation metadata, so it reuses the Gallery layout while adding no subnavigation tab.
+- Movie add/edit pages are lazy Gallery children without navigation metadata and share `MovieEditorPage`; `movies/new` must remain before `movies/:id`.
 - Movies reads request parameters from its child route query string and preserves them across reloads. `currentPage` is a zero-based API index; pagination translates its one-based page before navigation, and an index beyond the collection is replaced with the last valid index.
 - Gallery subnavigation contains only child routes with valid `navigation` metadata; redirects are excluded.
 - Header links are derived only from valid root `navigation.labelKey` metadata; redirects, wildcard routes, and gallery children are excluded.

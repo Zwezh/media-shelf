@@ -303,6 +303,53 @@ describe('MoviesStore', () => {
     ]);
   });
 
+  it('retries the current request after a load failure', () => {
+    const initialParamMap = convertToParamMap({});
+    const getMovies = vi
+      .fn<(params: MoviesParams) => ReturnType<GalleryApi['getMovies']>>()
+      .mockReturnValueOnce(throwError(() => new Error('Failed')))
+      .mockReturnValueOnce(of({ currentPage: 0, media: [media], totalCount: 1 }));
+    TestBed.configureTestingModule({
+      providers: [
+        MoviesStore,
+        ...provideI18nTesting(),
+        { provide: GalleryApi, useValue: { getMovies } },
+        { provide: ActivatedRoute, useValue: { queryParamMap: of(initialParamMap) } },
+        { provide: Router, useValue: { navigate: vi.fn() } },
+      ],
+    });
+    const store = TestBed.inject(MoviesStore);
+
+    store.retry();
+
+    expect(getMovies).toHaveBeenCalledTimes(2);
+    expect(store.hasError()).toBe(false);
+    expect(store.media()).toEqual([media]);
+  });
+
+  it('removes a confirmed deletion from the visible page', () => {
+    const initialParamMap = convertToParamMap({});
+    const deleteMovie = vi.fn(() => of(undefined));
+    TestBed.configureTestingModule({
+      providers: [
+        MoviesStore,
+        ...provideI18nTesting(),
+        { provide: GalleryApi, useValue: { deleteMovie, getMovies: () => of({ currentPage: 0, media: [media], totalCount: 1 }) } },
+        { provide: ActivatedRoute, useValue: { queryParamMap: of(initialParamMap) } },
+        { provide: Router, useValue: { navigate: vi.fn() } },
+      ],
+    });
+    const store = TestBed.inject(MoviesStore);
+
+    store.deleteMovie(media.id);
+
+    expect(deleteMovie).toHaveBeenCalledWith(media.id);
+    expect(store.media()).toEqual([]);
+    expect(store.totalCount()).toBe(0);
+    expect(store.isDeleting()).toBe(false);
+    expect(TestBed.inject(ToastStore).toasts().at(-1)).toEqual(expect.objectContaining({ title: 'Movie deleted', type: 'success' }));
+  });
+
   it('loads once, shows a success toast, and does not poll', () => {
     const initialParamMap = convertToParamMap({});
     const getMovies = vi.fn(() => of({ currentPage: 0, media: [media], totalCount: 1 }));

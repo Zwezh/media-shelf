@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { type Media } from '@msh-features/gallery/models/media';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { MediaCard } from './media-card';
+import type { MediaCardModel } from './media-card.model';
 
-const media: Media = {
+const media: MediaCardModel = {
   ageRating: '16+',
   director: 'Denis Villeneuve',
   durationMinutes: 166,

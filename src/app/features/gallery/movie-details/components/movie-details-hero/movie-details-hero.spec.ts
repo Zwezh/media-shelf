@@ -28,7 +28,7 @@ const movie: MovieDetails = {
 };
 
 describe('MovieDetailsHero', () => {
-  it('renders the Kinopoisk rating and visible disabled actions without IMDb content', async () => {
+  it('renders enabled edit/delete actions and disabled auxiliary actions without IMDb content', async () => {
     TestBed.configureTestingModule({ providers: provideI18nTesting() });
     const fixture = TestBed.createComponent(MovieDetailsHero);
     fixture.componentRef.setInput('movie', movie);
@@ -44,8 +44,9 @@ describe('MovieDetailsHero', () => {
     expect(rating?.getAttribute('aria-label')).toContain('new tab');
     expect(element.textContent).not.toContain('IMDb');
 
-    const disabledActions = element.querySelectorAll<HTMLButtonElement>('button:disabled');
-    expect(disabledActions).toHaveLength(4);
+    const buttons = [...element.querySelectorAll<HTMLButtonElement>('button')];
+    expect(buttons.filter((button) => button.disabled)).toHaveLength(2);
+    expect(buttons.filter((button) => !button.disabled)).toHaveLength(2);
     expect(element.textContent).toContain('Play trailer');
     expect(element.textContent).toContain('Path');
   });

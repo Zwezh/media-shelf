@@ -15,6 +15,7 @@
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
 - [plans/media-sorting.md](plans/media-sorting.md) - Responsive, URL-backed Movies sorting contract and structure.
 - [plans/movie-details.md](plans/movie-details.md) - Movie details route, API/store flow, prototype adaptation, components, navigation, and verification contract.
+- [plans/movie-editor.md](plans/movie-editor.md) - Movie add/edit routes, Signal Form and store flow, Kinopoisk autofill, CRUD mutations, confirmation deletion, and verification contract.
 - `plans/` - Persistent roadmaps and TODOs when needed.
 - `tmp/` - Git-ignored session scraps and handovers.
 
@@ -43,6 +44,7 @@ flowchart TD
   Root --> Plans[plans]
   Plans --> MediaSorting[media-sorting.md]
   Plans --> MovieDetails[movie-details.md]
+  Plans --> MovieEditor[movie-editor.md]
 ```
 
-Related lodes: [summary](summary.md), [UI tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md), [routing](routing/summary.md), [CI](ci/summary.md), [media sorting plan](plans/media-sorting.md), [movie details plan](plans/movie-details.md).
+Related lodes: [summary](summary.md), [UI tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md), [routing](routing/summary.md), [CI](ci/summary.md), [media sorting plan](plans/media-sorting.md), [movie details plan](plans/movie-details.md), [movie editor plan](plans/movie-editor.md).

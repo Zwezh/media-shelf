@@ -30,6 +30,8 @@ flowchart LR
   Converter --> Page[Movie details page]
   Store --> Toasts[ToastStore]
   Page --> Breadcrumbs[Breadcrumb navigation]
+  Page --> Editor[Edit route]
+  Page --> Confirm[Delete confirmation]
 ```
 
 ## Scope and prototype adaptation
@@ -37,7 +39,7 @@ flowchart LR
 - Preserve the prototype's responsive hierarchy: breadcrumb band, backdrop/hero, 2:3 poster and actions, primary metadata/synopsis, a 7/5 desktop details grid, then related-media lists.
 - Render hero data available from `MediaDto`: media type, quality, Kinopoisk rating, age rating, duration, localized/original titles, year, genres, description, poster, and backdrop. The rating is a link to `https://www.kinopoisk.ru/film/{kpId}` that opens in a new tab. Do not add IMDb content or invent tagline, file size, audio, screenplay, character names, exact release date, or storage data.
 - Omit Rapid Telemetry Counters, `#toggleQuickInspector`, the “Vault Verified • Disk Pool 02” status, and the prototype's combined “Connected Media & Recommendations” section.
-- Render Edit and Delete as disabled buttons. Keep the Auxiliary Stream / Path actions visible as disabled placeholders until trailer and filesystem contracts exist.
+- Edit navigates to `/gallery/movies/:id/edit` with collection query parameters preserved. Delete opens the shared confirmation dialog and calls `DELETE /movies/:id` only after explicit confirmation. Keep Auxiliary Stream / Path visible as disabled placeholders until trailer and filesystem contracts exist.
 - Use semantic design tokens and existing button/typography primitives; add detail-specific layout styles without importing the prototype's Tailwind classes or remote assets.
 - Dynamic poster and backdrop failures fall back safely. The decorative backdrop has empty alternative text; the poster alternative names the movie.
 
@@ -68,8 +70,8 @@ type MovieDetailsState = {
 
 ## Page and component structure
 
-1. `MovieDetails` page: route/store composition, loading/error/content branches, breadcrumbs, and disabled action wiring.
-2. `MovieDetailsHero`: poster, decorative backdrop, metadata badges, titles, genres, synopsis, and disabled Edit/Delete/Auxiliary actions. Keep it gallery-owned because it consumes the movie domain model.
+1. `MovieDetails` page: route/store composition, loading/error/content branches, breadcrumbs, edit navigation, and confirmed deletion orchestration.
+2. `MovieDetailsHero`: poster, decorative backdrop, metadata badges, titles, genres, synopsis, enabled Edit/Delete outputs, and disabled Auxiliary actions. Keep it gallery-owned because it consumes the movie domain model.
 3. Shared `DetailCard`: reusable surface with a required title/heading ID and projected body plus an optional projected header-trailing area. It renders no subtitle and owns only surface/header layout and heading semantics.
 4. `ProductionAndCast`: a 7-column `DetailCard` containing Director, Countries of Origin, Original Release year, and every actor name from the API. Label the list “Actors”; omit IMDb content, photos, roles, and “View full credit list”.
 5. `AdditionalInformation`: a 5-column `DetailCard` titled “Additional information”, containing only Added to Library, Quality, and Extension. Do not render a verified icon.
@@ -78,7 +80,7 @@ type MovieDetailsState = {
 ## Accessibility and responsive contract
 
 - Use one page `<h1>` and hierarchical `<h2>`/`<h3>` headings; card titles identify their regions without subtitle noise.
-- Disabled buttons use native `disabled`, remain visibly disabled, and are not presented as supported actions. Do not add click handlers or misleading links.
+- Auxiliary buttons use native `disabled`; Edit and Delete are keyboard-operable buttons with page-owned navigation/dialog orchestration.
 - Loading is a polite status; failures are assertive. Retry is keyboard reachable, focus styles use shared tokens, and no information relies on color alone.
 - Actor and related-media collections use semantic lists. Empty related-media collections are not rendered.
 - The Kinopoisk rating uses a real anchor with `target="_blank"`, `rel="noopener noreferrer"`, visible focus treatment, and a localized accessible name that announces it opens in a new tab.
@@ -97,7 +99,7 @@ type MovieDetailsState = {
 - Converter tests cover array years, title/poster fallbacks, missing age rating, invalid dates, and immutable related/cast projections.
 - Store tests cover initial/changed route IDs, stale-request cancellation, retry, success/error states, and one localized toast per completed request.
 - Route and Movies page tests prove lazy matching, no extra Gallery navigation tab, View navigation, and preserved collection query parameters.
-- Shared card tests cover heading semantics and optional projected header content. Page/component tests cover all actors, three Additional information rows, conditional related-list visibility, visible disabled actions, breadcrumbs without a leading icon, and loading/error/retry rendering.
+- Shared card tests cover heading semantics and optional projected header content. Page/component tests cover all actors, three Additional information rows, conditional related-list visibility, enabled Edit/Delete actions, disabled auxiliary actions, breadcrumbs without a leading icon, and loading/error/retry rendering.
 - Hero tests assert that the rating links to the exact Kinopoisk URL for `kpId`, opens in a new tab with safe `rel` values, and that no IMDb content is rendered.
 - Converter, API, SignalStore, component, and router tests cover the contracts above. `npm run check`, TypeScript application/test checks, and the production build are required quality gates; visual and AXE checks cover desktop and mobile breakpoints when a browser surface is available.
 

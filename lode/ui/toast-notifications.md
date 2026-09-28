@@ -42,6 +42,7 @@ Contracts:
 - The viewport uses the toast z-index token, safe-area insets, a 28 rem maximum width, and a responsive viewport-relative width.
 - URL-driven Movies loads use localized success and error toasts; these auto-hide after 2.5 and 5 seconds respectively. Loading and error state also remain visible in-page, and unchanged query parameters do not trigger background requests.
 - Route-driven movie-detail loads use the same 2.5-second success and 5-second error durations. Detail failures retain an in-page error with Retry and Back to movies actions.
+- Movie editor load, autofill, save, and movie deletion flows use localized toast feedback. Full autofill is success, optional-enrichment loss is warning, and failed base autofill/save/delete requests are errors.
 
 Rationale and lessons:
 

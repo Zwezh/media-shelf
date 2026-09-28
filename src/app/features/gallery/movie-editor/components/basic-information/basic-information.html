@@ -1,0 +1,59 @@
+<msh-movie-editor-section
+  headingId="movie-editor-basic"
+  titleKey="movieEditor.sections.basic.title"
+  eyebrowKey="movieEditor.sections.basic.eyebrow"
+>
+  <div class="editor-fields">
+    <label class="form-label editor-field editor-field--wide">
+      <span>{{ 'movieEditor.fields.name' | translate }} *</span>
+      <input id="movie-editor-name" class="form-control" [formField]="form().name" aria-describedby="movie-editor-name-error" />
+      @if (form().name().touched() && form().name().invalid()) {
+        <small id="movie-editor-name-error" class="editor-error">{{ 'movieEditor.validation.required' | translate }}</small>
+      }
+    </label>
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.enName' | translate }}</span>
+      <input class="form-control" [formField]="form().enName" />
+    </label>
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.year' | translate }}</span>
+      <input
+        id="movie-editor-year"
+        class="form-control"
+        inputmode="numeric"
+        aria-describedby="movie-editor-year-error"
+        [formField]="form().year"
+      />
+      @if (form().year().touched() && form().year().invalid()) {
+        <small id="movie-editor-year-error" class="editor-error">{{ 'movieEditor.validation.year' | translate }}</small>
+      }
+    </label>
+    <fieldset class="form-fieldset editor-field editor-field--full">
+      <legend class="form-legend">{{ 'movieEditor.fields.genres' | translate }}</legend>
+      @if (genresLoading()) {
+        <p class="editor-hint" role="status">{{ 'movieEditor.genresLoading' | translate }}</p>
+      } @else if (genresError()) {
+        <p class="editor-error" role="alert">{{ 'movieEditor.genresError' | translate }}</p>
+      } @else {
+        <div class="editor-choices">
+          @for (genre of genres(); track genre) {
+            <button
+              class="btn btn-sm"
+              type="button"
+              [class.btn-primary]="selectedGenres().includes(genre)"
+              [class.btn-toggle]="!selectedGenres().includes(genre)"
+              [attr.aria-pressed]="selectedGenres().includes(genre)"
+              (click)="genreToggled.emit(genre)"
+            >
+              {{ genre }}
+            </button>
+          }
+        </div>
+      }
+    </fieldset>
+    <label class="form-label editor-field editor-field--full">
+      <span>{{ 'movieEditor.fields.description' | translate }}</span>
+      <textarea class="form-control editor-textarea" rows="5" [formField]="form().description"></textarea>
+    </label>
+  </div>
+</msh-movie-editor-section>

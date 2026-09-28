@@ -1,6 +1,8 @@
 {
   "common": {
+    "cancel": "Anuluj",
     "close": "Zamknij",
+    "dismissNotification": "Zamknij powiadomienie",
     "itemCount": "Elementy: {{count}}"
   },
   "footer": {
@@ -54,6 +56,15 @@
       "label": "Okruszki nawigacyjne"
     },
     "emptyValue": "Brak danych",
+    "delete": {
+      "confirm": "Usuń film",
+      "errorMessage": "Film pozostał w bibliotece. Spróbuj ponownie.",
+      "errorTitle": "Nie udało się usunąć filmu",
+      "message": "Usunąć {{title}} z biblioteki? Tej operacji nie można cofnąć.",
+      "successMessage": "Film został usunięty z biblioteki.",
+      "successTitle": "Film usunięty",
+      "title": "Usunąć ten film?"
+    },
     "genres": "Gatunki",
     "kinopoiskLinkLabel": "Otwórz ocenę {{rating}} filmu {{title}} w Kinopoisk w nowej karcie",
     "loadError": "Nie udało się załadować szczegółów filmu.",
@@ -77,8 +88,93 @@
     "retry": "Spróbuj ponownie",
     "synopsis": "Opis"
   },
+  "movieEditor": {
+    "actions": {
+      "autofill": "Uzupełnij",
+      "autofilling": "Pobieranie…",
+      "back": "Wróć do filmów",
+      "discard": "Odrzuć zmiany",
+      "retry": "Spróbuj ponownie",
+      "save": "Zapisz w bibliotece",
+      "saving": "Zapisywanie…"
+    },
+    "addTitle": "Dodaj film",
+    "autofill": {
+      "description": "Pobierz tytuły, grafikę, obsadę i powiązane filmy według ID Kinopoisk.",
+      "title": "Synchronizacja z Kinopoisk"
+    },
+    "breadcrumbs": {
+      "add": "Dodaj multimedia",
+      "edit": "Edytuj multimedia",
+      "label": "Okruszki nawigacyjne"
+    },
+    "editTitle": "Edytuj film",
+    "fields": {
+      "actors": "Aktorzy",
+      "addedDate": "Data dodania",
+      "ageRating": "Kategoria wiekowa",
+      "backdropUrl": "URL tła",
+      "countries": "Kraje produkcji",
+      "description": "Opis",
+      "directors": "Reżyser / showrunner",
+      "enName": "Tytuł oryginalny / angielski",
+      "extension": "Format kontenera",
+      "genres": "Gatunki i kategorie",
+      "kpId": "ID Kinopoisk",
+      "movieLength": "Czas trwania, minuty",
+      "name": "Tytuł rosyjski",
+      "notSet": "Nie ustawiono",
+      "posterUrl": "URL plakatu",
+      "quality": "Rozdzielczość",
+      "rating": "Ocena widzów",
+      "sequelsAndPrequels": "Kontynuacje i prequele",
+      "similarMovies": "Podobne filmy",
+      "year": "Rok wydania"
+    },
+    "genresError": "Nie udało się wczytać gatunków.",
+    "genresLoading": "Ładowanie gatunków…",
+    "loadError": "Nie udało się załadować filmu do edycji.",
+    "loading": "Ładowanie edytora filmu…",
+    "posterPreviewAlt": "Podgląd plakatu: {{title}}",
+    "sections": {
+      "artwork": { "eyebrow": "Materiały wizualne", "title": "Sekcja 3: Grafika i dane scrapera" },
+      "basic": { "eyebrow": "Główne identyfikatory", "title": "Sekcja 1: Informacje podstawowe" },
+      "classification": { "eyebrow": "Oceny", "title": "Sekcja 2: Klasyfikacja i wskaźniki" },
+      "localFile": { "eyebrow": "Metadane pliku", "title": "Sekcja 5: Lokalny plik i strumień" },
+      "production": { "eyebrow": "Twórcy i pochodzenie", "title": "Sekcja 4: Produkcja i obsada" },
+      "relationships": { "eyebrow": "Powiązania", "title": "Sekcja 6: Relacje i uniwersum" }
+    },
+    "toasts": {
+      "autofillErrorMessage": "Sprawdź ID Kinopoisk, klucz API i połączenie, a następnie spróbuj ponownie.",
+      "autofillErrorTitle": "Automatyczne uzupełnianie nie powiodło się",
+      "autofillSuccessMessage": "Dostępne metadane Kinopoisk zostały zastosowane do formularza.",
+      "autofillSuccessTitle": "Film uzupełniony",
+      "loadErrorMessage": "Wróć do biblioteki lub spróbuj ponownie załadować film.",
+      "loadErrorTitle": "Nie udało się załadować filmu",
+      "saveErrorMessage": "Zmiany pozostały w formularzu. Spróbuj zapisać ponownie.",
+      "saveErrorTitle": "Nie udało się zapisać filmu",
+      "saveSuccessMessage": "Wpis w bibliotece jest aktualny.",
+      "saveSuccessTitle": "Film zapisany"
+    },
+    "validation": {
+      "duration": "Wprowadź nieujemny czas trwania.",
+      "kpId": "Wprowadź prawidłowe ID Kinopoisk.",
+      "rating": "Wprowadź ocenę od 0 do 10.",
+      "required": "To pole jest wymagane.",
+      "year": "Wprowadź rok od 1888 do 2100."
+    }
+  },
   "movies": {
     "addMovie": "Dodaj film",
+    "delete": {
+      "confirm": "Usuń film",
+      "errorMessage": "Film pozostał w bibliotece. Spróbuj ponownie.",
+      "errorTitle": "Nie udało się usunąć filmu",
+      "message": "Usunąć {{title}} z biblioteki? Tej operacji nie można cofnąć.",
+      "successMessage": "Film został usunięty z biblioteki.",
+      "successTitle": "Film usunięty",
+      "title": "Usunąć ten film?"
+    },
     "empty": "Brak dostępnych filmów.",
     "filters": {
       "active": "Aktywne filtry",
@@ -158,6 +254,7 @@
     "loadErrorTitle": "Nie udało się załadować biblioteki",
     "loadSuccessMessage": "Biblioteka filmów jest aktualna.",
     "loadSuccessTitle": "Biblioteka załadowana",
+    "retry": "Spróbuj ponownie",
     "title": "Filmy"
   },
   "navigation": {
@@ -179,7 +276,9 @@
     "summary": "Wyświetlanie {{firstItem}}–{{lastItem}} z {{totalItems}} elementów"
   },
   "routes": {
+    "movieAddTitle": "Dodaj film | MediaShelf",
     "movieDetailsTitle": "Szczegóły filmu | MediaShelf",
+    "movieEditTitle": "Edytuj film | MediaShelf",
     "moviesTitle": "Filmy | MediaShelf",
     "settingsTitle": "Ustawienia | MediaShelf",
     "statisticsTitle": "Statystyki | MediaShelf",

@@ -1,0 +1,90 @@
+<article class="movie-editor">
+  <div class="movie-editor__utility">
+    <div class="movie-editor__utility-inner">
+      <nav class="movie-editor__breadcrumbs" [attr.aria-label]="'movieEditor.breadcrumbs.label' | translate">
+        <ol>
+          <li>
+            <a routerLink="/gallery" queryParamsHandling="preserve">{{ 'navigation.gallery' | translate }}</a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <a routerLink="/gallery/movies" queryParamsHandling="preserve">{{ 'navigation.movies' | translate }}</a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page">
+            @if (store.mode() === 'edit' && store.breadcrumbTitle()) {
+              {{ store.breadcrumbTitle() }}
+            } @else {
+              {{ breadcrumbTitle() | translate }}
+            }
+          </li>
+        </ol>
+      </nav>
+      <div class="movie-editor__top-actions">
+        <button class="btn btn-ghost" type="button" [disabled]="store.isBusy()" (click)="discard()">
+          {{ 'movieEditor.actions.discard' | translate }}
+        </button>
+        <button class="btn btn-primary" type="submit" form="movie-editor-form" [disabled]="store.isBusy() || store.hasLoadError()">
+          {{ 'movieEditor.actions.save' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="movie-editor__workspace">
+    <h1>{{ titleKey() | translate }}</h1>
+
+    @if (store.isLoading()) {
+      <msh-page-status messageKey="movieEditor.loading" />
+    } @else if (store.hasLoadError()) {
+      <div class="movie-editor__load-error">
+        <msh-page-status kind="error" messageKey="movieEditor.loadError" />
+        <div class="movie-editor__load-error-actions">
+          <button class="btn btn-primary" type="button" (click)="store.retry()">{{ 'movieEditor.actions.retry' | translate }}</button>
+          <a class="btn btn-secondary" routerLink="/gallery/movies" queryParamsHandling="preserve">
+            {{ 'movieEditor.actions.back' | translate }}
+          </a>
+        </div>
+      </div>
+    } @else {
+      <form id="movie-editor-form" class="movie-editor__form" [attr.aria-busy]="store.isBusy()" (submit)="save($event)">
+        <div class="movie-editor__main-column">
+          <msh-movie-editor-basic-information
+            [form]="movieForm"
+            [genres]="settingsApi.genresForFilters()"
+            [genresError]="!!settingsApi.settings.error()"
+            [genresLoading]="settingsApi.settings.isLoading()"
+            [selectedGenres]="model().genres"
+            (genreToggled)="toggleGenre($event)"
+          />
+
+          <msh-movie-editor-classification-metrics [form]="movieForm" />
+
+          <msh-movie-editor-artwork-assets
+            class="movie-editor__artwork"
+            [backdropUrl]="model().backdropUrl"
+            [canAutofill]="canAutofill()"
+            [form]="movieForm"
+            [isAutofilling]="store.isAutofilling()"
+            [movieTitle]="model().name"
+            [posterUrl]="model().posterUrl"
+            (autofillRequested)="autofill()"
+          />
+
+          <msh-movie-editor-production-cast [form]="movieForm" />
+          <msh-movie-editor-local-file [form]="movieForm" />
+          <msh-movie-editor-relationships-universe [form]="movieForm" />
+
+          <div class="movie-editor__bottom-actions">
+            <button class="btn btn-ghost" type="button" [disabled]="store.isBusy()" (click)="discard()">
+              {{ 'movieEditor.actions.discard' | translate }}
+            </button>
+            <button class="btn btn-primary" type="submit" [disabled]="store.isBusy()">
+              {{ store.isSaving() ? ('movieEditor.actions.saving' | translate) : ('movieEditor.actions.save' | translate) }}
+            </button>
+          </div>
+        </div>
+      </form>
+    }
+  </div>
+</article>

@@ -28,7 +28,7 @@
           }
         </button>
         <msh-movies-sort-select [sorting]="store.sorting()" (sortingChange)="store.applySorting($event)" />
-        <button class="btn btn-secondary movies__add-button" type="button" disabled>
+        <button class="btn btn-secondary movies__add-button" type="button" (click)="addMovie()">
           <span aria-hidden="true">+</span> {{ 'movies.addMovie' | translate }}
         </button>
       </div>
@@ -37,13 +37,22 @@
     @if (store.isLoading()) {
       <msh-page-status messageKey="movies.loading" />
     } @else if (store.hasError()) {
-      <msh-page-status kind="error" messageKey="movies.loadError" />
+      <div class="movies__error">
+        <msh-page-status kind="error" messageKey="movies.loadError" />
+        <button class="btn btn-primary" type="button" (click)="store.retry()">{{ 'movies.retry' | translate }}</button>
+      </div>
     } @else if (store.media().length === 0) {
       <msh-empty-state messageKey="movies.empty" />
     } @else {
       <div class="movies__grid">
         @for (item of store.visibleMedia(); track item.id) {
-          <msh-media-card [media]="item" (viewRequested)="viewMovie($event)" />
+          <msh-media-card
+            [actionsDisabled]="store.isDeleting()"
+            [media]="item"
+            (deleteRequested)="confirmDelete($event)"
+            (editRequested)="editMovie($event)"
+            (viewRequested)="viewMovie($event)"
+          />
         }
       </div>
     }

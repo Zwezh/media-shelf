@@ -99,7 +99,16 @@
         <span>{{ 'movies.filters.minimumRating' | translate }}</span>
         <output for="movies-rating">{{ model().rating > 0 ? model().rating + '+' : ('movies.filters.any' | translate) }}</output>
       </legend>
-      <input id="movies-rating" class="form-range filter-panel__range" type="range" step="0.5" [formField]="filterForm.rating" />
+      <input
+        id="movies-rating"
+        class="form-range filter-panel__range"
+        type="range"
+        min="0"
+        max="10"
+        step="0.5"
+        [value]="model().rating"
+        (input)="updateRating($event)"
+      />
       <div class="filter-panel__range-labels" aria-hidden="true">
         <span>0</span><span>2.5</span><span>5</span><span>7.5</span><span>10</span>
       </div>

@@ -1,0 +1,51 @@
+<msh-movie-editor-section
+  headingId="movie-editor-artwork"
+  titleKey="movieEditor.sections.artwork.title"
+  eyebrowKey="movieEditor.sections.artwork.eyebrow"
+>
+  <div class="artwork-fields">
+    <div class="artwork-autofill">
+      <div>
+        <strong>{{ 'movieEditor.autofill.title' | translate }}</strong>
+        <p>{{ 'movieEditor.autofill.description' | translate }}</p>
+      </div>
+      <div class="artwork-autofill__controls">
+        <label class="form-label">
+          <span>{{ 'movieEditor.fields.kpId' | translate }}</span>
+          <input
+            id="movie-editor-kp-id"
+            class="form-control"
+            inputmode="numeric"
+            aria-describedby="movie-editor-kp-id-error"
+            [formField]="form().kpId"
+          />
+        </label>
+        <button class="btn btn-primary" type="button" [disabled]="!canAutofill()" (click)="autofillRequested.emit()">
+          {{ isAutofilling() ? ('movieEditor.actions.autofilling' | translate) : ('movieEditor.actions.autofill' | translate) }}
+        </button>
+      </div>
+      @if (form().kpId().touched() && form().kpId().invalid()) {
+        <small id="movie-editor-kp-id-error" class="artwork-error">{{ 'movieEditor.validation.kpId' | translate }}</small>
+      }
+    </div>
+    <label class="form-label">
+      <span>{{ 'movieEditor.fields.posterUrl' | translate }}</span>
+      <input class="form-control" type="url" [formField]="form().posterUrl" />
+    </label>
+    @if (posterUrl()) {
+      <img
+        class="artwork-preview artwork-preview--poster"
+        [src]="posterUrl()"
+        [alt]="'movieEditor.posterPreviewAlt' | translate: { title: movieTitle() || ('media.untitled' | translate) }"
+        (error)="useImageFallback($event)"
+      />
+    }
+    <label class="form-label">
+      <span>{{ 'movieEditor.fields.backdropUrl' | translate }}</span>
+      <input class="form-control" type="url" [formField]="form().backdropUrl" />
+    </label>
+    @if (backdropUrl()) {
+      <img class="artwork-preview artwork-preview--backdrop" [src]="backdropUrl()" alt="" (error)="useImageFallback($event)" />
+    }
+  </div>
+</msh-movie-editor-section>

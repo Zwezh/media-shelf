@@ -84,6 +84,21 @@ describe('MoviesFilterPanel', () => {
     expect(applyButton?.disabled).toBe(true);
   });
 
+  it('exposes and applies the supported zero-to-ten rating range', async () => {
+    const range = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('#movies-rating');
+    expect(range?.min).toBe('0');
+    expect(range?.max).toBe('10');
+
+    if (!range) throw new Error('Missing rating range');
+    range.value = '9.5';
+    range.dispatchEvent(new Event('input', { bubbles: true }));
+    await fixture.whenStable();
+    fixture.nativeElement.querySelector('form').dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+
+    expect(close).toHaveBeenCalledWith(expect.objectContaining({ rating: 9.5 }));
+  });
+
   function clickChoice(label: string): void {
     const button = [...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button[aria-pressed]')].find(
       (candidate) => candidate.textContent?.includes(label),

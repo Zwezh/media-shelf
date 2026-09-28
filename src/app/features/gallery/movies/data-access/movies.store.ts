@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, distinctUntilChanged, EMPTY, map, pipe, switchMap, tap } from 'rxjs';
+import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, switchMap, tap } from 'rxjs';
 import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { GalleryApi } from '../../data-access/gallery-api';
@@ -18,6 +18,7 @@ type MoviesState = {
   readonly media: readonly Media[];
   readonly params: MoviesParams;
   readonly totalCount: number;
+  readonly isDeleting: boolean;
   readonly isLoading: boolean;
   readonly hasError: boolean;
 };
@@ -26,6 +27,7 @@ const initialState: MoviesState = {
   media: [],
   params: DEFAULT_MOVIES_PARAMS,
   totalCount: 0,
+  isDeleting: false,
   isLoading: false,
   hasError: false,
 };
@@ -48,44 +50,48 @@ export const MoviesStore = signalStore(
       router = inject(Router),
       toastStore = inject(ToastStore),
       translate = inject(TranslateService),
-    ) => ({
-      changePage(page: number): void {
-        const currentPage = page - 1;
-        if (currentPage === store.params().currentPage) return;
+    ) => {
+      const deleteMovie = rxMethod<string>(
+        pipe(
+          filter(() => !store.isDeleting()),
+          tap(() => patchState(store, { isDeleting: true })),
+          switchMap((id) =>
+            galleryApi.deleteMovie(id).pipe(
+              tap(() => {
+                const media = store.media().filter((item) => item.id !== id);
+                const totalCount = Math.max(0, store.totalCount() - 1);
+                patchState(store, { isDeleting: false, media, totalCount });
+                toastStore.success({
+                  autoHide: true,
+                  delay: TOAST_AUTO_HIDE_DELAY_MS.success,
+                  message: String(translate.instant('movies.delete.successMessage')),
+                  title: String(translate.instant('movies.delete.successTitle')),
+                });
 
-        void router.navigate([], {
-          relativeTo: route,
-          queryParams: toMoviesQueryParams({ ...store.params(), currentPage }),
-        });
-      },
-      applyFilters(filters: MoviesFilters): void {
-        void router.navigate([], {
-          relativeTo: route,
-          queryParams: toMoviesQueryParams(replaceMovieFilters(store.params(), filters)),
-        });
-      },
-      applySorting(sorting: MoviesSorting): void {
-        const params = store.params();
-        if (params.direction === sorting.direction && params.key === sorting.key) return;
+                if (media.length === 0 && totalCount > 0 && store.params().currentPage > 0) {
+                  void router.navigate([], {
+                    relativeTo: route,
+                    queryParams: toMoviesQueryParams({ ...store.params(), currentPage: store.params().currentPage - 1 }),
+                    replaceUrl: true,
+                  });
+                }
+              }),
+              catchError(() => {
+                patchState(store, { isDeleting: false });
+                toastStore.error({
+                  autoHide: true,
+                  delay: TOAST_AUTO_HIDE_DELAY_MS.error,
+                  message: String(translate.instant('movies.delete.errorMessage')),
+                  title: String(translate.instant('movies.delete.errorTitle')),
+                });
+                return EMPTY;
+              }),
+            ),
+          ),
+        ),
+      );
 
-        void router.navigate([], {
-          relativeTo: route,
-          queryParams: toMoviesQueryParams({ ...params, ...sorting, currentPage: 0 }),
-        });
-      },
-      clearFilters(): void {
-        void router.navigate([], {
-          relativeTo: route,
-          queryParams: toMoviesQueryParams(replaceMovieFilters(store.params(), {})),
-        });
-      },
-      removeFilters(keys: readonly MovieFilterKey[]): void {
-        void router.navigate([], {
-          relativeTo: route,
-          queryParams: toMoviesQueryParams(removeMovieFilters(store.params(), keys)),
-        });
-      },
-      loadMovies: rxMethod<MoviesParams>(
+      const loadMovies = rxMethod<MoviesParams>(
         pipe(
           tap((params) => {
             patchState(store, { hasError: false, isLoading: true, params });
@@ -124,8 +130,52 @@ export const MoviesStore = signalStore(
             ),
           ),
         ),
-      ),
-    }),
+      );
+
+      return {
+        changePage(page: number): void {
+          const currentPage = page - 1;
+          if (currentPage === store.params().currentPage) return;
+
+          void router.navigate([], {
+            relativeTo: route,
+            queryParams: toMoviesQueryParams({ ...store.params(), currentPage }),
+          });
+        },
+        applyFilters(filters: MoviesFilters): void {
+          void router.navigate([], {
+            relativeTo: route,
+            queryParams: toMoviesQueryParams(replaceMovieFilters(store.params(), filters)),
+          });
+        },
+        applySorting(sorting: MoviesSorting): void {
+          const params = store.params();
+          if (params.direction === sorting.direction && params.key === sorting.key) return;
+
+          void router.navigate([], {
+            relativeTo: route,
+            queryParams: toMoviesQueryParams({ ...params, ...sorting, currentPage: 0 }),
+          });
+        },
+        clearFilters(): void {
+          void router.navigate([], {
+            relativeTo: route,
+            queryParams: toMoviesQueryParams(replaceMovieFilters(store.params(), {})),
+          });
+        },
+        deleteMovie,
+        loadMovies,
+        removeFilters(keys: readonly MovieFilterKey[]): void {
+          void router.navigate([], {
+            relativeTo: route,
+            queryParams: toMoviesQueryParams(removeMovieFilters(store.params(), keys)),
+          });
+        },
+        retry(): void {
+          loadMovies(store.params());
+        },
+      };
+    },
   ),
   withHooks((store, route = inject(ActivatedRoute)) => ({
     onInit() {

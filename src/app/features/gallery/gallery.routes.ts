@@ -18,6 +18,18 @@ export const GALLERY_ROUTES: Routes = [
         loadComponent: () => import('./movies/pages/movies').then((module) => module.Movies),
       },
       {
+        path: 'movies/new',
+        title: 'routes.movieAddTitle',
+        data: { mode: 'add' },
+        loadComponent: () => import('./movie-editor/pages/movie-editor').then((module) => module.MovieEditorPage),
+      },
+      {
+        path: 'movies/:id/edit',
+        title: 'routes.movieEditTitle',
+        data: { mode: 'edit' },
+        loadComponent: () => import('./movie-editor/pages/movie-editor').then((module) => module.MovieEditorPage),
+      },
+      {
         path: 'movies/:id',
         title: 'routes.movieDetailsTitle',
         loadComponent: () => import('./movie-details/pages/movie-details').then((module) => module.MovieDetailsPage),

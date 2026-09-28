@@ -1,0 +1,16 @@
+<msh-movie-editor-section
+  headingId="movie-editor-relationships"
+  titleKey="movieEditor.sections.relationships.title"
+  eyebrowKey="movieEditor.sections.relationships.eyebrow"
+>
+  <div class="editor-fields">
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.sequelsAndPrequels' | translate }}</span>
+      <input class="form-control" [formField]="form().sequelsAndPrequels" />
+    </label>
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.similarMovies' | translate }}</span>
+      <input class="form-control" [formField]="form().similarMovies" />
+    </label>
+  </div>
+</msh-movie-editor-section>

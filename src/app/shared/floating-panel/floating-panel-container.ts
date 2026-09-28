@@ -20,6 +20,7 @@ import { FloatingPanelPlacement } from './floating-panel-config';
     <dialog
       #dialog
       tabindex="-1"
+      [attr.aria-describedby]="ariaDescribedBy() || null"
       [attr.aria-label]="ariaLabel() || null"
       [attr.aria-labelledby]="ariaLabelledBy() || null"
       [class]="dialogClass()"
@@ -35,6 +36,7 @@ export class FloatingPanelContainer {
   private readonly outlet = viewChild.required('outlet', { read: ViewContainerRef });
 
   readonly ariaLabel = input('');
+  readonly ariaDescribedBy = input('');
   readonly ariaLabelledBy = input('');
   readonly anchor = input<HTMLElement | undefined>();
   readonly closeOnBackdrop = input(true);

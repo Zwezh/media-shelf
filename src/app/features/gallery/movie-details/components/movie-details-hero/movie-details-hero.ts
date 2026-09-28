@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MEDIA_POSTER_PLACEHOLDER } from '@msh-core/config/media';
 import { Icon } from '@msh-shared/components/icon/icon';
@@ -13,6 +13,9 @@ import { type MovieDetails } from '../../../models/movie-details';
 })
 export class MovieDetailsHero {
   readonly movie = input.required<MovieDetails>();
+  readonly isDeleting = input(false);
+  readonly deleteRequested = output<void>();
+  readonly editRequested = output<void>();
   protected readonly durationParams = computed(() => ({
     hours: Math.floor(this.movie().durationMinutes / 60),
     minutes: this.movie().durationMinutes % 60,

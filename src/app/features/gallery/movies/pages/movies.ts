@@ -3,7 +3,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EmptyState } from '@msh-shared/components/empty-state/empty-state';
+import { ConfirmationDialog, type ConfirmationDialogData } from '@msh-shared/components/confirmation-dialog/confirmation-dialog';
 import { MediaCard } from '@msh-shared/components/media-card/media-card';
+import type { MediaCardModel } from '@msh-shared/components/media-card/media-card.model';
 import { Icon } from '@msh-shared/components/icon/icon';
 import { PageHeader } from '@msh-shared/components/page-header/page-header';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
@@ -11,7 +13,6 @@ import { Pagination } from '@msh-shared/components/pagination/pagination';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { filter, take } from 'rxjs';
 import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-filters';
-import { type Media } from '../../models/media';
 import { MoviesFilterPanel, type MoviesFilterPanelData } from '../components/movies-filter-panel/movies-filter-panel';
 import { MoviesSortSelect } from '../components/movies-sort-select/movies-sort-select';
 import { MoviesStore } from '../data-access/movies.store';
@@ -43,11 +44,43 @@ export class Movies {
     globalThis.scrollTo?.({ top: 0, behavior: 'smooth' });
   }
 
+  protected addMovie(): void {
+    void this.router.navigate(['new'], { relativeTo: this.route, queryParamsHandling: 'preserve' });
+  }
+
+  protected confirmDelete(media: MediaCardModel): void {
+    this.floatingPanel
+      .open<ConfirmationDialog, ConfirmationDialogData, boolean>(ConfirmationDialog, {
+        ariaDescribedBy: 'confirmation-message',
+        ariaLabelledBy: 'confirmation-title',
+        data: {
+          cancelKey: 'common.cancel',
+          confirmKey: 'movies.delete.confirm',
+          messageKey: 'movies.delete.message',
+          messageParams: { title: media.title },
+          titleKey: 'movies.delete.title',
+        },
+        owner: this.destroyRef,
+        placement: 'center',
+      })
+      .closed.pipe(
+        take(1),
+        filter((confirmed) => confirmed === true),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => this.store.deleteMovie(media.id));
+  }
+
+  protected editMovie(media: MediaCardModel): void {
+    void this.router.navigate([media.id, 'edit'], { relativeTo: this.route, queryParamsHandling: 'preserve' });
+  }
+
   protected openFilters(): void {
     this.floatingPanel
       .open<MoviesFilterPanel, MoviesFilterPanelData, MoviesFilters>(MoviesFilterPanel, {
         ariaLabelledBy: 'movies-filter-panel-title',
         data: { filters: this.store.appliedFilters() },
+        owner: this.destroyRef,
         placement: 'responsive',
       })
       .closed.pipe(
@@ -62,7 +95,7 @@ export class Movies {
     this.store.removeFilters(keys);
   }
 
-  protected viewMovie(media: Media): void {
+  protected viewMovie(media: MediaCardModel): void {
     void this.router.navigate([media.id], { relativeTo: this.route, queryParamsHandling: 'preserve' });
   }
 }

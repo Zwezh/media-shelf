@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastMessage, ToastType } from '@msh-shared/models/toast.model';
+import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { Toast } from './toast';
 
 describe('Toast', () => {
@@ -17,7 +18,7 @@ describe('Toast', () => {
   });
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [Toast] }).compileComponents();
+    await TestBed.configureTestingModule({ imports: [Toast], providers: provideI18nTesting() }).compileComponents();
     fixture = TestBed.createComponent(Toast);
   });
 
@@ -42,6 +43,7 @@ describe('Toast', () => {
     fixture.detectChanges();
 
     const closeButton: HTMLButtonElement = fixture.nativeElement.querySelector('.toast__close');
+    expect(closeButton.getAttribute('aria-label')).toBe('Dismiss notification');
     closeButton.click();
 
     expect(dismissed).toEqual([7]);

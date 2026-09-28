@@ -42,10 +42,12 @@ export class FloatingPanel {
 
     let finished = false;
     let removeScrollListener = (): void => undefined;
+    let unregisterOwnerDestroy = (): void => undefined;
     const panelRef = new FloatingPanelRef<TResult, TComponent>((result) => {
       if (finished) return;
       finished = true;
       removeScrollListener();
+      unregisterOwnerDestroy();
       containerRef.instance.hide();
       this.applicationRef.detachView(containerRef.hostView);
       containerRef.destroy();
@@ -63,6 +65,7 @@ export class FloatingPanel {
       ],
     });
     panelRef.componentInstance = containerRef.instance.attach(component, contentInjector, this.environmentInjector);
+    unregisterOwnerDestroy = config.owner?.onDestroy(() => panelRef.close()) ?? unregisterOwnerDestroy;
     containerRef.instance.dismissed.subscribe(() => panelRef.close());
     containerRef.changeDetectorRef.detectChanges();
     containerRef.instance.show();
@@ -83,6 +86,7 @@ export class FloatingPanel {
   private configureContainer<TData>(containerRef: ComponentRef<FloatingPanelContainer>, config: FloatingPanelConfig<TData>): void {
     const panelClass = typeof config.panelClass === 'string' ? [config.panelClass] : (config.panelClass ?? []);
     containerRef.setInput('anchor', config.anchor);
+    containerRef.setInput('ariaDescribedBy', config.ariaDescribedBy ?? '');
     containerRef.setInput('ariaLabel', config.ariaLabel ?? '');
     containerRef.setInput('ariaLabelledBy', config.ariaLabelledBy ?? '');
     containerRef.setInput('closeOnBackdrop', config.closeOnBackdrop ?? true);

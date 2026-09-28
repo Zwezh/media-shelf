@@ -36,6 +36,7 @@ export class MoviesSortSelect {
       ariaLabelledBy: 'movies-sort-panel-title',
       closeOnScroll: true,
       data: { mode, sorting: this.sorting() },
+      owner: this.destroyRef,
       panelClass: 'floating-panel--movies-sort',
       placement: 'anchored-responsive',
     });
