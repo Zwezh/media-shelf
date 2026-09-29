@@ -32,7 +32,12 @@
       </div>
     </div>
   } @else if (store.movie(); as movie) {
-    <msh-movie-details-hero [movie]="movie" />
+    <msh-movie-details-hero
+      [movie]="movie"
+      [isDeleting]="store.isDeleting()"
+      (editRequested)="editMovie(movie)"
+      (deleteRequested)="confirmDelete(movie)"
+    />
 
     <div class="movie-details__content">
       <div class="movie-details__cards">

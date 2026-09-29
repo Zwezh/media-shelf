@@ -22,7 +22,7 @@
         <button class="toast__action" type="button" (click)="activateAction()">{{ action.label }}</button>
       }
       @if (toast().closable) {
-        <button class="toast__close" type="button" aria-label="Dismiss notification" (click)="dismiss()">
+        <button class="toast__close" type="button" [attr.aria-label]="'common.dismissNotification' | translate" (click)="dismiss()">
           <span aria-hidden="true">×</span>
         </button>
       }

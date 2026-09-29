@@ -1,0 +1,33 @@
+<msh-movie-editor-section
+  headingId="movie-editor-production"
+  titleKey="movieEditor.sections.production.title"
+  eyebrowKey="movieEditor.sections.production.eyebrow"
+>
+  <div class="editor-fields">
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.directors' | translate }} *</span>
+      <input
+        id="movie-editor-directors"
+        class="form-control"
+        aria-describedby="movie-editor-directors-error"
+        [formField]="form().directors"
+      />
+      <msh-form-validation-message [field]="form().directors()" messageId="movie-editor-directors-error" />
+    </label>
+    <label class="form-label editor-field">
+      <span>{{ 'movieEditor.fields.countries' | translate }} *</span>
+      <input
+        id="movie-editor-countries"
+        class="form-control"
+        aria-describedby="movie-editor-countries-error"
+        [formField]="form().countries"
+      />
+      <msh-form-validation-message [field]="form().countries()" messageId="movie-editor-countries-error" />
+    </label>
+    <label class="form-label editor-field editor-field--full">
+      <span>{{ 'movieEditor.fields.actors' | translate }} *</span>
+      <input id="movie-editor-actors" class="form-control" aria-describedby="movie-editor-actors-error" [formField]="form().actors" />
+      <msh-form-validation-message [field]="form().actors()" messageId="movie-editor-actors-error" />
+    </label>
+  </div>
+</msh-movie-editor-section>

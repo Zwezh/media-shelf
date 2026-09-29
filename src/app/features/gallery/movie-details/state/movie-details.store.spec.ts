@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from '@msh-shared/services/toast-store';
@@ -104,5 +104,27 @@ describe('MovieDetailsStore', () => {
     expect(getMovie).toHaveBeenCalledTimes(2);
     expect(store.hasError()).toBe(false);
     expect(store.movie()?.id).toBe('one');
+  });
+
+  it('deletes a movie once, shows success feedback, and returns to the preserved library URL', () => {
+    const deleteMovie = vi.fn(() => of(undefined));
+    const navigate = vi.fn(() => Promise.resolve(true));
+
+    TestBed.configureTestingModule({
+      providers: [
+        MovieDetailsStore,
+        ...provideI18nTesting(),
+        { provide: GalleryApi, useValue: { deleteMovie, getMovie: () => of(movie('one')) } },
+        { provide: Router, useValue: { navigate } },
+        { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ id: 'one' })) } },
+      ],
+    });
+
+    const store = TestBed.inject(MovieDetailsStore);
+    store.deleteMovie('one');
+
+    expect(deleteMovie).toHaveBeenCalledOnce();
+    expect(navigate).toHaveBeenCalledWith(['/gallery/movies'], { queryParamsHandling: 'preserve' });
+    expect(TestBed.inject(ToastStore).toasts().at(-1)).toEqual(expect.objectContaining({ title: 'Movie deleted', type: 'success' }));
   });
 });

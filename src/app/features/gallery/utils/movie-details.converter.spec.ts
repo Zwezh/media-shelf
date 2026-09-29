@@ -74,4 +74,13 @@ describe('toMovieDetails', () => {
     expect(details.title).toBe('Fallback title');
     expect(details.year).toBe('2024');
   });
+
+  it('parses a date-only value as a local calendar date', () => {
+    const addedDate = toMovieDetails({ ...dto, addedDate: '2025-01-02' }).addedDate;
+
+    expect(addedDate?.getFullYear()).toBe(2025);
+    expect(addedDate?.getMonth()).toBe(0);
+    expect(addedDate?.getDate()).toBe(2);
+    expect(addedDate?.getHours()).toBe(0);
+  });
 });

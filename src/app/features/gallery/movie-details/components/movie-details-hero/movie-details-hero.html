@@ -19,10 +19,10 @@
       </div>
 
       <div class="movie-hero__primary-actions" role="group" [attr.aria-label]="'movieDetails.actions.label' | translate">
-        <button class="btn btn-primary" type="button" disabled>
+        <button class="btn btn-primary" type="button" [mshRequiresAuth]="isDeleting()" (click)="editRequested.emit()">
           <msh-icon name="edit" [size]="18" /> {{ 'movieDetails.actions.edit' | translate }}
         </button>
-        <button class="btn btn-danger" type="button" disabled>
+        <button class="btn btn-danger" type="button" [mshRequiresAuth]="isDeleting()" (click)="deleteRequested.emit()">
           <msh-icon name="delete" [size]="18" /> {{ 'movieDetails.actions.delete' | translate }}
         </button>
       </div>

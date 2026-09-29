@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FLOATING_PANEL_DATA } from './floating-panel.tokens';
 import { FloatingPanelRef } from './floating-panel-ref';
@@ -6,11 +6,16 @@ import { FloatingPanel } from './floating-panel';
 
 @Component({
   selector: 'msh-test-panel-content',
-  template: '<p>{{ data.label }}</p>',
+  template: '<h2 id="test-panel-title">Panel</h2><p id="test-panel-description">{{ data.label }}</p>',
 })
 class TestPanelContent {
   readonly data = inject(FLOATING_PANEL_DATA) as { readonly label: string };
   readonly panelRef = inject<FloatingPanelRef<string>>(FloatingPanelRef);
+}
+
+@Component({ template: '' })
+class TestPanelOwner {
+  readonly destroyRef = inject(DestroyRef);
 }
 
 describe('FloatingPanel', () => {
@@ -23,6 +28,8 @@ describe('FloatingPanel', () => {
     TestBed.configureTestingModule({});
     const panel = TestBed.inject(FloatingPanel);
     const ref = panel.open<TestPanelContent, { readonly label: string }, string>(TestPanelContent, {
+      ariaDescribedBy: 'test-panel-description',
+      ariaLabelledBy: 'test-panel-title',
       data: { label: 'Dynamic panel' },
       placement: 'end',
     });
@@ -30,7 +37,10 @@ describe('FloatingPanel', () => {
     ref.closed.subscribe((value) => (result = value));
 
     expect(document.querySelector('msh-test-panel-content')?.textContent).toContain('Dynamic panel');
-    expect(document.querySelector('dialog')?.classList).toContain('floating-panel--end');
+    const dialog = document.querySelector('dialog');
+    expect(dialog?.classList).toContain('floating-panel--end');
+    expect(dialog?.getAttribute('aria-describedby')).toBe('test-panel-description');
+    expect(dialog?.getAttribute('aria-labelledby')).toBe('test-panel-title');
 
     ref.componentInstance?.panelRef.close('applied');
 
@@ -95,6 +105,22 @@ describe('FloatingPanel', () => {
     expect(didClose).toBe(false);
 
     document.dispatchEvent(new Event('scroll'));
+    expect(didClose).toBe(true);
+    expect(document.querySelector('msh-floating-panel-host')).toBeNull();
+  });
+
+  it('closes and destroys a panel when its owner is destroyed', () => {
+    TestBed.configureTestingModule({});
+    const owner = TestBed.createComponent(TestPanelOwner);
+    let didClose = false;
+    const ref = TestBed.inject(FloatingPanel).open(TestPanelContent, {
+      data: { label: 'Owned panel' },
+      owner: owner.componentInstance.destroyRef,
+    });
+    ref.closed.subscribe(() => (didClose = true));
+
+    owner.destroy();
+
     expect(didClose).toBe(true);
     expect(document.querySelector('msh-floating-panel-host')).toBeNull();
   });

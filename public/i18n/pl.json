@@ -1,7 +1,50 @@
 {
   "common": {
+    "cancel": "Anuluj",
     "close": "Zamknij",
-    "itemCount": "Elementy: {{count}}"
+    "dismissNotification": "Zamknij powiadomienie",
+    "itemCount": "Elementy: {{count}}",
+    "validation": {
+      "email": "Wprowadź prawidłowy adres e-mail.",
+      "max": "Wartość przekracza dozwolone maksimum.",
+      "maxDate": "Wybierz datę nie późniejszą niż dozwolona.",
+      "maxLength": "Wartość jest zbyt długa.",
+      "min": "Wartość jest mniejsza niż dozwolone minimum.",
+      "minDate": "Wybierz datę nie wcześniejszą niż dozwolona.",
+      "minLength": "Wartość jest zbyt krótka.",
+      "parse": "Wprowadź wartość w oczekiwanym formacie.",
+      "pattern": "Użyj wymaganego formatu.",
+      "range": "Wartość jest poza dozwolonym zakresem.",
+      "required": "Pole wymagane.",
+      "value": "Wprowadź prawidłową wartość."
+    }
+  },
+  "auth": {
+    "actions": {
+      "signIn": "Zaloguj się",
+      "signingIn": "Logowanie…",
+      "signOut": "Wyloguj się"
+    },
+    "dialog": {
+      "description": "Wprowadź główny klucz tajny, aby odblokować chronione działania w bibliotece.",
+      "hideSecret": "Ukryj klucz tajny",
+      "hint": "Klucz jest wymieniany na krótkotrwały token dostępu i nigdy nie jest przechowywany.",
+      "secretKey": "Główny klucz tajny",
+      "showSecret": "Pokaż klucz tajny",
+      "title": "Autoryzuj dostęp"
+    },
+    "requiredForWrite": "Zaloguj się, aby dodawać lub zmieniać elementy biblioteki",
+    "toasts": {
+      "signInErrorMessage": "Sprawdź klucz tajny i połączenie, a następnie spróbuj ponownie.",
+      "signInErrorTitle": "Logowanie nie powiodło się",
+      "signInSuccessMessage": "Chronione działania w bibliotece są dostępne w tej sesji strony.",
+      "signInSuccessTitle": "Zalogowano",
+      "signOutSuccessMessage": "Token dostępu został usunięty.",
+      "signOutSuccessTitle": "Wylogowano"
+    },
+    "validation": {
+      "secretKeyRequired": "Wprowadź główny klucz tajny."
+    }
   },
   "footer": {
     "description": "MediaShelf — system zarządzania archiwum multimediów",
@@ -54,6 +97,15 @@
       "label": "Okruszki nawigacyjne"
     },
     "emptyValue": "Brak danych",
+    "delete": {
+      "confirm": "Usuń film",
+      "errorMessage": "Film pozostał w bibliotece. Spróbuj ponownie.",
+      "errorTitle": "Nie udało się usunąć filmu",
+      "message": "Usunąć {{title}} z biblioteki? Tej operacji nie można cofnąć.",
+      "successMessage": "Film został usunięty z biblioteki.",
+      "successTitle": "Film usunięty",
+      "title": "Usunąć ten film?"
+    },
     "genres": "Gatunki",
     "kinopoiskLinkLabel": "Otwórz ocenę {{rating}} filmu {{title}} w Kinopoisk w nowej karcie",
     "loadError": "Nie udało się załadować szczegółów filmu.",
@@ -77,8 +129,95 @@
     "retry": "Spróbuj ponownie",
     "synopsis": "Opis"
   },
+  "movieEditor": {
+    "actions": {
+      "autofill": "Uzupełnij",
+      "autofilling": "Pobieranie…",
+      "back": "Wróć do filmów",
+      "discard": "Odrzuć zmiany",
+      "retry": "Spróbuj ponownie",
+      "save": "Zapisz w bibliotece",
+      "saving": "Zapisywanie…"
+    },
+    "addTitle": "Dodaj film",
+    "autofill": {
+      "description": "Pobierz tytuły, grafikę, obsadę i powiązane filmy według ID Kinopoisk.",
+      "title": "Synchronizacja z Kinopoisk"
+    },
+    "breadcrumbs": {
+      "add": "Dodaj multimedia",
+      "edit": "Edytuj multimedia",
+      "label": "Okruszki nawigacyjne"
+    },
+    "editTitle": "Edytuj film",
+    "fields": {
+      "actors": "Aktorzy",
+      "addedDate": "Data dodania",
+      "ageRating": "Kategoria wiekowa",
+      "backdropUrl": "URL tła",
+      "countries": "Kraje produkcji",
+      "description": "Opis",
+      "directors": "Reżyser / showrunner",
+      "enName": "Tytuł oryginalny / angielski",
+      "extension": "Format kontenera",
+      "genres": "Gatunki i kategorie",
+      "kpId": "ID Kinopoisk",
+      "movieLength": "Czas trwania, minuty",
+      "name": "Tytuł rosyjski",
+      "notSet": "Nie ustawiono",
+      "posterUrl": "URL plakatu",
+      "quality": "Rozdzielczość",
+      "rating": "Ocena widzów",
+      "sequelsAndPrequels": "Kontynuacje i prequele",
+      "similarMovies": "Podobne filmy",
+      "year": "Rok wydania"
+    },
+    "genresError": "Nie udało się wczytać gatunków.",
+    "genresLoading": "Ładowanie gatunków…",
+    "loadError": "Nie udało się załadować filmu do edycji.",
+    "loading": "Ładowanie edytora filmu…",
+    "posterPreviewAlt": "Podgląd plakatu: {{title}}",
+    "sections": {
+      "artwork": { "eyebrow": "Materiały wizualne", "title": "Sekcja 3: Grafika i dane scrapera" },
+      "basic": { "eyebrow": "Główne identyfikatory", "title": "Sekcja 1: Informacje podstawowe" },
+      "classification": { "eyebrow": "Oceny", "title": "Sekcja 2: Klasyfikacja i wskaźniki" },
+      "localFile": { "eyebrow": "Metadane pliku", "title": "Sekcja 5: Lokalny plik i strumień" },
+      "production": { "eyebrow": "Twórcy i pochodzenie", "title": "Sekcja 4: Produkcja i obsada" },
+      "relationships": { "eyebrow": "Powiązania", "title": "Sekcja 6: Relacje i uniwersum" }
+    },
+    "toasts": {
+      "autofillErrorMessage": "Sprawdź ID Kinopoisk, klucz API i połączenie, a następnie spróbuj ponownie.",
+      "autofillErrorTitle": "Automatyczne uzupełnianie nie powiodło się",
+      "autofillSuccessMessage": "Dostępne metadane Kinopoisk zostały zastosowane do formularza.",
+      "autofillSuccessTitle": "Film uzupełniony",
+      "duplicateErrorMessage": "Film o tej samej nazwie już istnieje.",
+      "duplicateErrorTitle": "Film już istnieje",
+      "loadErrorMessage": "Wróć do biblioteki lub spróbuj ponownie załadować film.",
+      "loadErrorTitle": "Nie udało się załadować filmu",
+      "saveErrorMessage": "Zmiany pozostały w formularzu. Spróbuj zapisać ponownie.",
+      "saveErrorTitle": "Nie udało się zapisać filmu",
+      "saveSuccessMessage": "Wpis w bibliotece jest aktualny.",
+      "saveSuccessTitle": "Film zapisany"
+    },
+    "validation": {
+      "duration": "Wprowadź nieujemny czas trwania.",
+      "kpId": "Wprowadź prawidłowe ID Kinopoisk.",
+      "rating": "Wprowadź ocenę od 0 do 10.",
+      "required": "Pole wymagane.",
+      "year": "Wprowadź rok od 1888 do 2100."
+    }
+  },
   "movies": {
     "addMovie": "Dodaj film",
+    "delete": {
+      "confirm": "Usuń film",
+      "errorMessage": "Film pozostał w bibliotece. Spróbuj ponownie.",
+      "errorTitle": "Nie udało się usunąć filmu",
+      "message": "Usunąć {{title}} z biblioteki? Tej operacji nie można cofnąć.",
+      "successMessage": "Film został usunięty z biblioteki.",
+      "successTitle": "Film usunięty",
+      "title": "Usunąć ten film?"
+    },
     "empty": "Brak dostępnych filmów.",
     "filters": {
       "active": "Aktywne filtry",
@@ -158,6 +297,7 @@
     "loadErrorTitle": "Nie udało się załadować biblioteki",
     "loadSuccessMessage": "Biblioteka filmów jest aktualna.",
     "loadSuccessTitle": "Biblioteka załadowana",
+    "retry": "Spróbuj ponownie",
     "title": "Filmy"
   },
   "navigation": {
@@ -179,7 +319,9 @@
     "summary": "Wyświetlanie {{firstItem}}–{{lastItem}} z {{totalItems}} elementów"
   },
   "routes": {
+    "movieAddTitle": "Dodaj film | MediaShelf",
     "movieDetailsTitle": "Szczegóły filmu | MediaShelf",
+    "movieEditTitle": "Edytuj film | MediaShelf",
     "moviesTitle": "Filmy | MediaShelf",
     "settingsTitle": "Ustawienia | MediaShelf",
     "statisticsTitle": "Statystyki | MediaShelf",

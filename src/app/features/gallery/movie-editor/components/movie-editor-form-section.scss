@@ -1,0 +1,59 @@
+@use 'abstracts/breakpoints' as breakpoint;
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.editor-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+
+  &--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.editor-field {
+  min-width: 0;
+
+  &--wide,
+  &--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.editor-textarea {
+  resize: vertical;
+}
+
+.editor-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.editor-error {
+  color: var(--color-danger);
+  font: var(--text-body-sm);
+}
+
+.editor-hint {
+  margin: 0;
+  color: var(--color-on-surface-variant);
+  font: var(--text-body-sm);
+}
+
+@include breakpoint.desktop-up {
+  .editor-field--wide {
+    grid-column: span 1;
+  }
+}
+
+@include breakpoint.mobile {
+  .editor-fields,
+  .editor-fields--three {
+    grid-template-columns: 1fr;
+  }
+}

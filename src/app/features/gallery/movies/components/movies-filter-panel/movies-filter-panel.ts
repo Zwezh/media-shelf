@@ -5,6 +5,7 @@ import { FLOATING_PANEL_DATA } from '@msh-shared/floating-panel/floating-panel.t
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
 import { Icon } from '@msh-shared/components/icon/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MEDIA_AGE_RATINGS, MEDIA_QUALITY_OPTIONS } from '../../../models/media-options';
 import { type MoviesFilters } from '../../../models/movies-filters';
 import { normalizeCommaSeparatedNames } from '../../../utils/movies-filters';
 
@@ -28,8 +29,6 @@ type SelectedFilter = {
   readonly label: string;
 };
 
-const AGE_RATINGS = [0, 6, 12, 16, 18] as const;
-const QUALITY_OPTIONS = ['4K UHD', '4K HDR', '1080p FHD', 'Remux / Lossless'] as const;
 const EMPTY_FORM: MoviesFilterFormModel = {
   actors: '',
   ageRating: [],
@@ -53,8 +52,8 @@ export class MoviesFilterPanel {
   private readonly initialFilters = toMoviesFilters(toFormModel(this.data.filters));
 
   protected readonly settingsApi = inject(SettingsApi);
-  protected readonly ageRatings = AGE_RATINGS;
-  protected readonly qualityOptions = QUALITY_OPTIONS;
+  protected readonly ageRatings = MEDIA_AGE_RATINGS;
+  protected readonly qualityOptions = MEDIA_QUALITY_OPTIONS;
   protected readonly model = signal<MoviesFilterFormModel>(toFormModel(this.data.filters));
   protected readonly filterForm = form(this.model, (schema) => {
     pattern(schema.fromYear, /^$|^\d{4}$/, { message: 'movies.filters.invalidYear' });
@@ -96,6 +95,11 @@ export class MoviesFilterPanel {
 
   protected reset(): void {
     this.model.set({ ...EMPTY_FORM, ageRating: [], genres: [], quality: [] });
+  }
+
+  protected updateRating(event: Event): void {
+    const rating = Number((event.target as HTMLInputElement).value);
+    this.model.update((value) => ({ ...value, rating }));
   }
 
   protected removeSelectedFilter(id: string): void {

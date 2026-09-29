@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastStore } from '@msh-shared/services/toast-store';
+import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { ToastViewport } from './toast-viewport';
 
 describe('ToastViewport', () => {
@@ -7,7 +8,7 @@ describe('ToastViewport', () => {
   let store: ToastStore;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [ToastViewport] }).compileComponents();
+    await TestBed.configureTestingModule({ imports: [ToastViewport], providers: provideI18nTesting() }).compileComponents();
     fixture = TestBed.createComponent(ToastViewport);
     store = TestBed.inject(ToastStore);
     fixture.detectChanges();

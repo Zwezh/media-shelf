@@ -9,6 +9,12 @@ const normalizeRelatedTitles = (titles: readonly string[]): string[] =>
   titles.map((title) => title.trim()).filter((title) => title.length > 0);
 
 const toDate = (value: string): Date | null => {
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (dateOnly) {
+    const [, year, month, day] = dateOnly;
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    return date.getFullYear() === Number(year) && date.getMonth() === Number(month) - 1 && date.getDate() === Number(day) ? date : null;
+  }
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? null : date;
 };

@@ -63,4 +63,19 @@ describe('movie query params', () => {
       }
     }
   });
+
+  it('bounds URL-controlled numeric parameters before they reach the API', () => {
+    expect(
+      readMoviesParams(
+        convertToParamMap({ ageRating: ['16', '99'], fromYear: '1500', pageSize: '1000000000', rating: '42', toYear: '2024' }),
+      ),
+    ).toEqual({
+      ageRating: [16],
+      currentPage: 0,
+      direction: 'desc',
+      key: 'addedDate',
+      pageSize: 100,
+      toYear: 2024,
+    });
+  });
 });

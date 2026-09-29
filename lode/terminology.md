@@ -30,6 +30,13 @@
 - Movies store - The feature-scoped NgRx SignalStore that owns movie loading, request state, current page, and visible-page derivation.
 - Movie details - The immutable detail projection loaded from `GET /movies/{id}` and presented at `/gallery/movies/:id` without widening the card-oriented Media model.
 - Kinopoisk rating link - The detail hero rating anchor derived from `MediaDto.kpId`, opening `https://www.kinopoisk.ru/film/{kpId}` in a new tab.
+- Movie editor - The shared add/edit Signal Form at `/gallery/movies/new` and `/gallery/movies/:id/edit`, backed by `MovieEditorStore` and complete `MediaDto` conversion.
+- Kinopoisk autofill - Movie-editor metadata loaded by Kinopoisk ID from PoiskKino's `GET /v1.4/movie/{id}` endpoint with `X-API-KEY` authentication.
+- Confirmation dialog - Shared `FloatingPanel` content that returns an explicit boolean decision while native dialog modality, dismissal, cleanup, and focus restoration remain infrastructure concerns.
+- Auth session - The expiring JWT state persisted under `StorageKey.Token`; it survives reloads and is cleared by Sign Out, JWT expiry, invalid restoration, or authenticated 401 responses.
+- Storage key - A centralized `StorageKey` enum member used by `BrowserStorage`; current exact keys are `token` and `language`.
+- Form validation message - The shared Signal Form component that renders the first validator-provided translated error after a field becomes touched and invalid, or maps standard error kinds to specific shared translations when custom copy is absent.
+- Protected control - A write-action control whose native disabled state is centrally combined with `AuthSession` through `mshRequiresAuth`.
 
 ```scss
 .movie-badge {
@@ -50,6 +57,8 @@ flowchart TD
   GalleryAPI --> DTO[Movies page DTO]
   DTO --> Model[Media model]
   DTO --> Details[Movie details model]
+  DTO --> Editor[Movie editor model]
+  Kinopoisk[Kinopoisk DTOs] --> Editor
 ```
 
 Related lodes: [summary](summary.md), [media gallery](ui/media-gallery.md), [UI design tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md).

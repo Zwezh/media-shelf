@@ -1,0 +1,61 @@
+@use 'abstracts/breakpoints' as breakpoint;
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.artwork-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.artwork-autofill {
+  padding: var(--space-base);
+  background: var(--color-surface-container-low);
+  border-radius: var(--radius-lg);
+
+  strong {
+    color: var(--color-on-surface);
+    font: var(--text-label-lg);
+  }
+
+  p {
+    margin: var(--space-xs) 0 var(--space-md);
+    color: var(--color-on-surface-variant);
+    font: var(--text-body-sm);
+  }
+
+  &__controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-sm);
+    align-items: end;
+  }
+}
+
+.artwork-preview {
+  display: block;
+  max-width: 100%;
+  object-fit: cover;
+  background: var(--color-surface-container);
+  border-radius: var(--radius-lg);
+
+  &--poster {
+    width: min(12rem, 100%);
+    aspect-ratio: 2 / 3;
+    margin-inline: auto;
+  }
+
+  &--backdrop {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@include breakpoint.mobile {
+  .artwork-autofill__controls {
+    grid-template-columns: 1fr;
+  }
+}

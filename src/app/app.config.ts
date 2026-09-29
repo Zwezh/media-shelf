@@ -1,5 +1,6 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { authenticationInterceptor } from '@msh-core/auth/authentication-interceptor';
 import { provideEnvironment } from '@msh-core/config/environment.token';
 import { provideRouter, TitleStrategy, withViewTransitions } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -13,7 +14,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideEnvironment(environment),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authenticationInterceptor])),
     provideTranslateService({
       fallbackLang: 'en',
       loader: provideTranslateHttpLoader({

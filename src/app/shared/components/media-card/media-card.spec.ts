@@ -1,9 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { type Media } from '@msh-features/gallery/models/media';
+import { AuthSession } from '@msh-core/auth/auth-session';
+import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { MediaCard } from './media-card';
+import type { MediaCardModel } from './media-card.model';
 
-const media: Media = {
+const media: MediaCardModel = {
   ageRating: '16+',
   director: 'Denis Villeneuve',
   durationMinutes: 166,
@@ -19,8 +21,11 @@ const media: Media = {
 };
 
 describe('MediaCard', () => {
+  beforeEach(resetTestAuthStorage);
+
   it('renders Stitch card metadata and emits typed view, edit, and delete actions', async () => {
     TestBed.configureTestingModule({ providers: provideI18nTesting() });
+    TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
     const fixture = TestBed.createComponent(MediaCard);
     fixture.componentRef.setInput('media', media);
     const viewed = vi.fn();
@@ -45,5 +50,17 @@ describe('MediaCard', () => {
     expect(viewed).toHaveBeenCalledWith(media);
     expect(edited).toHaveBeenCalledWith(media);
     expect(deleted).toHaveBeenCalledWith(media);
+  });
+
+  it('keeps edit and delete disabled while signed out', async () => {
+    TestBed.configureTestingModule({ providers: provideI18nTesting() });
+    const fixture = TestBed.createComponent(MediaCard);
+    fixture.componentRef.setInput('media', media);
+    await fixture.whenStable();
+
+    const actions = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.media-card__action');
+    expect(actions[0]?.disabled).toBe(false);
+    expect(actions[1]?.disabled).toBe(true);
+    expect(actions[2]?.disabled).toBe(true);
   });
 });

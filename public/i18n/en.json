@@ -1,7 +1,50 @@
 {
   "common": {
+    "cancel": "Cancel",
     "close": "Close",
-    "itemCount": "{{count}} items"
+    "dismissNotification": "Dismiss notification",
+    "itemCount": "{{count}} items",
+    "validation": {
+      "email": "Enter a valid email address.",
+      "max": "The value exceeds the allowed maximum.",
+      "maxDate": "Choose a date on or before the allowed maximum.",
+      "maxLength": "The value is too long.",
+      "min": "The value is below the allowed minimum.",
+      "minDate": "Choose a date on or after the allowed minimum.",
+      "minLength": "The value is too short.",
+      "parse": "Enter a value in the expected format.",
+      "pattern": "Use the required format.",
+      "range": "The value is outside the allowed range.",
+      "required": "Required field.",
+      "value": "Enter a valid value."
+    }
+  },
+  "auth": {
+    "actions": {
+      "signIn": "Sign In",
+      "signingIn": "Signing in…",
+      "signOut": "Sign Out"
+    },
+    "dialog": {
+      "description": "Enter the master secret key to unlock protected library actions.",
+      "hideSecret": "Hide secret key",
+      "hint": "The key is exchanged for a short-lived access token and is never stored.",
+      "secretKey": "Master secret key",
+      "showSecret": "Show secret key",
+      "title": "Authorize access"
+    },
+    "requiredForWrite": "Sign in to add or modify library items",
+    "toasts": {
+      "signInErrorMessage": "Check the secret key and connection, then try again.",
+      "signInErrorTitle": "Sign in failed",
+      "signInSuccessMessage": "Protected library actions are now available for this page session.",
+      "signInSuccessTitle": "Signed in",
+      "signOutSuccessMessage": "The access token has been cleared.",
+      "signOutSuccessTitle": "Signed out"
+    },
+    "validation": {
+      "secretKeyRequired": "Enter the master secret key."
+    }
   },
   "footer": {
     "description": "MediaShelf — Archival Media Management Suite",
@@ -54,6 +97,15 @@
       "label": "Breadcrumb"
     },
     "emptyValue": "Not available",
+    "delete": {
+      "confirm": "Delete movie",
+      "errorMessage": "The movie remains in your library. Try again.",
+      "errorTitle": "Movie could not be deleted",
+      "message": "Delete {{title}} from the library? This action cannot be undone.",
+      "successMessage": "The movie was removed from your library.",
+      "successTitle": "Movie deleted",
+      "title": "Delete this movie?"
+    },
     "genres": "Genres",
     "kinopoiskLinkLabel": "Open the {{rating}} Kinopoisk rating for {{title}} in a new tab",
     "loadError": "Movie details could not be loaded.",
@@ -77,8 +129,95 @@
     "retry": "Try again",
     "synopsis": "Synopsis"
   },
+  "movieEditor": {
+    "actions": {
+      "autofill": "Auto-fill",
+      "autofilling": "Fetching…",
+      "back": "Back to movies",
+      "discard": "Discard Changes",
+      "retry": "Try again",
+      "save": "Save to library",
+      "saving": "Saving…"
+    },
+    "addTitle": "Add movie",
+    "autofill": {
+      "description": "Retrieve titles, artwork, cast, and related movies by Kinopoisk ID.",
+      "title": "Kinopoisk Database Sync"
+    },
+    "breadcrumbs": {
+      "add": "Add media",
+      "edit": "Edit media",
+      "label": "Breadcrumb"
+    },
+    "editTitle": "Edit movie",
+    "fields": {
+      "actors": "Actors",
+      "addedDate": "Added date",
+      "ageRating": "Age certification",
+      "backdropUrl": "Backdrop URL",
+      "countries": "Production countries",
+      "description": "Synopsis",
+      "directors": "Director / Showrunner",
+      "enName": "Original / English name",
+      "extension": "Container format",
+      "genres": "Genres & categorization",
+      "kpId": "Kinopoisk ID",
+      "movieLength": "Runtime, minutes",
+      "name": "Primary Russian title",
+      "notSet": "Not set",
+      "posterUrl": "Poster URL",
+      "quality": "Master resolution",
+      "rating": "Audience score",
+      "sequelsAndPrequels": "Sequels & prequels",
+      "similarMovies": "Similar movies",
+      "year": "Release year"
+    },
+    "genresError": "Genres could not be loaded.",
+    "genresLoading": "Loading genres…",
+    "loadError": "The movie could not be loaded for editing.",
+    "loading": "Loading movie editor…",
+    "posterPreviewAlt": "Poster preview for {{title}}",
+    "sections": {
+      "artwork": { "eyebrow": "Visual assets", "title": "Section 3: Artwork & Scraper Assets" },
+      "basic": { "eyebrow": "Primary identifiers", "title": "Section 1: Basic Information" },
+      "classification": { "eyebrow": "Evaluation scores", "title": "Section 2: Classification & Metrics" },
+      "localFile": { "eyebrow": "Filesystem metadata", "title": "Section 5: Local File & Physical Stream" },
+      "production": { "eyebrow": "Credits & origin", "title": "Section 4: Production & Cast" },
+      "relationships": { "eyebrow": "Cross-references", "title": "Section 6: Relationships & Universe" }
+    },
+    "toasts": {
+      "autofillErrorMessage": "Check the Kinopoisk ID, API key, and connection, then try again.",
+      "autofillErrorTitle": "Auto-fill failed",
+      "autofillSuccessMessage": "Available Kinopoisk metadata was applied to the form.",
+      "autofillSuccessTitle": "Movie filled",
+      "duplicateErrorMessage": "A movie with the same name already exists.",
+      "duplicateErrorTitle": "Movie already exists",
+      "loadErrorMessage": "Return to the library or try loading this movie again.",
+      "loadErrorTitle": "Movie load failed",
+      "saveErrorMessage": "Your changes remain in the form. Try saving again.",
+      "saveErrorTitle": "Movie could not be saved",
+      "saveSuccessMessage": "The library entry is up to date.",
+      "saveSuccessTitle": "Movie saved"
+    },
+    "validation": {
+      "duration": "Enter a non-negative runtime.",
+      "kpId": "Enter a valid Kinopoisk ID.",
+      "rating": "Enter a rating from 0 to 10.",
+      "required": "Required field.",
+      "year": "Enter a year from 1888 to 2100."
+    }
+  },
   "movies": {
     "addMovie": "Add movie",
+    "delete": {
+      "confirm": "Delete movie",
+      "errorMessage": "The movie remains in your library. Try again.",
+      "errorTitle": "Movie could not be deleted",
+      "message": "Delete {{title}} from the library? This action cannot be undone.",
+      "successMessage": "The movie was removed from your library.",
+      "successTitle": "Movie deleted",
+      "title": "Delete this movie?"
+    },
     "empty": "There are no movies available.",
     "filters": {
       "active": "Active filters",
@@ -158,6 +297,7 @@
     "loadErrorTitle": "Library load failed",
     "loadSuccessMessage": "The movie library is up to date.",
     "loadSuccessTitle": "Library loaded",
+    "retry": "Try again",
     "title": "Movies"
   },
   "navigation": {
@@ -179,7 +319,9 @@
     "summary": "Showing {{firstItem}}–{{lastItem}} of {{totalItems}} items"
   },
   "routes": {
+    "movieAddTitle": "Add movie | MediaShelf",
     "movieDetailsTitle": "Movie details | MediaShelf",
+    "movieEditTitle": "Edit movie | MediaShelf",
     "moviesTitle": "Movies | MediaShelf",
     "settingsTitle": "Settings | MediaShelf",
     "statisticsTitle": "Statistics | MediaShelf",

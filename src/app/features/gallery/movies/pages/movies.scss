@@ -75,6 +75,15 @@
     gap: var(--size-grid-gutter);
   }
 
+  &__error {
+    display: grid;
+    justify-items: center;
+
+    .btn {
+      margin-top: calc(-1 * var(--space-xl));
+    }
+  }
+
   @include breakpoint.mobile-up {
     &__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));

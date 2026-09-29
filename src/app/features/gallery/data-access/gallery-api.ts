@@ -10,6 +10,7 @@ import { type MoviesParams } from '../models/movies-params';
 import { toMedia } from '../utils/media.converter';
 import { toMovieDetails } from '../utils/movie-details.converter';
 import { type MoviesQueryParams, toMoviesQueryParams } from '../utils/movies-params';
+import { parseMediaDto, parseMoviesPageDto } from './media-dto.parser';
 
 export type GalleryEndpoint = 'movies' | 'series' | 'wishlist';
 
@@ -19,15 +20,30 @@ export class GalleryApi {
   private readonly http = inject(HttpClient);
 
   getMovies(params: MoviesParams): Observable<MoviesPage> {
-    return this.http
-      .get<MoviesPageDto>(this.toEndpointUrl('movies'), { params: this.toApiParams(params) })
-      .pipe(map((response) => this.toMoviesPage(response, params.currentPage)));
+    return this.http.get<unknown>(this.toEndpointUrl('movies'), { params: this.toApiParams(params) }).pipe(
+      map(parseMoviesPageDto),
+      map((response) => this.toMoviesPage(response, params.currentPage)),
+    );
   }
 
   getMovie(id: string): Observable<MovieDetails> {
-    return this.http
-      .get<MediaDto>(`${this.toEndpointUrl('movies')}/${encodeURIComponent(id)}`)
-      .pipe(map((response) => toMovieDetails(response)));
+    return this.getMovieDto(id).pipe(map((response) => toMovieDetails(response)));
+  }
+
+  getMovieDto(id: string): Observable<MediaDto> {
+    return this.http.get<unknown>(`${this.toEndpointUrl('movies')}/${encodeURIComponent(id)}`).pipe(map(parseMediaDto));
+  }
+
+  addMovie(movie: MediaDto): Observable<MediaDto> {
+    return this.http.post<unknown>(this.toEndpointUrl('movies'), movie).pipe(map(parseMediaDto));
+  }
+
+  updateMovie(movie: MediaDto): Observable<MediaDto> {
+    return this.http.put<unknown>(this.toEndpointUrl('movies'), movie).pipe(map(parseMediaDto));
+  }
+
+  deleteMovie(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.toEndpointUrl('movies')}/${encodeURIComponent(id)}`);
   }
 
   private toEndpointUrl(endpoint: GalleryEndpoint): string {

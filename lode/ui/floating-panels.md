@@ -6,6 +6,7 @@
 const ref = floatingPanel.open<FilterPanel, FilterData, FilterResult>(FilterPanel, {
   ariaLabelledBy: 'filter-panel-title',
   data: { filters },
+  owner: destroyRef,
   placement: 'responsive',
 });
 
@@ -22,6 +23,8 @@ flowchart LR
   Data[FLOATING_PANEL_DATA] --> Content
   Ref[FloatingPanelRef] --> Content
   Content -->|close result| Ref
+  Confirmation[Confirmation dialog] -->|true or false| Ref
+  Authentication[Authorization dialog] -->|authenticated or dismissed| Ref
   Ref -->|closed observable| Caller
   Ref --> Cleanup[Detach view, destroy component, restore focus]
 ```
@@ -29,6 +32,8 @@ flowchart LR
 Contracts:
 
 - `FloatingPanelConfig` controls data, accessible naming, backdrop/Escape dismissal, placement, panel classes, and focus restoration.
+- Route/component callers pass their `DestroyRef` as `owner`; owner destruction closes the panel, destroys its dynamically attached view, removes global listeners, and prevents orphan dialogs after navigation.
+- Dialog descriptions use `ariaDescribedBy` on the native `<dialog>` when content such as a destructive confirmation message must be announced with its label.
 - Callers may opt into `closeOnScroll`; captured scroll events outside the panel close it, while internal panel scrolling is ignored. Listener cleanup is part of the same close lifecycle as view and host teardown.
 - Content injects `FLOATING_PANEL_DATA` and `FloatingPanelRef`; callers receive the same reference with the dynamically created component instance and a completing `closed` observable.
 - Opening a second panel closes and destroys the active panel before attaching the next one.
@@ -38,6 +43,8 @@ Contracts:
 - `responsive` placement is a full-height end sheet on desktop and a full-height sheet on mobile; neither mode uses a top offset.
 - `anchored-responsive` accepts an `HTMLElement` anchor. It opens beneath and end-aligned with the trigger, updates its anchor coordinates on resize, and becomes a content-height modal bottom sheet with a scrim on mobile. Feature-specific `panelClass` values may narrow the shared maximum width and radius; Movies sorting uses an 18rem-wide, 8px-radius desktop panel.
 - Enter motion uses design motion tokens and is removed for reduced-motion preferences.
+- Shared destructive confirmations use `ConfirmationDialog` with translated title/message/action keys and a boolean result. Cancel receives initial focus; confirmation is danger-styled, while Escape and backdrop dismissal return no affirmative result.
+- Header Sign In uses a centered `AuthDialog` labelled and described through the native dialog. It focuses the secret-key field, provides a password visibility toggle, and closes affirmatively only after a valid access token starts the session. It intentionally omits the prototype's Forgot key and workstation-persistence controls.
 
 Rationale and lessons:
 
@@ -45,4 +52,4 @@ Rationale and lessons:
 - The native dialog supplies semantics and modality without adding Angular CDK or duplicating its full overlay system.
 - Panel content owns its header, body, footer, and result contract; the shared container owns only lifecycle and placement.
 
-Related lodes: [UI summary](summary.md), [media gallery](media-gallery.md), [application shell](application-shell.md), [practices](../practices.md).
+Related lodes: [authentication](../auth/summary.md), [UI summary](summary.md), [media gallery](media-gallery.md), [application shell](application-shell.md), [practices](../practices.md).
