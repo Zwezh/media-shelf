@@ -6,14 +6,14 @@ import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { MovieDeletionCoordinator } from './movie-deletion-coordinator';
 
 describe('MovieDeletionCoordinator', () => {
-  it('opens the shared movie deletion dialog and runs the confirmed action once', () => {
+  it('opens the shared movie deletion dialog and emits a confirmed result once', () => {
     const closed = new Subject<boolean | undefined>();
     const open = vi.fn(() => ({ closed }));
     TestBed.configureTestingModule({ providers: [{ provide: FloatingPanel, useValue: { open } }] });
     const owner = TestBed.inject(DestroyRef);
     const onConfirmed = vi.fn();
 
-    TestBed.inject(MovieDeletionCoordinator).confirm({ onConfirmed, owner, title: 'Arrival' });
+    TestBed.inject(MovieDeletionCoordinator).confirm({ owner, title: 'Arrival' }).subscribe(onConfirmed);
 
     expect(open).toHaveBeenCalledWith(
       ConfirmationDialog,
@@ -45,11 +45,9 @@ describe('MovieDeletionCoordinator', () => {
     });
     const onConfirmed = vi.fn();
 
-    TestBed.inject(MovieDeletionCoordinator).confirm({
-      onConfirmed,
-      owner: TestBed.inject(DestroyRef),
-      title: 'Arrival',
-    });
+    TestBed.inject(MovieDeletionCoordinator)
+      .confirm({ owner: TestBed.inject(DestroyRef), title: 'Arrival' })
+      .subscribe(onConfirmed);
     closed.next(false);
 
     expect(onConfirmed).not.toHaveBeenCalled();

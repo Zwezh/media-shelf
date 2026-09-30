@@ -2,7 +2,8 @@ import { Component, computed, ElementRef, inject, linkedSignal } from '@angular/
 import { form, required, submit, validate } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { SettingsApi } from '@msh-core/settings/settings-api';
+import { SettingsStore } from '@msh-core/settings/settings.store';
+import type { ExtensionSettingOption, QualitySettingOption } from '@msh-core/settings/settings.dto';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
 import { RequiresAuth } from '@msh-shared/directives/requires-auth';
 import { ArtworkAssets } from '../components/artwork-assets/artwork-assets';
@@ -11,8 +12,16 @@ import { ClassificationMetrics } from '../components/classification-metrics/clas
 import { LocalFile } from '../components/local-file/local-file';
 import { ProductionCast } from '../components/production-cast/production-cast';
 import { RelationshipsUniverse } from '../components/relationships-universe/relationships-universe';
+import type { MovieEditorMode, MovieEditorModel } from '../models/movie-editor.model';
 import { MovieEditorStore } from '../state/movie-editor.store';
-import { toMediaDto } from '../utils/movie-editor.converter';
+
+type MovieEditorModelSource = {
+  readonly defaultExtension: string;
+  readonly defaultQuality: string;
+  readonly mode: MovieEditorMode;
+  readonly seed: MovieEditorModel;
+  readonly settingsLoaded: boolean;
+};
 
 @Component({
   imports: [
@@ -34,9 +43,31 @@ import { toMediaDto } from '../utils/movie-editor.converter';
 })
 export class MovieEditorPage {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  protected readonly settingsApi = inject(SettingsApi);
+  protected readonly settings = inject(SettingsStore);
   protected readonly store = inject(MovieEditorStore);
-  protected readonly model = linkedSignal(() => this.store.seed());
+  protected readonly model = linkedSignal<MovieEditorModelSource, MovieEditorModel>({
+    source: () => ({
+      defaultExtension: this.settings.defaultExtension(),
+      defaultQuality: this.settings.defaultQuality(),
+      mode: this.store.mode(),
+      seed: this.store.seed(),
+      settingsLoaded: this.settings.settings.hasValue(),
+    }),
+    computation: (source, previous) => {
+      const seedChanged = !previous || previous.source.mode !== source.mode || previous.source.seed !== source.seed;
+      const draft = seedChanged ? source.seed : previous.value;
+      const settingsJustLoaded = source.settingsLoaded && (!previous || !previous.source.settingsLoaded);
+      if (source.mode !== 'add' || !settingsJustLoaded) return draft;
+
+      return {
+        ...draft,
+        extension: draft.extension || source.defaultExtension,
+        quality: draft.quality || source.defaultQuality,
+      };
+    },
+  });
+  protected readonly extensionOptions = computed(() => withCurrentExtension(this.settings.extensionOptions(), this.model().extension));
+  protected readonly qualityOptions = computed(() => withCurrentQuality(this.settings.qualityOptions(), this.model().quality));
   protected readonly movieForm = form(this.model, (schema) => {
     required(schema.name, { message: 'movieEditor.validation.required' });
     validate(schema.name, ({ value }) => requiredText(value()));
@@ -92,7 +123,7 @@ export class MovieEditorPage {
     event.preventDefault();
     if (this.store.isBusy()) return;
     await submit(this.movieForm, async () => {
-      this.store.save(toMediaDto(this.model()));
+      this.store.save(this.model());
     });
     if (this.movieForm().invalid()) this.focusFirstInvalidField();
   }
@@ -126,6 +157,16 @@ export class MovieEditorPage {
     const firstInvalidId = invalidFieldIds.find(([invalid]) => invalid)?.[1];
     if (firstInvalidId) this.elementRef.nativeElement.querySelector<HTMLElement>(`#${firstInvalidId}`)?.focus();
   }
+}
+
+function withCurrentExtension(options: readonly ExtensionSettingOption[], currentValue: string): readonly ExtensionSettingOption[] {
+  return !currentValue.trim() || options.some((option) => option.value === currentValue) ? options : [...options, { value: currentValue }];
+}
+
+function withCurrentQuality(options: readonly QualitySettingOption[], currentValue: string): readonly QualitySettingOption[] {
+  return !currentValue.trim() || options.some((option) => option.value === currentValue)
+    ? options
+    : [...options, { title: currentValue, value: currentValue }];
 }
 
 function numericRange(value: string, minimum: number, maximum: number, optional: boolean, message: string, integer = false) {

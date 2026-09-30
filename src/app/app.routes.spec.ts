@@ -3,9 +3,11 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { GalleryApi } from './features/gallery/data-access/gallery-api';
 import { type Media } from './features/gallery/models/media';
 import { type MovieDetails } from './features/gallery/models/movie-details';
+import { DeleteMovieUseCase } from './features/gallery/movies/application/delete-movie.use-case';
+import { GetMovieDetailsQuery } from './features/gallery/movies/application/get-movie-details.query';
+import { GetMoviesQuery } from './features/gallery/movies/application/get-movies.query';
 import { APP_NAVIGATION_ITEMS, routes } from './app.routes';
 import { provideI18nTesting } from './testing/i18n-testing';
 
@@ -58,7 +60,9 @@ describe('root routes', () => {
         provideHttpClient(),
         provideRouter(routes),
         provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovie: () => of(movieDetails), getMovies } },
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
+        { provide: GetMovieDetailsQuery, useValue: { execute: () => of(movieDetails) } },
+        { provide: GetMoviesQuery, useValue: { execute: getMovies } },
       ],
     });
   });

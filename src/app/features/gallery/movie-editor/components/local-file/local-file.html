@@ -8,8 +8,8 @@
       <span>{{ 'movieEditor.fields.quality' | translate }} *</span>
       <select id="movie-editor-quality" class="form-control" aria-describedby="movie-editor-quality-error" [formField]="form().quality">
         <option value="">{{ 'movieEditor.fields.notSet' | translate }}</option>
-        @for (quality of qualityOptions; track quality) {
-          <option [value]="quality">{{ quality }}</option>
+        @for (quality of qualityOptions(); track quality.value) {
+          <option [value]="quality.value">{{ quality.title }}</option>
         }
       </select>
       <msh-form-validation-message [field]="form().quality()" messageId="movie-editor-quality-error" />
@@ -23,8 +23,8 @@
         [formField]="form().extension"
       >
         <option value="">{{ 'movieEditor.fields.notSet' | translate }}</option>
-        @for (extension of extensionOptions; track extension) {
-          <option [value]="extension">{{ extension }}</option>
+        @for (extension of extensionOptions(); track extension.value) {
+          <option [value]="extension.value">{{ extension.value }}</option>
         }
       </select>
       <msh-form-validation-message [field]="form().extension()" messageId="movie-editor-extension-error" />

@@ -2,10 +2,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideEnvironment } from '@msh-core/config/environment.token';
-import { environment } from '../../../../environments/environment';
-import { type MediaDto } from '../models/media.dto';
-import { type MoviesParams } from '../models/movies-params';
-import { GalleryApi } from './gallery-api';
+import { AppError } from '@msh-core/http/app-error';
+import { environment } from '../../../../../environments/environment';
+import { type MediaDto } from '../../models/media.dto';
+import { type MoviesParams } from '../../models/movies-params';
+import { toMovieEditorModel } from '../../movie-editor/utils/movie-editor.converter';
+import { MoviesApiClient } from './movies-api.client';
+import { HttpMoviesRepository } from './http-movies.repository';
 
 const testEnvironment = {
   ...environment,
@@ -55,18 +58,24 @@ const params: MoviesParams = {
   toYear: 2025,
 };
 
-describe('GalleryApi', () => {
+describe('HttpMoviesRepository', () => {
   it('loads gallery media from the configured endpoint and converts it for the UI', () => {
     TestBed.configureTestingModule({
-      providers: [GalleryApi, provideEnvironment(testEnvironment), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        HttpMoviesRepository,
+        MoviesApiClient,
+        provideEnvironment(testEnvironment),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
 
-    const api = TestBed.inject(GalleryApi);
+    const repository = TestBed.inject(HttpMoviesRepository);
     const http = TestBed.inject(HttpTestingController);
     let currentPage = -1;
     let mediaTitle = '';
 
-    api.getMovies(params).subscribe((page) => {
+    repository.find(params).subscribe((page) => {
       currentPage = page.currentPage;
       mediaTitle = page.media[0]?.title ?? '';
     });
@@ -95,14 +104,20 @@ describe('GalleryApi', () => {
 
   it('loads one movie by its encoded ID and converts the detail response', () => {
     TestBed.configureTestingModule({
-      providers: [GalleryApi, provideEnvironment(testEnvironment), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        HttpMoviesRepository,
+        MoviesApiClient,
+        provideEnvironment(testEnvironment),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
 
-    const api = TestBed.inject(GalleryApi);
+    const repository = TestBed.inject(HttpMoviesRepository);
     const http = TestBed.inject(HttpTestingController);
     let title = '';
 
-    api.getMovie('movie/one').subscribe((movie) => {
+    repository.findById('movie/one').subscribe((movie) => {
       title = movie.title;
     });
 
@@ -114,32 +129,38 @@ describe('GalleryApi', () => {
     http.verify();
   });
 
-  it('loads a raw movie DTO and sends exact add, update, and delete mutations', () => {
+  it('loads an editor model and sends exact add, update, and delete mutations', () => {
     TestBed.configureTestingModule({
-      providers: [GalleryApi, provideEnvironment(testEnvironment), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        HttpMoviesRepository,
+        MoviesApiClient,
+        provideEnvironment(testEnvironment),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
 
-    const api = TestBed.inject(GalleryApi);
+    const repository = TestBed.inject(HttpMoviesRepository);
     const http = TestBed.inject(HttpTestingController);
 
-    api.getMovieDto('movie/one').subscribe();
+    repository.getForEdit('movie/one').subscribe();
     const getRequest = http.expectOne('http://localhost:4200/api/movies/movie%2Fone');
     expect(getRequest.request.method).toBe('GET');
     getRequest.flush(mediaDto);
 
-    api.addMovie(mediaDto).subscribe();
+    repository.create(toMovieEditorModel(mediaDto)).subscribe();
     const postRequest = http.expectOne('http://localhost:4200/api/movies');
     expect(postRequest.request.method).toBe('POST');
     expect(postRequest.request.body).toEqual(mediaDto);
     postRequest.flush(mediaDto);
 
-    api.updateMovie(mediaDto).subscribe();
+    repository.update(toMovieEditorModel(mediaDto)).subscribe();
     const putRequest = http.expectOne('http://localhost:4200/api/movies');
     expect(putRequest.request.method).toBe('PUT');
     expect(putRequest.request.body).toEqual(mediaDto);
     putRequest.flush(mediaDto);
 
-    api.deleteMovie('movie/one').subscribe();
+    repository.delete('movie/one').subscribe();
     const deleteRequest = http.expectOne('http://localhost:4200/api/movies/movie%2Fone');
     expect(deleteRequest.request.method).toBe('DELETE');
     deleteRequest.flush(null);
@@ -149,16 +170,22 @@ describe('GalleryApi', () => {
 
   it('rejects malformed transport responses before conversion', () => {
     TestBed.configureTestingModule({
-      providers: [GalleryApi, provideEnvironment(testEnvironment), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        HttpMoviesRepository,
+        MoviesApiClient,
+        provideEnvironment(testEnvironment),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
-    const api = TestBed.inject(GalleryApi);
+    const repository = TestBed.inject(HttpMoviesRepository);
     const http = TestBed.inject(HttpTestingController);
     const error = vi.fn();
 
-    api.getMovies(params).subscribe({ error });
+    repository.find(params).subscribe({ error });
     http.expectOne(({ url }) => url === 'http://localhost:4200/api/movies').flush({ currentPage: 0, list: null, totalCount: 1 });
 
-    expect(error).toHaveBeenCalledWith(expect.any(TypeError));
+    expect(error).toHaveBeenCalledWith(expect.any(AppError));
     http.verify();
   });
 });

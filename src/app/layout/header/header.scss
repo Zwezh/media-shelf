@@ -14,7 +14,6 @@
   min-width: 0;
   height: var(--size-shell-header-height);
   padding-inline: var(--size-shell-inline-padding);
-  overflow: hidden;
   background: var(--color-shell-surface);
   border-bottom: var(--border-width-hairline) solid var(--color-shell-border);
   box-shadow: var(--shadow-level-1);
@@ -36,15 +35,22 @@
 }
 
 .app-header__navigation {
+  flex: 0 1 auto;
   min-width: 0;
   margin-left: var(--space-xl);
   overflow-x: auto;
   scrollbar-width: none;
 }
 
+.app-header__search {
+  flex: 0 1 20rem;
+  width: clamp(12rem, 24vw, 20rem);
+  min-width: 12rem;
+  margin-left: auto;
+}
+
 .app-header__auth {
   flex: 0 0 auto;
-  margin-left: auto;
   padding-left: var(--space-md);
 }
 
@@ -119,5 +125,15 @@
       white-space: nowrap;
       border: 0;
     }
+  }
+}
+
+@include breakpoint.mobile {
+  .app-header__search {
+    display: none;
+  }
+
+  .app-header__navigation {
+    margin-right: auto;
   }
 }

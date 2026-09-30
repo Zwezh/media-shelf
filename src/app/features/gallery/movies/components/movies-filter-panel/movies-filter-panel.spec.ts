@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SettingsApi } from '@msh-core/settings/settings-api';
+import { SettingsStore } from '@msh-core/settings/settings.store';
 import { FLOATING_PANEL_DATA } from '@msh-shared/floating-panel/floating-panel.tokens';
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
@@ -22,9 +22,13 @@ describe('MoviesFilterPanel', () => {
         },
         { provide: FloatingPanelRef, useValue: { close } },
         {
-          provide: SettingsApi,
+          provide: SettingsStore,
           useValue: {
             genresForFilters: signal(['Action', 'Drama', 'Sci-Fi']),
+            qualityOptions: signal([
+              { title: '2160p 4K', value: '2160p' },
+              { title: '1080p FHD', value: '1080p', default: true },
+            ]),
             settings: { error: signal(undefined), isLoading: signal(false) },
           },
         },
@@ -97,6 +101,17 @@ describe('MoviesFilterPanel', () => {
     await fixture.whenStable();
 
     expect(close).toHaveBeenCalledWith(expect.objectContaining({ rating: 9.5 }));
+  });
+
+  it('renders backend quality titles and submits their values', async () => {
+    expect(fixture.nativeElement.textContent).toContain('1080p FHD');
+
+    clickChoice('1080p FHD');
+    await fixture.whenStable();
+    fixture.nativeElement.querySelector('form').dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+
+    expect(close).toHaveBeenCalledWith(expect.objectContaining({ quality: ['1080p'] }));
   });
 
   function clickChoice(label: string): void {

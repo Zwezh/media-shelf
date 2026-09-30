@@ -23,8 +23,9 @@ export interface MovieDetails {
 flowchart LR
   Card[Movie card View] -->|preserve list query| Route[/gallery/movies/:id]
   Route --> Store[MovieDetailsStore]
-  Store --> API[GalleryApi.getMovie id]
-  API --> Endpoint[GET /movies/id]
+  Store --> Query[GetMovieDetailsQuery]
+  Query --> Repository[MoviesRepository]
+  Repository --> Endpoint[GET /movies/id]
   Endpoint --> DTO[MediaDto]
   DTO --> Converter[toMovieDetails]
   Converter --> Page[Movie details page]
@@ -52,12 +53,12 @@ flowchart LR
 
 ## Data and SignalStore
 
-- Add `GalleryApi.getMovie(id): Observable<MovieDetails>` using the normalized API base and `GET /movies/${encodeURIComponent(id)}`. Keep DTO conversion in the API boundary.
+- `GetMovieDetailsQuery` delegates to `MoviesRepository.findById(id)`. `HttpMoviesRepository` uses the normalized API base and `GET /movies/${encodeURIComponent(id)}`, then validates and converts the DTO.
 - Add a focused `toMovieDetails(MediaDto)` converter rather than widening card-oriented `Media`. Preserve `kpId`; normalize title/poster fallback, year, age rating, duration, array fields, extension display, and an invalid/missing added date fallback.
 - Add route-scoped `MovieDetailsStore` state: `movie`, `requestedId`, `isLoading`, and `hasError`. Derived signals expose display-ready state; methods expose `loadMovie(id)` and `retry()`.
 - On initialization, observe `ActivatedRoute.paramMap`, ignore duplicate IDs, and switch to the newest request so parameter navigation cancels stale HTTP work.
-- Each load clears the previous error, shows a page loading state, and replaces stale movie content. Success stores the movie and emits a localized auto-hiding success toast; failure clears the movie, renders an assertive error state with Retry/Back actions, and emits a localized error toast.
-- Keep HTTP orchestration in the store, transport/conversion in `GalleryApi`, and routing/event binding in page containers.
+- Each load clears the previous error, shows a page loading state, and replaces stale movie content. Success stores the movie silently; failure clears the movie, renders an assertive error state with Retry/Back actions, and emits localized error feedback.
+- Keep page state in the store, reads in `GetMovieDetailsQuery`, transport/conversion in `HttpMoviesRepository`, and routing/event binding in page containers.
 
 ```typescript
 type MovieDetailsState = {

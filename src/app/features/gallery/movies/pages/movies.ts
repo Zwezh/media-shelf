@@ -17,7 +17,8 @@ import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-fil
 import { MovieDeletionCoordinator } from '../../services/movie-deletion-coordinator';
 import { MoviesFilterPanel, type MoviesFilterPanelData } from '../components/movies-filter-panel/movies-filter-panel';
 import { MoviesSortSelect } from '../components/movies-sort-select/movies-sort-select';
-import { MoviesStore } from '../data-access/movies.store';
+import { MoviesRouteState } from '../state/movies-route-state';
+import { MoviesStore } from '../state/movies.store';
 
 type FilterChip = {
   readonly key: MovieFilterKey;
@@ -28,7 +29,7 @@ type FilterChip = {
 
 @Component({
   imports: [EmptyState, Icon, MediaCard, MoviesSortSelect, PageHeader, PageStatus, Pagination, RequiresAuth, TranslatePipe],
-  providers: [MoviesStore],
+  providers: [MoviesRouteState, MoviesStore],
   selector: 'msh-movies',
   styleUrl: './movies.scss',
   templateUrl: './movies.html',
@@ -53,11 +54,10 @@ export class Movies {
   }
 
   protected confirmDelete(media: MediaCardModel): void {
-    this.movieDeletion.confirm({
-      onConfirmed: () => this.store.deleteMovie(media.id),
-      owner: this.destroyRef,
-      title: media.title,
-    });
+    this.movieDeletion
+      .confirm({ owner: this.destroyRef, title: media.title })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.store.deleteMovie(media.id));
   }
 
   protected editMovie(media: MediaCardModel): void {

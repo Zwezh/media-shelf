@@ -1,18 +1,29 @@
+import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, RouterOutlet } from '@angular/router';
 import { APP_VERSION } from '@msh-core/config/app-version';
+import { provideEnvironment } from '@msh-core/config/environment.token';
 import { Footer } from '@msh-layout/footer/footer';
 import { Header } from '@msh-layout/header/header';
 import { MainContent } from '@msh-layout/main-content/main-content';
+import { GetMoviesQuery } from '@msh-features/gallery/movies/application/get-movies.query';
+import { of } from 'rxjs';
 import { App } from './app';
 import { provideI18nTesting } from './testing/i18n-testing';
+import { environment } from '../environments/environment';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([]), provideI18nTesting()],
+      providers: [
+        provideEnvironment(environment),
+        provideHttpClient(),
+        provideRouter([]),
+        provideI18nTesting(),
+        { provide: GetMoviesQuery, useValue: { execute: () => of({ currentPage: 0, media: [], totalCount: 0 }) } },
+      ],
     }).compileComponents();
   });
 
