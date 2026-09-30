@@ -1,0 +1,129 @@
+<article class="settings-page">
+  <div class="settings-page__utility">
+    <div class="settings-page__utility-inner" aria-label="{{ 'settings.actions.label' | translate }}">
+      <button class="btn btn-ghost" type="button" [disabled]="!auth.isAuthenticated() || isBusy() || !hasChanges()" (click)="discard()">
+        {{ 'settings.actions.discard' | translate }}
+      </button>
+      <button class="btn btn-primary" type="submit" form="settings-form" [disabled]="saveDisabled()">
+        {{ (isSaving() ? 'settings.actions.saving' : 'settings.actions.save') | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="settings-page__workspace">
+    <header class="settings-page__header">
+      <div>
+        <p class="settings-page__eyebrow">{{ 'settings.eyebrow' | translate }}</p>
+        <h1 id="settings-title">{{ 'settings.title' | translate }}</h1>
+        <p class="settings-page__description">{{ 'settings.description' | translate }}</p>
+      </div>
+    </header>
+
+    @if (settings.settings.isLoading()) {
+      <msh-page-status messageKey="settings.loading" />
+    } @else if (settings.settings.error()) {
+      <div class="settings-page__load-error">
+        <msh-page-status kind="error" messageKey="settings.loadError" />
+        <button class="btn btn-primary" type="button" (click)="retry()">{{ 'settings.actions.retry' | translate }}</button>
+      </div>
+    } @else if (settings.settings.hasValue()) {
+      @if (!auth.isAuthenticated()) {
+        <aside class="settings-page__notice" aria-label="{{ 'settings.access.viewOnly' | translate }}">
+          <msh-icon name="view" [size]="18" />
+          <p>{{ 'settings.viewOnlyHint' | translate }}</p>
+        </aside>
+      }
+
+      <form id="settings-form" class="settings-page__form" aria-labelledby="settings-title" (submit)="save($event)">
+        <section class="settings-card" aria-labelledby="settings-defaults-title">
+          <header class="settings-card__header">
+            <div>
+              <p class="settings-card__eyebrow">{{ 'settings.defaults.eyebrow' | translate }}</p>
+              <h2 id="settings-defaults-title">{{ 'settings.defaults.title' | translate }}</h2>
+            </div>
+            <p>{{ 'settings.defaults.description' | translate }}</p>
+          </header>
+
+          <div class="settings-card__fields">
+            <label class="form-label" for="settings-quality">
+              <span>{{ 'settings.fields.defaultQuality' | translate }}</span>
+              <select id="settings-quality" class="form-control" [formField]="settingsForm.defaultQuality">
+                @for (option of settings.qualityOptions(); track option.value) {
+                  <option [value]="option.value">{{ option.title }}</option>
+                }
+              </select>
+              <small>{{ 'settings.fields.defaultQualityHint' | translate }}</small>
+            </label>
+
+            <label class="form-label" for="settings-extension">
+              <span>{{ 'settings.fields.defaultExtension' | translate }}</span>
+              <select id="settings-extension" class="form-control" [formField]="settingsForm.defaultExtension">
+                @for (option of settings.extensionOptions(); track option.value) {
+                  <option [value]="option.value">{{ option.value }}</option>
+                }
+              </select>
+              <small>{{ 'settings.fields.defaultExtensionHint' | translate }}</small>
+            </label>
+          </div>
+        </section>
+
+        <section class="settings-card settings-card--genres" aria-labelledby="settings-genres-title">
+          <header class="settings-card__header settings-card__header--genres">
+            <div>
+              <p class="settings-card__eyebrow">{{ 'settings.genres.eyebrow' | translate }}</p>
+              <h2 id="settings-genres-title">{{ 'settings.genres.title' | translate }}</h2>
+            </div>
+            <button class="btn btn-secondary" type="button" [disabled]="!auth.isAuthenticated() || isBusy()" (click)="refillGenres()">
+              <msh-icon name="arrow-down" [size]="14" />
+              {{ (isRefilling() ? 'settings.actions.refilling' : 'settings.actions.refill') | translate }}
+            </button>
+          </header>
+
+          <p class="settings-card__description">{{ 'settings.genres.description' | translate }}</p>
+
+          <div class="settings-page__genre-entry">
+            <label class="form-label" for="settings-new-genre">
+              <span>{{ 'settings.fields.newGenre' | translate }}</span>
+              <input
+                id="settings-new-genre"
+                class="form-control"
+                type="text"
+                autocomplete="off"
+                [formField]="settingsForm.newGenre"
+                [placeholder]="'settings.fields.newGenrePlaceholder' | translate"
+                (keydown.enter)="addGenre($event)"
+              />
+            </label>
+            <button class="btn btn-secondary" type="button" [disabled]="!canAddGenre()" (click)="addGenre()">
+              <msh-icon name="add" [size]="16" />
+              {{ 'settings.actions.addGenre' | translate }}
+            </button>
+          </div>
+
+          <div class="settings-page__genre-summary" aria-live="polite">
+            <span>{{ 'settings.genres.available' | translate }}</span>
+            <span>{{ 'common.itemCount' | translate: { count: genres().length } }}</span>
+          </div>
+
+          <ul class="settings-page__genres">
+            @for (genre of genres(); track genre) {
+              <li>
+                <span>{{ genre }}</span>
+                <button
+                  type="button"
+                  [attr.aria-label]="'settings.actions.removeGenre' | translate: { genre }"
+                  [disabled]="!auth.isAuthenticated() || isBusy()"
+                  (click)="removeGenre(genre)"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </li>
+            } @empty {
+              <li class="settings-page__genres-empty">{{ 'settings.genres.empty' | translate }}</li>
+            }
+          </ul>
+        </section>
+      </form>
+    }
+  </div>
+</article>

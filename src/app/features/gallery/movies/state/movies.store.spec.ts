@@ -375,7 +375,7 @@ describe('MoviesStore', () => {
     expect(TestBed.inject(ToastStore).toasts().at(-1)).toEqual(expect.objectContaining({ title: 'Movie deleted', type: 'success' }));
   });
 
-  it('loads once without routine success feedback and does not poll', () => {
+  it('shows successful load feedback once and does not poll', () => {
     const initialParamMap = convertToParamMap({});
     const getMovies = vi.fn(() => of({ currentPage: 0, media: [media], totalCount: 1 }));
 
@@ -397,7 +397,13 @@ describe('MoviesStore', () => {
     TestBed.inject(MoviesStore);
     const toastStore = TestBed.inject(ToastStore);
 
-    expect(toastStore.toasts()).toEqual([]);
+    expect(toastStore.toasts()).toEqual([
+      expect.objectContaining({
+        delay: TOAST_AUTO_HIDE_DELAY_MS.success,
+        title: 'Library loaded',
+        type: 'success',
+      }),
+    ]);
     vi.advanceTimersByTime(60_000);
 
     expect(getMovies).toHaveBeenCalledTimes(1);

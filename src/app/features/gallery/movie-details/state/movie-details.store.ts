@@ -41,6 +41,7 @@ export const MovieDetailsStore = signalStore(
             getMovieDetails.execute(requestedId).pipe(
               tap((movie) => {
                 patchState(store, { hasError: false, isLoading: false, movie });
+                feedback.success('movieDetails.loadSuccessTitle', 'movieDetails.loadSuccessMessage');
               }),
               catchError(() => {
                 patchState(store, { hasError: true, isLoading: false, movie: null });

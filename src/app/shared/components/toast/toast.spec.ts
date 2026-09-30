@@ -67,4 +67,20 @@ describe('Toast', () => {
     action.click();
     expect(requested).toEqual([3]);
   });
+
+  it('translates title, message, and action keys while preserving literal copy', async () => {
+    fixture.componentRef.setInput(
+      'toast',
+      createToast({
+        action: { label: 'common.close', handler: () => undefined },
+        message: 'movieDetails.loadSuccessMessage',
+        title: 'movieDetails.loadSuccessTitle',
+      }),
+    );
+    await fixture.whenStable();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('.toast__title')?.textContent).toBe('Movie loaded');
+    expect((fixture.nativeElement as HTMLElement).querySelector('.toast__message')?.textContent).toBe('The movie details are up to date.');
+    expect((fixture.nativeElement as HTMLElement).querySelector('.toast__action')?.textContent).toBe('Close');
+  });
 });

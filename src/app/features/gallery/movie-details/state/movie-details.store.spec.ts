@@ -73,7 +73,13 @@ describe('MovieDetailsStore', () => {
     responses.get('two')?.next(movie('two'));
     expect(store.movie()?.id).toBe('two');
     expect(store.isLoading()).toBe(false);
-    expect(TestBed.inject(ToastStore).toasts()).toEqual([]);
+    expect(TestBed.inject(ToastStore).toasts()).toEqual([
+      expect.objectContaining({
+        delay: TOAST_AUTO_HIDE_DELAY_MS.success,
+        title: 'Movie loaded',
+        type: 'success',
+      }),
+    ]);
   });
 
   it('exposes an error state and retries the last requested ID', () => {

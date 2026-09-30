@@ -219,6 +219,63 @@
       "year": "Enter a year from 1888 to 2100."
     }
   },
+  "settings": {
+    "access": {
+      "editable": "Editing enabled",
+      "viewOnly": "View only"
+    },
+    "actions": {
+      "addGenre": "Add genre",
+      "discard": "Discard changes",
+      "label": "Settings actions",
+      "refill": "Refill from movies",
+      "refilling": "Refilling…",
+      "removeGenre": "Remove {{genre}}",
+      "retry": "Try again",
+      "save": "Save",
+      "saving": "Saving…"
+    },
+    "defaults": {
+      "description": "These values are preselected when a new library item is created.",
+      "eyebrow": "New item behavior",
+      "title": "Library defaults"
+    },
+    "description": "Manage the defaults and genre vocabulary shared across your library.",
+    "eyebrow": "Library configuration",
+    "fields": {
+      "defaultExtension": "Default extension",
+      "defaultExtensionHint": "The container format selected for new items.",
+      "defaultQuality": "Default quality",
+      "defaultQualityHint": "The resolution selected for new items.",
+      "newGenre": "Add an available genre",
+      "newGenrePlaceholder": "Enter a genre name"
+    },
+    "genres": {
+      "available": "Available genres",
+      "description": "Add or remove genres individually, or replace the draft list with genres currently used by movies.",
+      "empty": "No genres are available.",
+      "eyebrow": "Catalog vocabulary",
+      "title": "Available genres"
+    },
+    "loadError": "Settings could not be loaded.",
+    "loadErrorMessage": "Check your connection and try loading the settings again.",
+    "loadErrorTitle": "Settings load failed",
+    "loadSuccessMessage": "Library settings are up to date.",
+    "loadSuccessTitle": "Settings loaded",
+    "loading": "Loading settings…",
+    "title": "Settings",
+    "toasts": {
+      "refillErrorMessage": "The current genre draft was kept. Check the connection and try again.",
+      "refillErrorTitle": "Genres could not be refilled",
+      "refillSuccessMessage": "The draft now contains genres returned by the movie catalog.",
+      "refillSuccessTitle": "Genres refilled",
+      "saveErrorMessage": "Your changes remain on the page. Try saving again.",
+      "saveErrorTitle": "Settings could not be saved",
+      "saveSuccessMessage": "Library defaults and genres are up to date.",
+      "saveSuccessTitle": "Settings saved"
+    },
+    "viewOnlyHint": "Sign in to change defaults, maintain genres, or save settings."
+  },
   "movies": {
     "addMovie": "Add movie",
     "delete": {

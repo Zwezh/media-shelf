@@ -88,6 +88,7 @@ export const MoviesStore = signalStore(
                   return;
                 }
                 patchState(store, { hasError: false, isLoading: false, media, totalCount });
+                feedback.success('movies.loadSuccessTitle', 'movies.loadSuccessMessage');
               }),
               catchError(() => {
                 patchState(store, { hasError: true, isLoading: false, media: [], totalCount: 0 });

@@ -1,4 +1,6 @@
 import { inject, Service } from '@angular/core';
+import { type Observable } from 'rxjs';
+import { type SettingsDto } from './settings.dto';
 import { SettingsRepository } from './settings.repository';
 
 @Service()
@@ -11,4 +13,12 @@ export class SettingsStore {
   readonly genresForFilters = this.repository.genresForFilters;
   readonly qualityOptions = this.repository.qualityOptions;
   readonly settings = this.repository.settings;
+
+  refillGenres(): Observable<readonly string[]> {
+    return this.repository.refillGenres();
+  }
+
+  update(settings: SettingsDto): Observable<SettingsDto> {
+    return this.repository.update(settings);
+  }
 }

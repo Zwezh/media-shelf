@@ -1,7 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { SettingsStore } from '@msh-core/settings/settings.store';
 import { of } from 'rxjs';
 import { type Media } from './features/gallery/models/media';
 import { type MovieDetails } from './features/gallery/models/movie-details';
@@ -63,6 +65,20 @@ describe('root routes', () => {
         { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         { provide: GetMovieDetailsQuery, useValue: { execute: () => of(movieDetails) } },
         { provide: GetMoviesQuery, useValue: { execute: getMovies } },
+        {
+          provide: SettingsStore,
+          useValue: {
+            extensionOptions: signal([]),
+            qualityOptions: signal([]),
+            settings: {
+              error: signal(undefined),
+              hasValue: signal(true),
+              isLoading: signal(false),
+              reload: vi.fn(),
+              value: signal({ extension: [], genresForFilters: [], id: 'settings-1', quality: [] }),
+            },
+          },
+        },
       ],
     });
   });
