@@ -140,7 +140,7 @@ export const MovieEditorStore = signalStore(
     },
   ),
   withHooks((store, route = inject(ActivatedRoute)) => ({
-    onInit() {
+    onInit(): void {
       const mode = route.snapshot.data['mode'] === 'edit' ? 'edit' : 'add';
       store.setMode(mode);
       if (mode === 'edit') {

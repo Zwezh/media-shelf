@@ -10,7 +10,7 @@ const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_RESULT_LIMIT = 6;
 
 export const QUICK_SEARCH_DEBOUNCE = new InjectionToken<number>('QUICK_SEARCH_DEBOUNCE', {
-  factory: () => SEARCH_DEBOUNCE_MS,
+  factory: (): number => SEARCH_DEBOUNCE_MS,
 });
 
 type QuickSearchStatus = 'idle' | 'loading' | 'loaded' | 'error';

@@ -19,6 +19,7 @@ export default tseslint.config(
       '@angular-eslint/directive-selector': ['error', { type: 'attribute', prefix: 'msh', style: 'camelCase' }],
       '@angular-eslint/component-selector': ['error', { type: 'element', prefix: 'msh', style: 'kebab-case' }],
       '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true }],
       'consistent-return': 'error',
@@ -26,6 +27,12 @@ export default tseslint.config(
       'no-debugger': 'warn',
       'no-undef': 'off',
       'prefer-const': 'error',
+    },
+  },
+  {
+    files: ['**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'off',
     },
   },
   {

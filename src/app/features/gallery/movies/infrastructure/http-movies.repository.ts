@@ -1,12 +1,17 @@
 import { inject, Service } from '@angular/core';
 import { toAppError } from '@msh-core/http/app-error';
-import { catchError, map, throwError } from 'rxjs';
+import { catchError, map, type Observable, throwError } from 'rxjs';
+import { type Media } from '../../models/media';
 import { parseMediaDto, parseMoviesPageDto } from '../../data-access/media-dto.parser';
 import { type MediaDto } from '../../models/media.dto';
+import { type MovieDetails } from '../../models/movie-details';
+import { type MoviesPage } from '../../models/movies-page';
 import { type MoviesPageDto } from '../../models/movies-page.dto';
+import { type MoviesParams } from '../../models/movies-params';
 import { toMedia } from '../../utils/media.converter';
 import { toMovieDetails } from '../../utils/movie-details.converter';
 import { toMediaDto, toMovieEditorModel } from '../../movie-editor/utils/movie-editor.converter';
+import { type MovieEditorModel } from '../../movie-editor/models/movie-editor.model';
 import { type MoviesRepository } from '../application/movies.repository';
 import { MoviesApiClient } from './movies-api.client';
 
@@ -14,7 +19,7 @@ import { MoviesApiClient } from './movies-api.client';
 export class HttpMoviesRepository implements MoviesRepository {
   private readonly api = inject(MoviesApiClient);
 
-  find(query: Parameters<MoviesRepository['find']>[0]) {
+  find(query: MoviesParams): Observable<MoviesPage> {
     return this.api.getMovies(query).pipe(
       map(parseMoviesPageDto),
       map((response) => toMoviesPage(response, query.currentPage)),
@@ -22,7 +27,7 @@ export class HttpMoviesRepository implements MoviesRepository {
     );
   }
 
-  findById(id: string) {
+  findById(id: string): Observable<MovieDetails> {
     return this.api.getMovie(id).pipe(
       map(parseMediaDto),
       map(toMovieDetails),
@@ -30,7 +35,7 @@ export class HttpMoviesRepository implements MoviesRepository {
     );
   }
 
-  getForEdit(id: string) {
+  getForEdit(id: string): Observable<MovieEditorModel> {
     return this.api.getMovie(id).pipe(
       map(parseMediaDto),
       map(toMovieEditorModel),
@@ -38,7 +43,7 @@ export class HttpMoviesRepository implements MoviesRepository {
     );
   }
 
-  create(draft: Parameters<MoviesRepository['create']>[0]) {
+  create(draft: MovieEditorModel): Observable<Media> {
     return this.api.addMovie(toMediaDto(draft)).pipe(
       map(parseMediaDto),
       map(toMedia),
@@ -46,7 +51,7 @@ export class HttpMoviesRepository implements MoviesRepository {
     );
   }
 
-  update(draft: Parameters<MoviesRepository['update']>[0]) {
+  update(draft: MovieEditorModel): Observable<Media> {
     return this.api.updateMovie(toMediaDto(draft)).pipe(
       map(parseMediaDto),
       map(toMedia),
@@ -54,12 +59,12 @@ export class HttpMoviesRepository implements MoviesRepository {
     );
   }
 
-  delete(id: string) {
+  delete(id: string): Observable<void> {
     return this.api.deleteMovie(id).pipe(catchError((error: unknown) => throwError(() => toAppError(error))));
   }
 }
 
-function toMoviesPage(response: MoviesPageDto, requestedPage: number) {
+function toMoviesPage(response: MoviesPageDto, requestedPage: number): MoviesPage {
   const currentPage = Number(response.currentPage);
   return {
     currentPage: Number.isInteger(currentPage) && currentPage >= 0 ? currentPage : requestedPage,

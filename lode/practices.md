@@ -12,6 +12,22 @@ New features and runtime behavior changes ship with focused Vitest unit tests in
 
 ESLint and Prettier share one formatting contract: `.prettierrc` owns formatting options, while `eslint-plugin-prettier/recommended` reports violations through `npm run lint`. Before every commit, `npm run check` must pass; it runs ESLint and the complete unit suite in non-watch mode. Failures are fixed at their source and checks are never disabled or weakened merely to permit a commit.
 
+Declared production TypeScript functions and methods always expose an explicit return type. This includes queries, use cases, repositories, API clients, validators, component methods, and store lifecycle hooks. Side-effect-only functions use `void`; asynchronous and value-returning functions expose concrete contracts such as `Promise<void>`, `Observable<MovieDetails>`, or `MoviesPage`. Spec files may rely on inferred return types so test setup and stubs stay concise. ESLint enforces the production rule through `@typescript-eslint/explicit-function-return-type` with a `*.spec.ts` override.
+
+```typescript
+execute(id: string): Observable<MovieDetails> {
+  return this.movies.findById(id);
+}
+
+function toMoviesPage(dto: MoviesPageDto): MoviesPage {
+  return {
+    media: dto.list.map(toMedia),
+    totalCount: dto.totalCount,
+    currentPage: dto.currentPage,
+  };
+}
+```
+
 GitHub Actions applies the same quality gate to pull requests and pushes targeting `master`, then verifies the production Angular build. CI installs the lockfile exactly with `npm ci` on the minimum supported Node.js 22 runtime, and superseded runs for the same ref are cancelled.
 
 Services use Angular 22 `@Service()` from `@angular/core` for app-wide singletons and field-level `inject()` for dependencies. Use `@Service({ autoProvided: false })` only when the service is intentionally scoped through a component, route, or other provider list. Keep `@Injectable()` for legacy code or advanced provider configurations that `@Service()` does not express.
@@ -89,6 +105,8 @@ flowchart LR
   Mutation[Write or command] --> HttpClient[HttpClient]
   ServiceClass[Singleton service] --> ServiceDecorator[@Service]
   PreCommit[npm run check] --> Lint[ESLint and Prettier]
+  Function[Declared function or method] --> ReturnType[Explicit return contract]
+  ReturnType --> Lint
   PreCommit --> AllTests[Complete unit suite]
   Lint --> Commit[Commit allowed]
   AllTests --> Commit
@@ -116,6 +134,7 @@ Invariants:
 - Stateful feature workflows use feature-scoped NgRx SignalStores when request state, mutations, and derived view state belong together; components inject the store and remain presentation-focused.
 - User-facing interface copy lives in synchronized `public/i18n` dictionaries and is referenced through contextual translation keys.
 - Commits require a passing `npm run check`; lint, formatting, and test failures are fixed before committing.
+- Declared functions and methods state return types explicitly; `@typescript-eslint/explicit-function-return-type` prevents regressions.
 - GitHub Actions must pass `npm run check` and `npm run build` before changes are merged to `master`.
 
 Related lodes: [summary](summary.md), [UI design tokens](ui/design-tokens.md), [continuous integration](ci/summary.md).

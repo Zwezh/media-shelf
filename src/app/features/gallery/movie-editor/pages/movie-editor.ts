@@ -23,6 +23,8 @@ type MovieEditorModelSource = {
   readonly settingsLoaded: boolean;
 };
 
+type ValidationResult = { readonly kind: string; readonly message: string } | undefined;
+
 @Component({
   imports: [
     ArtworkAssets,
@@ -169,7 +171,14 @@ function withCurrentQuality(options: readonly QualitySettingOption[], currentVal
     : [...options, { title: currentValue, value: currentValue }];
 }
 
-function numericRange(value: string, minimum: number, maximum: number, optional: boolean, message: string, integer = false) {
+function numericRange(
+  value: string,
+  minimum: number,
+  maximum: number,
+  optional: boolean,
+  message: string,
+  integer = false,
+): ValidationResult {
   if (optional && value.trim() === '') return undefined;
   const numericValue = Number(value);
   const hasValidPrecision = !integer || Number.isInteger(numericValue);
@@ -178,7 +187,7 @@ function numericRange(value: string, minimum: number, maximum: number, optional:
     : { kind: 'range', message };
 }
 
-function yearRange(value: string, message: string) {
+function yearRange(value: string, message: string): ValidationResult {
   if (value.trim() === '') return { kind: 'range', message };
   const years = value.split(',').map((year) => Number(year.trim()));
   return years.length <= 2 && years.every((year) => Number.isInteger(year) && year >= 1888 && year <= 2100)
@@ -186,6 +195,6 @@ function yearRange(value: string, message: string) {
     : { kind: 'range', message };
 }
 
-function requiredText(value: string) {
+function requiredText(value: string): ValidationResult {
   return value.trim() ? undefined : { kind: 'required', message: 'movieEditor.validation.required' };
 }

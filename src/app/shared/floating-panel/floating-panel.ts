@@ -76,7 +76,7 @@ export class FloatingPanel {
         panelRef.close();
       };
       this.document.addEventListener('scroll', handleScroll, true);
-      removeScrollListener = () => this.document.removeEventListener('scroll', handleScroll, true);
+      removeScrollListener = (): void => this.document.removeEventListener('scroll', handleScroll, true);
     }
     this.activePanel = panelRef as FloatingPanelRef<unknown, unknown>;
 

@@ -84,7 +84,7 @@ export const MovieDetailsStore = signalStore(
     },
   ),
   withHooks((store, route = inject(ActivatedRoute)) => ({
-    onInit() {
+    onInit(): void {
       store.loadMovie(
         route.paramMap.pipe(
           map((params) => params.get('id')?.trim() ?? ''),

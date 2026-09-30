@@ -128,7 +128,7 @@ export const MoviesStore = signalStore(
     },
   ),
   withHooks((store, routeState = inject(MoviesRouteState)) => ({
-    onInit() {
+    onInit(): void {
       store.loadMovies(routeState.query);
     },
   })),

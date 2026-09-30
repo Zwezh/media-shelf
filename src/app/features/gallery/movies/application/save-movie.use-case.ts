@@ -1,4 +1,6 @@
 import { inject, Service } from '@angular/core';
+import { type Observable } from 'rxjs';
+import { type Media } from '../../models/media';
 import { type MovieEditorMode, type MovieEditorModel } from '../../movie-editor/models/movie-editor.model';
 import { MOVIES_REPOSITORY } from './movies.repository';
 
@@ -6,7 +8,7 @@ import { MOVIES_REPOSITORY } from './movies.repository';
 export class SaveMovieUseCase {
   private readonly movies = inject(MOVIES_REPOSITORY);
 
-  execute(mode: MovieEditorMode, draft: MovieEditorModel) {
+  execute(mode: MovieEditorMode, draft: MovieEditorModel): Observable<Media> {
     return mode === 'add' ? this.movies.create(draft) : this.movies.update(draft);
   }
 }

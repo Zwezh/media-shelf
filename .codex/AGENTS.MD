@@ -196,6 +196,14 @@ import { MediaCard, type MediaCardModel } from '@msh-shared/components/media-car
 - Use generic `resource()` from `@angular/core` for asynchronous work that is not an Angular `HttpClient` request, such as IndexedDB, file APIs, custom SDK promises, or non-HTTP async computations. Pass the provided `abortSignal` to abortable work.
 - Use `HttpClient` directly for mutations (`POST`, `PUT`, `PATCH`, `DELETE`) and imperative one-shot calls. Mutation requests must be subscribed to or converted through an explicit async workflow so they execute.
 
+## TypeScript Return Types
+
+- Every declared production function and method must state its return type explicitly, including application operations, repositories, API clients, component helpers, and store lifecycle methods.
+- Use concrete result contracts such as `Observable<MovieDetails>`, `Promise<void>`, `MoviesPage`, or `ValidationResult`; do not hide a known public result behind `unknown` or an unnecessary `ReturnType<...>` alias.
+- Keep `void` explicit for side-effect-only functions.
+- Spec files may rely on inferred return types to keep test setup and stubs concise.
+- The `@typescript-eslint/explicit-function-return-type` rule enforces this contract outside `*.spec.ts`. Do not disable it locally in production code to bypass missing annotations.
+
 ## State Management Rules
 
 - Feature state lives beside its owning capability/page, for example `features/gallery/movies/state/movies.store.ts` or `features/gallery/movie-details/state/movie-details.store.ts`.
