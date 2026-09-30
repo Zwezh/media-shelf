@@ -219,6 +219,63 @@
       "year": "Wprowadź rok od 1888 do 2100."
     }
   },
+  "settings": {
+    "access": {
+      "editable": "Edycja włączona",
+      "viewOnly": "Tylko podgląd"
+    },
+    "actions": {
+      "addGenre": "Dodaj gatunek",
+      "discard": "Odrzuć zmiany",
+      "label": "Działania ustawień",
+      "refill": "Uzupełnij z filmów",
+      "refilling": "Uzupełnianie…",
+      "removeGenre": "Usuń gatunek {{genre}}",
+      "retry": "Spróbuj ponownie",
+      "save": "Zapisz",
+      "saving": "Zapisywanie…"
+    },
+    "defaults": {
+      "description": "Te wartości są wstępnie wybierane podczas tworzenia nowego elementu biblioteki.",
+      "eyebrow": "Zachowanie nowego elementu",
+      "title": "Domyślne ustawienia biblioteki"
+    },
+    "description": "Zarządzaj wartościami domyślnymi i słownikiem gatunków wspólnym dla biblioteki.",
+    "eyebrow": "Konfiguracja biblioteki",
+    "fields": {
+      "defaultExtension": "Domyślne rozszerzenie",
+      "defaultExtensionHint": "Format kontenera wybierany dla nowych elementów.",
+      "defaultQuality": "Domyślna jakość",
+      "defaultQualityHint": "Rozdzielczość wybierana dla nowych elementów.",
+      "newGenre": "Dodaj dostępny gatunek",
+      "newGenrePlaceholder": "Wprowadź nazwę gatunku"
+    },
+    "genres": {
+      "available": "Dostępne gatunki",
+      "description": "Dodawaj lub usuwaj gatunki pojedynczo albo zastąp wersję roboczą gatunkami używanymi obecnie przez filmy.",
+      "empty": "Brak dostępnych gatunków.",
+      "eyebrow": "Słownik katalogu",
+      "title": "Dostępne gatunki"
+    },
+    "loadError": "Nie udało się wczytać ustawień.",
+    "loadErrorMessage": "Sprawdź połączenie i spróbuj ponownie wczytać ustawienia.",
+    "loadErrorTitle": "Nie udało się wczytać ustawień",
+    "loadSuccessMessage": "Ustawienia biblioteki są aktualne.",
+    "loadSuccessTitle": "Ustawienia wczytane",
+    "loading": "Ładowanie ustawień…",
+    "title": "Ustawienia",
+    "toasts": {
+      "refillErrorMessage": "Bieżąca wersja robocza gatunków została zachowana. Sprawdź połączenie i spróbuj ponownie.",
+      "refillErrorTitle": "Nie udało się uzupełnić gatunków",
+      "refillSuccessMessage": "Wersja robocza zawiera teraz gatunki zwrócone przez katalog filmów.",
+      "refillSuccessTitle": "Gatunki uzupełnione",
+      "saveErrorMessage": "Zmiany pozostały na stronie. Spróbuj zapisać ponownie.",
+      "saveErrorTitle": "Nie udało się zapisać ustawień",
+      "saveSuccessMessage": "Domyślne ustawienia biblioteki i gatunki są aktualne.",
+      "saveSuccessTitle": "Ustawienia zapisane"
+    },
+    "viewOnlyHint": "Zaloguj się, aby zmieniać wartości domyślne, zarządzać gatunkami lub zapisywać ustawienia."
+  },
   "movies": {
     "addMovie": "Dodaj film",
     "delete": {
