@@ -2,14 +2,16 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideEnvironment } from '@msh-core/config/environment.token';
-import { type MovieAutofill } from '../models/movie-autofill.model';
-import { KinopoiskApi } from './kinopoisk-api';
+import { type MovieAutofill } from '../../../movie-editor/models/movie-autofill.model';
+import { HttpKinopoiskRepository } from './http-kinopoisk.repository';
+import { KinopoiskApiClient } from './kinopoisk-api.client';
 
-describe('KinopoiskApi', () => {
+describe('HttpKinopoiskRepository', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        KinopoiskApi,
+        HttpKinopoiskRepository,
+        KinopoiskApiClient,
         provideEnvironment({ apiUrl: '/api', kinopoiskToken: 'test-token', production: false }),
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -18,11 +20,11 @@ describe('KinopoiskApi', () => {
   });
 
   it('loads and maps the complete PoiskKino movie response with one request', () => {
-    const api = TestBed.inject(KinopoiskApi);
+    const repository = TestBed.inject(HttpKinopoiskRepository);
     const http = TestBed.inject(HttpTestingController);
     let result: MovieAutofill | undefined;
 
-    api.getMovieAutofill(301).subscribe((movie) => {
+    repository.getMovieAutofill(301).subscribe((movie) => {
       result = movie;
     });
 
@@ -64,14 +66,14 @@ describe('KinopoiskApi', () => {
   });
 
   it('rejects a malformed required movie response', () => {
-    const api = TestBed.inject(KinopoiskApi);
+    const repository = TestBed.inject(HttpKinopoiskRepository);
     const http = TestBed.inject(HttpTestingController);
     const error = vi.fn();
 
-    api.getMovieAutofill(301).subscribe({ error });
+    repository.getMovieAutofill(301).subscribe({ error });
     http.expectOne('https://api.poiskkino.dev/v1.4/movie/301').flush({ name: 'Missing ID' });
 
-    expect(error).toHaveBeenCalledWith(expect.any(TypeError));
+    expect(error).toHaveBeenCalledWith(expect.objectContaining({ kind: 'unexpected' }));
     http.verify();
   });
 });

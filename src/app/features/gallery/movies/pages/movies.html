@@ -53,7 +53,7 @@
       <div class="movies__grid">
         @for (item of store.visibleMedia(); track item.id) {
           <msh-media-card
-            [actionsDisabled]="store.isDeleting()"
+            [actionsDisabled]="store.deletingId() === item.id"
             [media]="item"
             (deleteRequested)="confirmDelete($event)"
             (editRequested)="editMovie($event)"

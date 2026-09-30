@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
-import { GalleryApi } from '../../data-access/gallery-api';
+import { BehaviorSubject, type Observable, of, Subject, throwError } from 'rxjs';
+import { DeleteMovieUseCase } from '../application/delete-movie.use-case';
+import { GetMoviesQuery } from '../application/get-movies.query';
+import { MoviesRouteState } from './movies-route-state';
 import { type Media } from '../../models/media';
 import { type MoviesPage } from '../../models/movies-page';
 import { type MoviesParams } from '../../models/movies-params';
@@ -50,8 +52,10 @@ describe('MoviesStore', () => {
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies } },
+        { provide: GetMoviesQuery, useValue: { execute: getMovies } },
         {
           provide: ActivatedRoute,
           useValue: { queryParamMap: queryParamMap.asObservable(), snapshot: { queryParamMap: initialParamMap } },
@@ -115,8 +119,10 @@ describe('MoviesStore', () => {
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies } },
+        { provide: GetMoviesQuery, useValue: { execute: getMovies } },
         {
           provide: ActivatedRoute,
           useValue: { queryParamMap: of(initialParamMap), snapshot: { queryParamMap: initialParamMap } },
@@ -146,8 +152,10 @@ describe('MoviesStore', () => {
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies: vi.fn(() => of({ currentPage: 4, media: [media], totalCount: 150 })) } },
+        { provide: GetMoviesQuery, useValue: { execute: vi.fn(() => of({ currentPage: 4, media: [media], totalCount: 150 })) } },
         {
           provide: ActivatedRoute,
           useValue: { queryParamMap: of(initialParamMap), snapshot: { queryParamMap: initialParamMap } },
@@ -201,8 +209,10 @@ describe('MoviesStore', () => {
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies: vi.fn(() => of({ currentPage: 4, media: [media], totalCount: 150 })) } },
+        { provide: GetMoviesQuery, useValue: { execute: vi.fn(() => of({ currentPage: 4, media: [media], totalCount: 150 })) } },
         {
           provide: ActivatedRoute,
           useValue: { queryParamMap: of(initialParamMap), snapshot: { queryParamMap: initialParamMap } },
@@ -242,8 +252,10 @@ describe('MoviesStore', () => {
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies } },
+        { provide: GetMoviesQuery, useValue: { execute: getMovies } },
         {
           provide: ActivatedRoute,
           useValue: { queryParamMap: queryParamMap.asObservable(), snapshot: { queryParamMap: initialParamMap } },
@@ -273,10 +285,12 @@ describe('MoviesStore', () => {
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         ...provideI18nTesting(),
         {
-          provide: GalleryApi,
-          useValue: { getMovies: vi.fn(() => throwError(() => new Error('Failed'))) },
+          provide: GetMoviesQuery,
+          useValue: { execute: vi.fn(() => throwError(() => new Error('Failed'))) },
         },
         {
           provide: ActivatedRoute,
@@ -306,14 +320,16 @@ describe('MoviesStore', () => {
   it('retries the current request after a load failure', () => {
     const initialParamMap = convertToParamMap({});
     const getMovies = vi
-      .fn<(params: MoviesParams) => ReturnType<GalleryApi['getMovies']>>()
+      .fn<(params: MoviesParams) => Observable<MoviesPage>>()
       .mockReturnValueOnce(throwError(() => new Error('Failed')))
       .mockReturnValueOnce(of({ currentPage: 0, media: [media], totalCount: 1 }));
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies } },
+        { provide: GetMoviesQuery, useValue: { execute: getMovies } },
         { provide: ActivatedRoute, useValue: { queryParamMap: of(initialParamMap) } },
         { provide: Router, useValue: { navigate: vi.fn() } },
       ],
@@ -329,12 +345,15 @@ describe('MoviesStore', () => {
 
   it('removes a confirmed deletion from the visible page', () => {
     const initialParamMap = convertToParamMap({});
-    const deleteMovie = vi.fn(() => of(undefined));
+    const deletion = new Subject<void>();
+    const deleteMovie = vi.fn(() => deletion.asObservable());
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { deleteMovie, getMovies: () => of({ currentPage: 0, media: [media], totalCount: 1 }) } },
+        { provide: DeleteMovieUseCase, useValue: { execute: deleteMovie } },
+        { provide: GetMoviesQuery, useValue: { execute: () => of({ currentPage: 0, media: [media], totalCount: 1 }) } },
         { provide: ActivatedRoute, useValue: { queryParamMap: of(initialParamMap) } },
         { provide: Router, useValue: { navigate: vi.fn() } },
       ],
@@ -344,21 +363,29 @@ describe('MoviesStore', () => {
     store.deleteMovie(media.id);
 
     expect(deleteMovie).toHaveBeenCalledWith(media.id);
+    expect(store.deletingId()).toBe(media.id);
+    expect(store.media()).toEqual([media]);
+
+    deletion.next();
+    deletion.complete();
+
     expect(store.media()).toEqual([]);
     expect(store.totalCount()).toBe(0);
     expect(store.isDeleting()).toBe(false);
     expect(TestBed.inject(ToastStore).toasts().at(-1)).toEqual(expect.objectContaining({ title: 'Movie deleted', type: 'success' }));
   });
 
-  it('loads once, shows a success toast, and does not poll', () => {
+  it('loads once without routine success feedback and does not poll', () => {
     const initialParamMap = convertToParamMap({});
     const getMovies = vi.fn(() => of({ currentPage: 0, media: [media], totalCount: 1 }));
 
     TestBed.configureTestingModule({
       providers: [
         MoviesStore,
+        MoviesRouteState,
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovies } },
+        { provide: GetMoviesQuery, useValue: { execute: getMovies } },
         {
           provide: ActivatedRoute,
           useValue: { queryParamMap: of(initialParamMap), snapshot: { queryParamMap: initialParamMap } },
@@ -370,14 +397,7 @@ describe('MoviesStore', () => {
     TestBed.inject(MoviesStore);
     const toastStore = TestBed.inject(ToastStore);
 
-    expect(toastStore.toasts()).toEqual([
-      expect.objectContaining({
-        title: 'Library loaded',
-        type: 'success',
-        autoHide: true,
-        delay: TOAST_AUTO_HIDE_DELAY_MS.success,
-      }),
-    ]);
+    expect(toastStore.toasts()).toEqual([]);
     vi.advanceTimersByTime(60_000);
 
     expect(getMovies).toHaveBeenCalledTimes(1);

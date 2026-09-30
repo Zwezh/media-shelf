@@ -20,6 +20,10 @@
     </ul>
   </nav>
 
+  <div class="app-header__search">
+    <ng-content select="[header-search]" />
+  </div>
+
   <div class="app-header__auth">
     @if (authSession.isAuthenticated()) {
       <button class="btn btn-secondary btn-sm" type="button" (click)="signOut()">

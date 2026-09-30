@@ -56,9 +56,9 @@
         <div class="movie-editor__main-column">
           <msh-movie-editor-basic-information
             [form]="movieForm"
-            [genres]="settingsApi.genresForFilters()"
-            [genresError]="!!settingsApi.settings.error()"
-            [genresLoading]="settingsApi.settings.isLoading()"
+            [genres]="settings.genresForFilters()"
+            [genresError]="!!settings.settings.error()"
+            [genresLoading]="settings.settings.isLoading()"
             [selectedGenres]="model().genres"
             (genreToggled)="toggleGenre($event)"
           />
@@ -77,7 +77,7 @@
           />
 
           <msh-movie-editor-production-cast [form]="movieForm" />
-          <msh-movie-editor-local-file [form]="movieForm" />
+          <msh-movie-editor-local-file [extensionOptions]="extensionOptions()" [form]="movieForm" [qualityOptions]="qualityOptions()" />
           <msh-movie-editor-relationships-universe [form]="movieForm" />
 
           <div class="movie-editor__bottom-actions">

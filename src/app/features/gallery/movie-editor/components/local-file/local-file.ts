@@ -1,8 +1,8 @@
 import { Component, input } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
+import type { ExtensionSettingOption, QualitySettingOption } from '@msh-core/settings/settings.dto';
 import { FormValidationMessage } from '@msh-shared/components/form-validation-message/form-validation-message';
-import { MEDIA_EXTENSION_OPTIONS, MEDIA_QUALITY_OPTIONS } from '../../../models/media-options';
 import type { MovieEditorForm } from '../../models/movie-editor-form.model';
 import { MovieEditorSection } from '../movie-editor-section/movie-editor-section';
 
@@ -13,7 +13,7 @@ import { MovieEditorSection } from '../movie-editor-section/movie-editor-section
   templateUrl: './local-file.html',
 })
 export class LocalFile {
+  readonly extensionOptions = input.required<readonly ExtensionSettingOption[]>();
   readonly form = input.required<MovieEditorForm>();
-  protected readonly extensionOptions = MEDIA_EXTENSION_OPTIONS;
-  protected readonly qualityOptions = MEDIA_QUALITY_OPTIONS;
+  readonly qualityOptions = input.required<readonly QualitySettingOption[]>();
 }

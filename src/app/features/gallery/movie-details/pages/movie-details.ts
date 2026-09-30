@@ -1,4 +1,5 @@
 import { Component, computed, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
@@ -29,10 +30,9 @@ export class MovieDetailsPage {
   }
 
   protected confirmDelete(movie: MovieDetails): void {
-    this.movieDeletion.confirm({
-      onConfirmed: () => this.store.deleteMovie(movie.id),
-      owner: this.destroyRef,
-      title: movie.title,
-    });
+    this.movieDeletion
+      .confirm({ owner: this.destroyRef, title: movie.title })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.store.deleteMovie(movie.id));
   }
 }

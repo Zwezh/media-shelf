@@ -7,7 +7,7 @@ import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import type { Media } from '../../models/media';
-import { MoviesStore } from '../data-access/movies.store';
+import { MoviesStore } from '../state/movies.store';
 import { Movies } from './movies';
 
 const media: Media = {
@@ -104,6 +104,7 @@ function createStore() {
     applySorting: vi.fn(),
     changePage: vi.fn(),
     deleteMovie: vi.fn(),
+    deletingId: signal<string | null>(null),
     hasError: signal(false),
     isDeleting: signal(false),
     isLoading: signal(false),

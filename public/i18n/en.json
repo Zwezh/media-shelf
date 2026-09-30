@@ -58,6 +58,18 @@
     "home": "MediaShelf home",
     "primaryNavigation": "Primary navigation"
   },
+  "quickSearch": {
+    "applyHint": "to show all matches",
+    "empty": "No catalog matches found for “{{query}}”.",
+    "enter": "Enter",
+    "error": "Search is unavailable. Try again.",
+    "label": "Search catalog",
+    "loading": "Searching catalog…",
+    "placeholder": "Quick search catalog...",
+    "press": "Press",
+    "results": "Catalog search results",
+    "unknownDirector": "Director unavailable"
+  },
   "media": {
     "actions": {
       "delete": "Delete {{title}}",

@@ -48,13 +48,13 @@
         <span>{{ 'movies.filters.genres' | translate }}</span>
         <small>{{ 'movies.filters.selectedCount' | translate: { count: model().genres.length } }}</small>
       </legend>
-      @if (settingsApi.settings.isLoading()) {
+      @if (settings.settings.isLoading()) {
         <p class="filter-panel__hint" role="status">{{ 'movies.filters.loadingGenres' | translate }}</p>
-      } @else if (settingsApi.settings.error()) {
+      } @else if (settings.settings.error()) {
         <p class="filter-panel__error" role="alert">{{ 'movies.filters.genresError' | translate }}</p>
       } @else {
         <div class="filter-panel__options">
-          @for (genre of settingsApi.genresForFilters(); track genre) {
+          @for (genre of settings.genresForFilters(); track genre) {
             <button
               class="btn btn-sm filter-panel__choice"
               type="button"
@@ -117,15 +117,15 @@
     <fieldset class="form-fieldset filter-panel__group">
       <legend class="form-legend">{{ 'movies.filters.quality' | translate }}</legend>
       <div class="filter-panel__options filter-panel__options--grid">
-        @for (quality of qualityOptions; track quality) {
+        @for (quality of qualityOptions(); track quality.value) {
           <button
             class="btn btn-toggle filter-panel__check-choice"
             type="button"
-            [class.filter-panel__check-choice--selected]="model().quality.includes(quality)"
-            [attr.aria-pressed]="model().quality.includes(quality)"
-            (click)="toggleQuality(quality)"
+            [class.filter-panel__check-choice--selected]="model().quality.includes(quality.value)"
+            [attr.aria-pressed]="model().quality.includes(quality.value)"
+            (click)="toggleQuality(quality.value)"
           >
-            <span aria-hidden="true"></span>{{ quality }}
+            <span aria-hidden="true"></span>{{ quality.title }}
           </button>
         }
       </div>

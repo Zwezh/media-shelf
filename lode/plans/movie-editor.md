@@ -1,6 +1,6 @@
 # Movie Editor
 
-The movie editor extends the Gallery feature with add and edit routes, an Angular Signal Form, a route-scoped NgRx SignalStore, MediaShelf API mutations, Kinopoisk autofill, toast feedback, navigation, and a reusable confirmation dialog for deletion. The desktop and mobile Stitch prototypes define the responsive visual hierarchy, while this contract removes unsupported prototype controls and maps every submitted value to `MediaDto`.
+The movie editor extends the Gallery feature with add and edit routes, an Angular Signal Form, a route-scoped NgRx SignalStore, backend-owned settings catalogs, MediaShelf API mutations, Kinopoisk autofill, toast feedback, navigation, and a reusable confirmation dialog for deletion. The desktop and mobile Stitch prototypes define the responsive visual hierarchy, while this contract removes unsupported prototype controls and maps every submitted value to `MediaDto`.
 
 ```typescript
 export type MovieEditorMode = 'add' | 'edit';
@@ -19,17 +19,20 @@ flowchart LR
   Edit --> Editor
   Editor --> Page[MovieEditorPage container]
   Page --> Form[Signal Form]
+  Settings[SettingsStore catalogs] --> Page
   Page --> Sections[Presentational section components]
   Sections --> Form
   Form --> Store[MovieEditorStore]
-  Store --> GalleryAPI[GalleryApi POST or PUT]
-  Store --> KinopoiskAPI[KinopoiskApi autofill]
-  GalleryAPI --> Toasts[ToastStore]
-  GalleryAPI --> Details
+  Store --> Save[SaveMovieUseCase]
+  Store --> Autofill[AutofillMovieUseCase]
+  Save --> MoviesRepo[MoviesRepository]
+  Autofill --> KinopoiskRepo[KinopoiskRepository]
+  Store --> Toasts[MovieFeedback]
+  Save --> Details
   Details -->|Delete| Coordinator[MovieDeletionCoordinator]
   Coordinator --> Confirm[Confirmation dialog]
-  Confirm --> GalleryAPI
-  GalleryAPI --> List
+  Confirm --> Delete[DeleteMovieUseCase]
+  Delete --> List
   Auth[AuthSession + route guard] --> Add
   Auth --> Edit
 ```
@@ -47,16 +50,16 @@ flowchart LR
 
 ## MediaShelf API contract
 
-Extend `GalleryApi` with imperative mutation methods. Keep the exact endpoint semantics requested by the backend:
+`HttpMoviesRepository` maps editor models to DTOs and delegates these exact requests to `MoviesApiClient`:
 
 ```typescript
-addMovie(movie: MediaDto): Observable<MediaDto>;       // POST /movies, body movie
-updateMovie(movie: MediaDto): Observable<MediaDto>;    // PUT /movies, body movie
-deleteMovie(id: string): Observable<void>;             // DELETE /movies/{encodedId}
-getMovieDto(id: string): Observable<MediaDto>;          // GET /movies/{encodedId}
+create(draft: MovieEditorModel): Observable<Media>; // POST /movies with mapped DTO
+update(draft: MovieEditorModel): Observable<Media>; // PUT /movies with mapped DTO
+delete(id: string): Observable<void>;              // DELETE /movies/{encodedId}
+getForEdit(id: string): Observable<MovieEditorModel>; // GET /movies/{encodedId}
 ```
 
-- Preserve the existing converted `getMovie(id): Observable<MovieDetails>` for the detail page; edit loading needs the unmodified DTO, so it uses `getMovieDto` rather than reconstructing data from `MovieDetails`.
+- Detail and edit loading use separate repository projections, so neither screen reconstructs its model from the other.
 - The add payload is a complete `MediaDto`; use an empty ID only if the backend accepts it and replaces it. Confirm this request/response detail against the running backend before coding because no backend source exists in this workspace.
 - PUT targets `/movies` with the complete DTO in the body, not `/movies/:id`.
 - DELETE is planned as `/movies/:id`, consistent with the existing GET detail route; adjust only if backend verification proves that “with id” means a query parameter or request body.
@@ -94,7 +97,7 @@ type MovieEditorModel = {
 - Use `submit(movieForm, async () => ...)`; submitting marks invalid fields touched, focuses the first invalid control, and does not call the API when invalid. `FormValidationMessage` consumes each Signal Form field state and prefers its first validator-provided translation key; errors without custom copy map by kind (`required`, parse, email, pattern, min/max, date, length, schema, and custom range) to specific shared translations. Required editor fields display the concise localized equivalent of “Required field.”
 - Convert comma/newline-separated directors, countries, actors, similar movies, and sequels/prequels into trimmed, non-empty, de-duplicated arrays. Section 4 Actors and both Section 6 relationships are plain `input type="text"` controls as requested.
 - Edit seeds all fields from `MediaDto`, including `id`, `isSeries`, `compactPosterUrl`, and array data. The editor always submits `isSeries: false`; preserve the loaded `id` and compact poster URL on edit.
-- On add, initialize `addedDate` to the current local date, arrays to empty values, strings to empty values, `isSeries` to false, and derive `compactPosterUrl` from the autofill preview URL or fall back to `posterUrl` before submission.
+- On add, initialize `addedDate` to the current local date, arrays and ordinary strings to empty values, and `isSeries` to false. Quality and extension begin empty, then receive their backend-marked defaults once settings become available if the user has not already selected a value. Derive `compactPosterUrl` from the autofill preview URL or fall back to `posterUrl` before submission.
 - Dirty-state protection is limited to explicit Discard/Cancel actions in this scope; a browser unload or route-deactivation guard can be added only if requested.
 
 ## Responsive UI composition
@@ -113,28 +116,33 @@ type MovieEditorModel = {
 
 ### Component boundaries
 
-`MovieEditorPage` is the smart route container. It owns the form-model signal, validation schema, load/error shell, submission, navigation, and calls into `MovieEditorStore` and `SettingsApi`. Its template composes six store-free section components:
+`MovieEditorPage` is the smart route container. It owns the form-model signal, validation schema, load/error shell, submission, and calls into `MovieEditorStore` and `SettingsStore`. Its template composes six store-free section components:
 
 ```html
 <msh-movie-editor-basic-information
   [form]="movieForm"
-  [genres]="settingsApi.genresForFilters()"
+  [genres]="settings.genresForFilters()"
   [selectedGenres]="model().genres"
   (genreToggled)="toggleGenre($event)"
 />
 <msh-movie-editor-classification-metrics [form]="movieForm" />
 <msh-movie-editor-artwork-assets [form]="movieForm" (autofillRequested)="autofill()" />
+<msh-movie-editor-local-file
+  [extensionOptions]="extensionOptions()"
+  [form]="movieForm"
+  [qualityOptions]="qualityOptions()"
+/>
 ```
 
 - Basic Information, Classification & Metrics, Artwork & Scraper Assets, Production & Cast, Local File & Technical, and Relationships & Universe each own their section markup and local responsive presentation.
 - Section components accept the shared typed `MovieEditorForm` field tree through signal inputs. They do not inject stores, API services, or the router and never mutate route/application state directly.
 - Basic Information emits `genreToggled`; Artwork emits `autofillRequested`. The container handles both events because they change the draft or start an external request.
 - `MovieEditorSection` remains the small reusable card/heading shell. Shared form-section layout rules live in `movie-editor-form-section.scss`; artwork-specific preview rules stay with Artwork Assets.
-- Age-rating, quality, and extension value catalogs come from `gallery/models/media-options.ts`. These arrays contain domain values only; editor selects add their local empty “Not set” option rather than placing presentation state in the shared catalogs.
+- Age ratings remain a frontend domain catalog in `gallery/models/media-options.ts`. Quality and extension options come from the cached `/settings` resource in backend order; quality renders `title` while both fields persist `value`. A source-aware `linkedSignal` applies each backend-marked default once when settings become available in add mode without replacing a non-empty draft, while edit mode always retains the movie's saved scalar values. If a saved legacy value is absent from current settings, the page appends it to that editor option list so the native select can still display and submit it. Editor selects keep their local empty “Not set” option.
 
 ## Kinopoisk autofill
 
-Use a separate root `KinopoiskApi` service and transport DTOs backed by the PoiskKino API.
+`KinopoiskApiClient` performs the external request, while `HttpKinopoiskRepository` validates and maps the response for `AutofillMovieUseCase`.
 
 - Base URL: `https://api.poiskkino.dev`.
 - Header: `X-API-KEY` from configuration.
@@ -148,28 +156,28 @@ Use a separate root `KinopoiskApi` service and transport DTOs backed by the Pois
 
 ## SignalStore behavior
 
-Provide `MovieEditorStore` at the editor route/page. State owns `mode`, loaded DTO/seed, requested ID, load/autofill/save flags, errors, and the last saved movie. Computed signals expose `isBusy`, `canSubmit`, and breadcrumb/title state.
+Provide `MovieEditorStore` at the editor route/page. State owns `mode`, editor seed, requested ID, load error, and one operation value: `idle | loading | autofilling | saving`. Computed signals expose busy and operation-specific presentation state plus breadcrumb/title state.
 
-- Edit initialization reads `paramMap`, cancels stale loads with `switchMap`, clears stale content, and obtains raw `MediaDto`.
+- Edit initialization reads `paramMap`, cancels stale loads with `switchMap`, clears stale content, and obtains `MovieEditorModel` from `LoadMovieEditorQuery`.
 - The page owns the writable form-model signal required by Signal Forms and resets it only when the store publishes a new load/autofill seed; ordinary typing remains local and synchronous.
 - `autofill(kpId, currentModel)` reads the live form signal when the response arrives and merges returned fields into that latest draft. It never restores the click-time snapshot, changes local-only fields (`id`, `addedDate`, `quality`, `extension`), or clears existing values when optional Kinopoisk data is absent.
 - The PoiskKino movie response is parsed from `unknown`. An invalid required movie response fails autofill, while documented nullable metadata is converted to empty optional values so the merge retains current form values.
-- `save(dto)` selects POST or PUT from route mode, prevents duplicate submissions, shows localized success/error toasts, and navigates only after success. In add mode, the exact `409` response `{ message: "A movie with the same name already exists.", error: "Conflict", statusCode: 409 }` produces the dedicated localized duplicate-movie toast, leaves the draft intact, and does not navigate; other failures use the generic save error.
-- Keep API transport in services, mapping in pure converters, request orchestration in stores, and route/form event wiring in page containers.
+- `save(model)` delegates create/update selection to `SaveMovieUseCase`, rejects every call while another editor operation is active, shows localized success/error feedback, and navigates only after success. An infrastructure `AppError` with kind `conflict` produces the duplicate-movie message in add mode.
+- Keep transport in infrastructure, reusable workflows in application operations, request state in stores, and route/form event wiring in page containers.
 
 ## Common confirmation dialog and deletion
 
 Create a shared `ConfirmationDialog` on the existing native-dialog `FloatingPanel` infrastructure with typed data (`titleKey`, `messageKey`, confirm/cancel keys, tone) and boolean result. It owns heading semantics and initial focus, while `FloatingPanel` continues to own modality, Escape/backdrop behavior, cleanup, and focus restoration.
 
 - Enable Delete on movie details and emit Edit/Delete outputs from `MovieDetailsHero`; the page owns routing while `MovieDeletionCoordinator` owns shared deletion-dialog orchestration for list and detail callers.
-- Confirmed deletion calls `GalleryApi.deleteMovie(movie.id)`. Cancel/Escape/backdrop performs no mutation.
+- Confirmed deletion calls `DeleteMovieUseCase.execute(movie.id)`. Cancel/Escape/backdrop performs no mutation.
 - During deletion, prevent duplicate confirmation/action. Success shows a localized toast and navigates to `/gallery/movies` with preserved query parameters. Failure stays on details and shows an error toast.
 - The dialog wording includes the movie title and clearly identifies the irreversible action; confirmation uses the danger button style and is never the initially focused control.
-- `MovieDeletionCoordinator.confirm()` centralizes dialog data, placement, one-result filtering, owner destruction cleanup, and confirmed callback execution. Pages supply only the title, owner `DestroyRef`, and context-specific store action.
+- `MovieDeletionCoordinator.confirm()` centralizes dialog data, placement, one-result filtering, and owner destruction cleanup, then returns a confirmed observable result. Pages own the context-specific store action.
 
 ## Maintenance workflow
 
-Changes to the editor keep raw DTO CRUD in `GalleryApi`, third-party transport in `KinopoiskApi`, conversions pure, request state in `MovieEditorStore`, route/form orchestration in `MovieEditorPage`, and field presentation in store-free section components. Every behavior change updates focused tests and synchronized EN/RU/PL translations, then passes `npm run check` and `npm run build`; visual, keyboard, and AXE checks run whenever a browser surface is available.
+Changes to the editor keep DTOs and external transport in infrastructure repositories/clients, reusable workflows in application use cases, conversions pure, request state in `MovieEditorStore`, route/form orchestration in `MovieEditorPage`, and field presentation in store-free sections. Every behavior change updates focused tests and synchronized EN/RU/PL translations, then passes `npm run check` and `npm run build`; visual, keyboard, and AXE checks run whenever a browser surface is available.
 
 ## Verification and acceptance
 
@@ -178,7 +186,8 @@ Changes to the editor keep raw DTO CRUD in `GalleryApi`, third-party transport i
 - Converter tests cover nullable Kinopoisk fields, age parsing, name fallbacks, staff filtering, cover fallback, relation filtering, CSV normalization, number conversion, and complete `MediaDto` output.
 - Store tests cover add/edit initialization, stale-load cancellation, autofill, duplicate-action prevention, save success/error, toast variants, and navigation timing.
 - Component tests cover requested omissions and labels, signal-form validation, accessible errors/status, desktop/mobile section order, discard behavior, and disabled busy controls.
+- Settings/editor tests cover nested catalog parsing, computed defaults, delayed add-mode default selection, non-overwriting of a non-empty draft, and preservation of edit values absent from current catalogs.
 - Confirmation tests cover focus, accessible naming, cancel/Escape/backdrop, one delete request after confirmation, failure retention, success toast, and preserved-query navigation.
 - Acceptance requires no Save draft, animation toggle, description paragraph, or live media preview; breadcrumbs have no icon; all six requested sections and exact action labels are present; add/edit/delete/autofill work end to end.
 
-Related lodes: [authentication](../auth/summary.md), [movie details](movie-details.md), [media gallery](../ui/media-gallery.md), [floating panels](../ui/floating-panels.md), [toast notifications](../ui/toast-notifications.md), [routing](../routing/summary.md), [practices](../practices.md), [terminology](../terminology.md).
+Related lodes: [authentication](../auth/summary.md), [settings resource](../settings/summary.md), [movie details](movie-details.md), [media gallery](../ui/media-gallery.md), [floating panels](../ui/floating-panels.md), [toast notifications](../ui/toast-notifications.md), [routing](../routing/summary.md), [practices](../practices.md), [terminology](../terminology.md).

@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, type Observable, of, Subject, throwError } from 'rxjs';
 import { TOAST_AUTO_HIDE_DELAY_MS } from '@msh-shared/config/toast';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
-import { GalleryApi } from '../../data-access/gallery-api';
 import { type MovieDetails } from '../../models/movie-details';
+import { DeleteMovieUseCase } from '../../movies/application/delete-movie.use-case';
+import { GetMovieDetailsQuery } from '../../movies/application/get-movie-details.query';
 import { MovieDetailsStore } from './movie-details.store';
 
 const movie = (id: string): MovieDetails => ({
@@ -52,7 +53,8 @@ describe('MovieDetailsStore', () => {
       providers: [
         MovieDetailsStore,
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovie } },
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
+        { provide: GetMovieDetailsQuery, useValue: { execute: getMovie } },
         { provide: ActivatedRoute, useValue: { paramMap: paramMap.asObservable() } },
       ],
     });
@@ -71,14 +73,12 @@ describe('MovieDetailsStore', () => {
     responses.get('two')?.next(movie('two'));
     expect(store.movie()?.id).toBe('two');
     expect(store.isLoading()).toBe(false);
-    expect(TestBed.inject(ToastStore).toasts()).toEqual([
-      expect.objectContaining({ delay: TOAST_AUTO_HIDE_DELAY_MS.success, title: 'Movie loaded', type: 'success' }),
-    ]);
+    expect(TestBed.inject(ToastStore).toasts()).toEqual([]);
   });
 
   it('exposes an error state and retries the last requested ID', () => {
     const getMovie = vi
-      .fn<(id: string) => ReturnType<GalleryApi['getMovie']>>()
+      .fn<(id: string) => Observable<MovieDetails>>()
       .mockReturnValueOnce(throwError(() => new Error('Failed')))
       .mockReturnValueOnce(of(movie('one')));
 
@@ -86,7 +86,8 @@ describe('MovieDetailsStore', () => {
       providers: [
         MovieDetailsStore,
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { getMovie } },
+        { provide: DeleteMovieUseCase, useValue: { execute: vi.fn() } },
+        { provide: GetMovieDetailsQuery, useValue: { execute: getMovie } },
         { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ id: 'one' })) } },
       ],
     });
@@ -114,7 +115,8 @@ describe('MovieDetailsStore', () => {
       providers: [
         MovieDetailsStore,
         ...provideI18nTesting(),
-        { provide: GalleryApi, useValue: { deleteMovie, getMovie: () => of(movie('one')) } },
+        { provide: DeleteMovieUseCase, useValue: { execute: deleteMovie } },
+        { provide: GetMovieDetailsQuery, useValue: { execute: () => of(movie('one')) } },
         { provide: Router, useValue: { navigate } },
         { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ id: 'one' })) } },
       ],

@@ -1,6 +1,6 @@
 # Media Sorting
 
-The Movies request carries `key` and `direction` from URL query parameters through `MoviesStore` to `GalleryApi`. A responsive sorting control changes that server-side ordering without introducing client-side sorting. The URL is the canonical applied state, so refresh, deep links, back/forward navigation, filters, and pagination stay synchronized.
+The Movies request carries `key` and `direction` from URL query parameters through `MoviesRouteState`, `MoviesStore`, and `GetMoviesQuery` to the Movies repository. A responsive sorting control changes server-side ordering without introducing client-side sorting. The URL is canonical, so refresh, deep links, history, filters, and pagination stay synchronized.
 
 ```typescript
 export const SORTING_DIRECTIONS = ['asc', 'desc'] as const;
@@ -22,7 +22,7 @@ flowchart LR
   Store --> Trigger
   Panel -->|apply MoviesSorting| Store
   Store -->|preserve filters/search/pageSize; page=0| URL
-  URL --> Request[GalleryApi request]
+  URL --> Request[GetMoviesQuery request]
   Request --> Grid[Server-sorted media page]
 ```
 

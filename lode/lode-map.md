@@ -9,12 +9,15 @@
 - [ui/style-primitives.md](ui/style-primitives.md) - Reusable Bootstrap-like button, typography, and form class contract.
 - [ui/floating-panels.md](ui/floating-panels.md) - Dynamic native-dialog infrastructure, typed data/results, lifecycle, and responsive placement.
 - [ui/media-gallery.md](ui/media-gallery.md) - Movies grid, media-card, poster fallback, and pagination contract.
+- [ui/quick-search.md](ui/quick-search.md) - Debounced header catalog preview, result navigation, and Enter-to-list contract.
 - [ui/toast-notifications.md](ui/toast-notifications.md) - Global toast store, viewport, variants, timers, accessibility, and animations.
 - [routing/summary.md](routing/summary.md) - Root URL contract and lazy feature boundaries.
 - [i18n/summary.md](i18n/summary.md) - Runtime language initialization, translation resources, and key contracts.
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
 - [auth/summary.md](auth/summary.md) - Persisted JWT session, authorization dialog, interceptor, guarded routes, and protected-control contract.
 - [storage/summary.md](storage/summary.md) - Guarded localStorage wrapper and centralized token/language key contract.
+- [settings/summary.md](settings/summary.md) - Validated app-wide settings resource, backend-owned catalogs, defaults, and Gallery consumers.
+- [gallery/business-logic-architecture.md](gallery/business-logic-architecture.md) - Current layered Gallery dependency contract, state ownership, workflows, runtime boundaries, and extension rules.
 - [plans/media-sorting.md](plans/media-sorting.md) - Responsive, URL-backed Movies sorting contract and structure.
 - [plans/movie-details.md](plans/movie-details.md) - Movie details route, API/store flow, prototype adaptation, components, navigation, and verification contract.
 - [plans/movie-editor.md](plans/movie-editor.md) - Movie add/edit routes, Signal Form and store flow, Kinopoisk autofill, CRUD mutations, confirmation deletion, and verification contract.
@@ -36,6 +39,7 @@ flowchart TD
   UI --> UIPrimitives[style-primitives.md]
   UI --> FloatingPanels[floating-panels.md]
   UI --> MediaGallery[media-gallery.md]
+  UI --> QuickSearch[quick-search.md]
   UI --> Toasts[toast-notifications.md]
   Root --> Routing[routing]
   Routing --> RouteSummary[summary.md]
@@ -47,10 +51,14 @@ flowchart TD
   Auth --> AuthSummary[summary.md]
   Root --> Storage[storage]
   Storage --> StorageSummary[summary.md]
+  Root --> Settings[settings]
+  Settings --> SettingsSummary[summary.md]
+  Root --> Gallery[gallery]
+  Gallery --> GalleryArchitecture[business-logic-architecture.md]
   Root --> Plans[plans]
   Plans --> MediaSorting[media-sorting.md]
   Plans --> MovieDetails[movie-details.md]
   Plans --> MovieEditor[movie-editor.md]
 ```
 
-Related lodes: [summary](summary.md), [authentication](auth/summary.md), [browser storage](storage/summary.md), [UI tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md), [routing](routing/summary.md), [CI](ci/summary.md), [media sorting plan](plans/media-sorting.md), [movie details plan](plans/movie-details.md), [movie editor plan](plans/movie-editor.md).
+Related lodes: [summary](summary.md), [Gallery business logic](gallery/business-logic-architecture.md), [authentication](auth/summary.md), [browser storage](storage/summary.md), [settings resource](settings/summary.md), [UI tokens](ui/design-tokens.md), [quick search](ui/quick-search.md), [toast notifications](ui/toast-notifications.md), [routing](routing/summary.md), [CI](ci/summary.md), [media sorting plan](plans/media-sorting.md), [movie details plan](plans/movie-details.md), [movie editor plan](plans/movie-editor.md).

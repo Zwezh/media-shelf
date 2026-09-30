@@ -1,17 +1,15 @@
 import { Location } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, type Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
 import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, switchMap, tap } from 'rxjs';
-import { ToastStore } from '@msh-shared/services/toast-store';
-import { GalleryApi } from '../../data-access/gallery-api';
-import { type MediaDto } from '../../models/media.dto';
-import { KinopoiskApi } from '../data-access/kinopoisk-api';
+import { AppError } from '@msh-core/http/app-error';
+import { AutofillMovieUseCase } from '../../movies/application/autofill-movie.use-case';
+import { LoadMovieEditorQuery } from '../../movies/application/load-movie-editor.query';
+import { MovieFeedback } from '../../movies/ui/movie-feedback';
+import { SaveMovieUseCase } from '../../movies/application/save-movie.use-case';
 import { type MovieEditorModel, type MovieEditorMode, createEmptyMovieEditorModel } from '../models/movie-editor.model';
-import { mergeMovieAutofill, toMovieEditorModel } from '../utils/movie-editor.converter';
 
 type AutofillCommand = {
   readonly currentModel: Signal<MovieEditorModel>;
@@ -20,21 +18,19 @@ type AutofillCommand = {
 
 type MovieEditorState = {
   readonly hasLoadError: boolean;
-  readonly isAutofilling: boolean;
-  readonly isLoading: boolean;
-  readonly isSaving: boolean;
   readonly mode: MovieEditorMode;
   readonly movieId: string;
+  readonly operation: EditorOperation;
   readonly seed: MovieEditorModel;
 };
 
+type EditorOperation = 'autofilling' | 'idle' | 'loading' | 'saving';
+
 const initialState: MovieEditorState = {
   hasLoadError: false,
-  isAutofilling: false,
-  isLoading: false,
-  isSaving: false,
   mode: 'add',
   movieId: '',
+  operation: 'idle',
   seed: createEmptyMovieEditorModel(),
 };
 
@@ -42,34 +38,31 @@ export const MovieEditorStore = signalStore(
   withState(initialState),
   withComputed((store) => ({
     breadcrumbTitle: computed(() => (store.mode() === 'add' ? '' : store.seed().name)),
-    isBusy: computed(() => store.isLoading() || store.isSaving() || store.isAutofilling()),
+    isAutofilling: computed(() => store.operation() === 'autofilling'),
+    isBusy: computed(() => store.operation() !== 'idle'),
+    isLoading: computed(() => store.operation() === 'loading'),
+    isSaving: computed(() => store.operation() === 'saving'),
   })),
   withMethods(
     (
       store,
-      galleryApi = inject(GalleryApi),
-      kinopoiskApi = inject(KinopoiskApi),
+      autofillMovie = inject(AutofillMovieUseCase),
+      feedback = inject(MovieFeedback),
+      loadMovieEditor = inject(LoadMovieEditorQuery),
       location = inject(Location),
       router = inject(Router),
-      toastStore = inject(ToastStore),
-      translate = inject(TranslateService),
+      saveMovie = inject(SaveMovieUseCase),
     ) => {
-      const showToast = (type: 'error' | 'success', titleKey: string, messageKey: string): void => {
-        toastStore[type]({
-          message: String(translate.instant(messageKey)),
-          title: String(translate.instant(titleKey)),
-        });
-      };
-
       const loadMovie = rxMethod<string>(
         pipe(
-          tap((movieId) => patchState(store, { hasLoadError: false, isLoading: true, movieId })),
+          filter(() => store.operation() === 'idle'),
+          tap((movieId) => patchState(store, { hasLoadError: false, movieId, operation: 'loading' })),
           switchMap((movieId) =>
-            galleryApi.getMovieDto(movieId).pipe(
-              tap((movie) => patchState(store, { hasLoadError: false, isLoading: false, seed: toMovieEditorModel(movie) })),
+            loadMovieEditor.execute(movieId).pipe(
+              tap((seed) => patchState(store, { hasLoadError: false, operation: 'idle', seed })),
               catchError(() => {
-                patchState(store, { hasLoadError: true, isLoading: false });
-                showToast('error', 'movieEditor.toasts.loadErrorTitle', 'movieEditor.toasts.loadErrorMessage');
+                patchState(store, { hasLoadError: true, operation: 'idle' });
+                feedback.error('movieEditor.toasts.loadErrorTitle', 'movieEditor.toasts.loadErrorMessage');
                 return EMPTY;
               }),
             ),
@@ -79,16 +72,17 @@ export const MovieEditorStore = signalStore(
 
       const autofill = rxMethod<AutofillCommand>(
         pipe(
-          tap(() => patchState(store, { isAutofilling: true })),
+          filter(() => store.operation() === 'idle'),
+          tap(() => patchState(store, { operation: 'autofilling' })),
           switchMap(({ currentModel, id }) =>
-            kinopoiskApi.getMovieAutofill(id).pipe(
-              tap((result) => {
-                patchState(store, { isAutofilling: false, seed: mergeMovieAutofill(currentModel(), result) });
-                showToast('success', 'movieEditor.toasts.autofillSuccessTitle', 'movieEditor.toasts.autofillSuccessMessage');
+            autofillMovie.execute(id, currentModel).pipe(
+              tap((seed) => {
+                patchState(store, { operation: 'idle', seed });
+                feedback.success('movieEditor.toasts.autofillSuccessTitle', 'movieEditor.toasts.autofillSuccessMessage');
               }),
               catchError(() => {
-                patchState(store, { isAutofilling: false });
-                showToast('error', 'movieEditor.toasts.autofillErrorTitle', 'movieEditor.toasts.autofillErrorMessage');
+                patchState(store, { operation: 'idle' });
+                feedback.error('movieEditor.toasts.autofillErrorTitle', 'movieEditor.toasts.autofillErrorMessage');
                 return EMPTY;
               }),
             ),
@@ -96,26 +90,26 @@ export const MovieEditorStore = signalStore(
         ),
       );
 
-      const save = rxMethod<MediaDto>(
+      const save = rxMethod<MovieEditorModel>(
         pipe(
-          filter(() => !store.isSaving()),
-          tap(() => patchState(store, { isSaving: true })),
+          filter(() => store.operation() === 'idle'),
+          tap(() => patchState(store, { operation: 'saving' })),
           switchMap((movie) =>
-            (store.mode() === 'add' ? galleryApi.addMovie(movie) : galleryApi.updateMovie(movie)).pipe(
+            saveMovie.execute(store.mode(), movie).pipe(
               tap((savedMovie) => {
-                patchState(store, { isSaving: false });
-                showToast('success', 'movieEditor.toasts.saveSuccessTitle', 'movieEditor.toasts.saveSuccessMessage');
+                patchState(store, { operation: 'idle' });
+                feedback.success('movieEditor.toasts.saveSuccessTitle', 'movieEditor.toasts.saveSuccessMessage');
                 const id = savedMovie.id || movie.id;
                 void router.navigate(id ? ['/gallery/movies', id] : ['/gallery/movies'], {
                   queryParamsHandling: 'preserve',
                 });
               }),
               catchError((error: unknown) => {
-                patchState(store, { isSaving: false });
-                if (store.mode() === 'add' && isDuplicateMovieConflict(error)) {
-                  showToast('error', 'movieEditor.toasts.duplicateErrorTitle', 'movieEditor.toasts.duplicateErrorMessage');
+                patchState(store, { operation: 'idle' });
+                if (store.mode() === 'add' && error instanceof AppError && error.kind === 'conflict') {
+                  feedback.error('movieEditor.toasts.duplicateErrorTitle', 'movieEditor.toasts.duplicateErrorMessage');
                 } else {
-                  showToast('error', 'movieEditor.toasts.saveErrorTitle', 'movieEditor.toasts.saveErrorMessage');
+                  feedback.error('movieEditor.toasts.saveErrorTitle', 'movieEditor.toasts.saveErrorMessage');
                 }
                 return EMPTY;
               }),
@@ -146,7 +140,7 @@ export const MovieEditorStore = signalStore(
     },
   ),
   withHooks((store, route = inject(ActivatedRoute)) => ({
-    onInit() {
+    onInit(): void {
       const mode = route.snapshot.data['mode'] === 'edit' ? 'edit' : 'add';
       store.setMode(mode);
       if (mode === 'edit') {
@@ -161,10 +155,3 @@ export const MovieEditorStore = signalStore(
     },
   })),
 );
-
-function isDuplicateMovieConflict(error: unknown): boolean {
-  if (!(error instanceof HttpErrorResponse) || error.status !== 409) return false;
-  if (typeof error.error !== 'object' || error.error === null || Array.isArray(error.error)) return false;
-  const payload = error.error as Record<string, unknown>;
-  return payload['message'] === 'A movie with the same name already exists.' && payload['statusCode'] === 409;
-}

@@ -1,11 +1,11 @@
 import { computed, Component, inject, signal } from '@angular/core';
 import { FormField, form, max, min, pattern, submit } from '@angular/forms/signals';
-import { SettingsApi } from '@msh-core/settings/settings-api';
+import { SettingsStore } from '@msh-core/settings/settings.store';
 import { FLOATING_PANEL_DATA } from '@msh-shared/floating-panel/floating-panel.tokens';
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
 import { Icon } from '@msh-shared/components/icon/icon';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MEDIA_AGE_RATINGS, MEDIA_QUALITY_OPTIONS } from '../../../models/media-options';
+import { MEDIA_AGE_RATINGS } from '../../../models/media-options';
 import { type MoviesFilters } from '../../../models/movies-filters';
 import { normalizeCommaSeparatedNames } from '../../../utils/movies-filters';
 
@@ -51,9 +51,9 @@ export class MoviesFilterPanel {
   private readonly panelRef = inject<FloatingPanelRef<MoviesFilters>>(FloatingPanelRef);
   private readonly initialFilters = toMoviesFilters(toFormModel(this.data.filters));
 
-  protected readonly settingsApi = inject(SettingsApi);
+  protected readonly settings = inject(SettingsStore);
   protected readonly ageRatings = MEDIA_AGE_RATINGS;
-  protected readonly qualityOptions = MEDIA_QUALITY_OPTIONS;
+  protected readonly qualityOptions = this.settings.qualityOptions;
   protected readonly model = signal<MoviesFilterFormModel>(toFormModel(this.data.filters));
   protected readonly filterForm = form(this.model, (schema) => {
     pattern(schema.fromYear, /^$|^\d{4}$/, { message: 'movies.filters.invalidYear' });

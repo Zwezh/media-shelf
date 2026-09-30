@@ -73,19 +73,39 @@ Shared code must remain **business-agnostic** and must not depend on individual 
 Each business area is an independent vertical slice:
 
 ```text
-features/gallery/
-├── pages/                 # Routable/container components
-├── components/            # Feature-specific presentational components
-├── data-access/           # API/repository/data access
-├── store/                 # Signals/Signal Store state
-├── facade/                # Optional orchestration layer
-├── guards/                # Feature-specific guards when needed
-└── gallery.routes.ts
+features/gallery/movies/
+├── application/           # Queries, use cases, and repository contracts
+├── infrastructure/        # API clients, repository implementations, DTO boundary
+├── state/                 # Route/page Signal Store and route adapter
+├── pages/                 # Routable containers
+└── components/            # Feature presentation
 ```
 
 Create only folders actually needed by a feature; do not create empty architectural layers.
 
 Prefer feature ownership over moving business-specific code into global folders.
+
+### Layer responsibilities
+
+Always preserve this direction:
+
+```text
+Presentation -> Feature State -> Application -> Repository Contract -> Infrastructure -> External System
+                                      |
+                                      v
+                                    Domain
+```
+
+- Components express intent and must not inject `HttpClient`, API clients, DTOs, or parsers.
+- Route-scoped Signal Stores own screen state, concurrency, and page-specific outcomes. They call queries/use cases, not raw APIs.
+- Queries perform read operations; use cases perform mutations or reusable workflows.
+- Repository contracts expose application-facing models and hide endpoints, DTOs, parsing, mapping, and HTTP errors.
+- API clients are thin request builders that return raw/unknown transport results.
+- Parsers and mappers are pure functions. External JSON is always validated from `unknown`.
+- Application operations never navigate, open dialogs, translate strings, or show toasts.
+- Coordinators return UI outcomes; they do not receive business callbacks or own business state.
+- Do not add generic repositories, CRUD frameworks, forwarding-only facades, global entity caches, or empty layers.
+- Preserve URL-owned Movies filter/sort/search/page state and component-scoped page stores.
 
 ### Dependency Direction
 
@@ -172,18 +192,28 @@ import { MediaCard, type MediaCardModel } from '@msh-shared/components/media-car
 - Use signal forms for working with forms
 - Can be use experimental Angular API like debounce
 - Create new services with `@Service()` from `@angular/core` and field-level `inject()` dependencies. Use `@Service({ autoProvided: false })` only when the service must be provided manually in a component, route, or other provider scope. Keep `@Injectable()` only for legacy services or advanced provider options that `@Service()` does not cover.
-- For API reads over Angular HTTP, prefer `httpResource()` from `@angular/common/http`; it is eager, signal-based, cancels stale requests, uses interceptors, and exposes loading/error/value signals. Guard `value()` reads with `hasValue()` and use `parse` for runtime response validation.
+- For infrastructure reads that naturally derive from signals, prefer `httpResource()` from `@angular/common/http`; it is eager, signal-based, cancels stale requests, uses interceptors, and exposes loading/error/value signals. Do not expose raw HTTP resources as the ordinary feature-presentation boundary. Guard `value()` reads with `hasValue()` and use `parse` for runtime response validation.
 - Use generic `resource()` from `@angular/core` for asynchronous work that is not an Angular `HttpClient` request, such as IndexedDB, file APIs, custom SDK promises, or non-HTTP async computations. Pass the provided `abortSignal` to abortable work.
 - Use `HttpClient` directly for mutations (`POST`, `PUT`, `PATCH`, `DELETE`) and imperative one-shot calls. Mutation requests must be subscribed to or converted through an explicit async workflow so they execute.
 
+## TypeScript Return Types
+
+- Every declared production function and method must state its return type explicitly, including application operations, repositories, API clients, component helpers, and store lifecycle methods.
+- Use concrete result contracts such as `Observable<MovieDetails>`, `Promise<void>`, `MoviesPage`, or `ValidationResult`; do not hide a known public result behind `unknown` or an unnecessary `ReturnType<...>` alias.
+- Keep `void` explicit for side-effect-only functions.
+- Spec files may rely on inferred return types to keep test setup and stubs concise.
+- The `@typescript-eslint/explicit-function-return-type` rule enforces this contract outside `*.spec.ts`. Do not disable it locally in production code to bypass missing annotations.
+
 ## State Management Rules
 
-- Feature state lives in `features/<name>/state/<name>.store.ts`
+- Feature state lives beside its owning capability/page, for example `features/gallery/movies/state/movies.store.ts` or `features/gallery/movie-details/state/movie-details.store.ts`.
 - Global state lives in `core/state/<name>.store.ts`
 - Store files use the NgRx SignalStore pattern (see @src/app/features/users/state/users.store.ts)
 - Private writable signals; expose readonly via asReadonly()
 - Use `patchState()` - NEVER mutate state directly
-- Async state reads should prefer `httpResource()` or `resource()` when they naturally derive from signals. Use `withMethods` + RxJS inside a store for mutations, imperative workflows, or cases where SignalStore orchestration is the clearest owner.
+- Feature stores must delegate HTTP reads to application queries/repositories. Use `withMethods` + RxJS for route-driven cancellation, mutations, imperative workflows, and explicit concurrency policies.
+- Use `switchMap` for replaceable reads, `exhaustMap` when duplicate commands must be ignored, `concatMap` when order matters, and `mergeMap` only for intentional concurrency.
+- Model mutually exclusive operations with one finite-state value instead of independent booleans that permit impossible combinations.
 
 ## Testing Rules
 

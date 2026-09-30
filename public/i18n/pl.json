@@ -58,6 +58,18 @@
     "home": "Strona główna MediaShelf",
     "primaryNavigation": "Główna nawigacja"
   },
+  "quickSearch": {
+    "applyHint": "aby wyświetlić wszystkie wyniki",
+    "empty": "Brak wyników w katalogu dla „{{query}}”.",
+    "enter": "Enter",
+    "error": "Wyszukiwanie jest niedostępne. Spróbuj ponownie.",
+    "label": "Przeszukaj katalog",
+    "loading": "Przeszukiwanie katalogu…",
+    "placeholder": "Szybkie wyszukiwanie w katalogu...",
+    "press": "Naciśnij",
+    "results": "Wyniki wyszukiwania w katalogu",
+    "unknownDirector": "Brak informacji o reżyserze"
+  },
   "media": {
     "actions": {
       "delete": "Usuń {{title}}",
