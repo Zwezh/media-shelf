@@ -88,7 +88,7 @@ All external JSON follows this path:
 unknown -> parser -> DTO -> pure mapper -> application/domain model
 ```
 
-`MoviesApiClient` and `KinopoiskApiClient` only construct HTTP requests and expose raw responses. Repositories parse/map responses and convert failures into `AppError` kinds such as `network`, `not-found`, `unauthorized`, `forbidden`, `validation`, `conflict`, and `unexpected`. Stores and use cases do not inspect `HttpErrorResponse`.
+`MoviesApiClient` and `KinopoiskApiClient` only construct MediaShelf HTTP requests and expose raw responses. Kinopoisk provider calls, DTOs, parsing and mapping belong to NestJS; the frontend validates only normalized `MovieAutofill` (see [Kinopoisk autofill](kinopoisk-autofill.md)). Repositories parse/map responses and convert failures into `AppError` kinds such as `network`, `not-found`, `unauthorized`, `forbidden`, `validation`, `conflict`, and `unexpected`. Stores and use cases do not inspect `HttpErrorResponse`.
 
 ## Extension rules
 

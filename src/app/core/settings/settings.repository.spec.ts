@@ -11,7 +11,7 @@ describe('SettingsRepository', () => {
     TestBed.configureTestingModule({
       providers: [
         SettingsRepository,
-        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', kinopoiskToken: '', production: false }),
+        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', production: false }),
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
@@ -56,7 +56,7 @@ describe('SettingsRepository', () => {
     TestBed.configureTestingModule({
       providers: [
         SettingsRepository,
-        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', kinopoiskToken: '', production: false }),
+        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', production: false }),
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
@@ -78,7 +78,7 @@ describe('SettingsRepository', () => {
     TestBed.configureTestingModule({
       providers: [
         SettingsRepository,
-        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', kinopoiskToken: '', production: false }),
+        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', production: false }),
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
@@ -106,7 +106,7 @@ describe('SettingsRepository', () => {
     TestBed.configureTestingModule({
       providers: [
         SettingsRepository,
-        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', kinopoiskToken: '', production: false }),
+        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', production: false }),
         provideHttpClient(),
         provideHttpClientTesting(),
       ],

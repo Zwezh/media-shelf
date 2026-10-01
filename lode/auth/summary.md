@@ -20,7 +20,8 @@ flowchart LR
   Storage -->|reload restore| Session
   Session --> Interceptor[Scoped Bearer interceptor]
   Interceptor --> MediaAPI[MediaShelf API]
-  Interceptor -. never attaches .-> PoiskKino[PoiskKino API]
+  MediaAPI --> Autofill[Authenticated Kinopoisk autofill]
+  Autofill --> Provider[Server-only provider call]
   Session --> Guard[Add/edit route guard]
   Session --> Directive[Protected-control directive]
   Expiry[JWT exp or authenticated 401] --> SignOut[Clear session]
@@ -31,7 +32,7 @@ flowchart LR
 - `POST {apiUrl}/auth` sends `{ secretKey: string }` and parses `{ access_token: string }` from `unknown`.
 - The access token is persisted in `localStorage` under the centralized `StorageKey.Token` value `token`, as explicitly required by the product. This survives reloads but exposes the token to same-origin JavaScript; a future backend-issued `HttpOnly; Secure; SameSite` cookie or BFF remains the safer durable-session contract.
 - A token must have three non-empty JWT segments and a future numeric `exp` claim. Client decoding schedules expiry but does not verify authenticity; every protected backend operation still validates the token server-side.
-- The functional HTTP interceptor adds `Authorization: Bearer <token>` only to the normalized configured `environment.apiUrl` boundary. It excludes `/auth`, PoiskKino, translation files, image assets, and unrelated origins. An authenticated 401 clears the local session.
+- The functional HTTP interceptor adds `Authorization: Bearer <token>` only to the normalized configured `environment.apiUrl` boundary. It excludes `/auth`, translation files, image assets, and unrelated origins. The backend autofill endpoint is inside the API boundary and receives the JWT; provider credentials stay on the server. An authenticated 401 clears the local session.
 - The header's right corner renders Sign In while signed out and Sign Out while signed in. It does not render View Only status labels.
 - Sign In opens one centered native-dialog panel based on the Stitch authorization prototype. The dialog contains a secret-key password field, visibility toggle, explanatory security hint, Cancel, and Sign In. It omits Forgot key and Remember workstation authorization.
 - Successful and failed authorization attempts show localized toast feedback. Closing, Escape, backdrop dismissal, and Cancel do not authenticate.

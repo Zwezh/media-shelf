@@ -13,7 +13,6 @@ import { HttpMoviesRepository } from './http-movies.repository';
 const testEnvironment = {
   ...environment,
   apiUrl: 'http://localhost:4200/api/',
-  kinopoiskToken: 'test-token',
   production: false,
 };
 

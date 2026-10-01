@@ -12,7 +12,7 @@ describe('authenticationInterceptor', () => {
     resetTestAuthStorage();
     TestBed.configureTestingModule({
       providers: [
-        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', kinopoiskToken: '', production: false }),
+        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', production: false }),
         provideHttpClient(withInterceptors([authenticationInterceptor])),
         provideHttpClientTesting(),
       ],
@@ -26,11 +26,11 @@ describe('authenticationInterceptor', () => {
 
     client.get('http://localhost:4200/api/movies').subscribe();
     client.post('http://localhost:4200/api/auth', {}).subscribe();
-    client.get('https://api.poiskkino.dev/v1.4/movie/1').subscribe();
+    client.get('https://external.example/resource').subscribe();
 
     const apiRequest = controller.expectOne('http://localhost:4200/api/movies');
     const authRequest = controller.expectOne('http://localhost:4200/api/auth');
-    const externalRequest = controller.expectOne('https://api.poiskkino.dev/v1.4/movie/1');
+    const externalRequest = controller.expectOne('https://external.example/resource');
     expect(apiRequest.request.headers.get('Authorization')).toBe(`Bearer ${TEST_ACCESS_TOKEN}`);
     expect(authRequest.request.headers.has('Authorization')).toBe(false);
     expect(externalRequest.request.headers.has('Authorization')).toBe(false);
