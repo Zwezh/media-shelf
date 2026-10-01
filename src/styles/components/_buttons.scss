@@ -53,10 +53,6 @@
     background: var(--color-primary-active);
     border-color: var(--color-primary-active);
   }
-
-  msh-icon {
-    filter: brightness(0) invert(1);
-  }
 }
 
 .btn-secondary {
@@ -115,18 +111,10 @@
   background: color-mix(in srgb, var(--color-surface-container-lowest) 20%, transparent);
   border-color: transparent;
 
-  msh-icon {
-    filter: brightness(0) invert(1);
-  }
-
   &:hover:not(:disabled, [aria-disabled='true']),
   &:focus-visible {
     color: var(--color-on-surface);
     background: var(--color-surface-container-lowest);
-
-    msh-icon {
-      filter: none;
-    }
   }
 }
 
@@ -134,10 +122,6 @@
 .btn-overlay-danger:focus-visible {
   color: var(--color-on-error);
   background: var(--color-error);
-
-  msh-icon {
-    filter: brightness(0) invert(1);
-  }
 }
 
 .btn-compact {

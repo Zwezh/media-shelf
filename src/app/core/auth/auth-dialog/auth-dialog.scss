@@ -91,7 +91,7 @@
   }
 
   &__hint msh-icon {
-    filter: invert(34%) sepia(52%) saturate(983%) hue-rotate(114deg) brightness(89%) contrast(96%);
+    color: var(--color-success);
   }
 
   &__footer {

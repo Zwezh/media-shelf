@@ -56,7 +56,15 @@
   },
   "header": {
     "home": "MediaShelf home",
-    "primaryNavigation": "Primary navigation"
+    "language": {
+      "label": "Application language"
+    },
+    "primaryNavigation": "Primary navigation",
+    "theme": {
+      "dark": "Dark theme. Switch to browser theme",
+      "light": "Light theme. Switch to dark theme",
+      "system": "Theme follows browser. Switch to light theme"
+    }
   },
   "quickSearch": {
     "applyHint": "to show all matches",

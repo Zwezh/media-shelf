@@ -1,40 +1,51 @@
 <header class="app-header">
-  <a class="app-header__brand" routerLink="/gallery" [attr.aria-label]="'header.home' | translate">
-    <img ngSrc="logo.svg" width="32" height="32" alt="" priority />
-  </a>
+  <div class="app-header__navigation-area">
+    <a class="app-header__brand" routerLink="/gallery" [attr.aria-label]="'header.home' | translate">
+      <img ngSrc="logo.svg" width="32" height="32" alt="" priority />
+    </a>
 
-  <nav class="app-header__navigation" [attr.aria-label]="'header.primaryNavigation' | translate">
-    <ul class="app-header__navigation-list">
-      @for (item of navigationItems(); track item.path) {
-        <li>
-          <a
-            class="app-header__navigation-link"
-            [routerLink]="item.path"
-            routerLinkActive="app-header__navigation-link--active"
-            ariaCurrentWhenActive="page"
-          >
-            {{ item.labelKey | translate }}
-          </a>
-        </li>
-      }
-    </ul>
-  </nav>
-
-  <div class="app-header__search">
-    <ng-content select="[header-search]" />
+    <nav class="app-header__navigation" [attr.aria-label]="'header.primaryNavigation' | translate">
+      <ul class="app-header__navigation-list">
+        @for (item of navigationItems(); track item.path) {
+          <li>
+            <a
+              class="app-header__navigation-link"
+              [routerLink]="item.path"
+              routerLinkActive="app-header__navigation-link--active"
+              ariaCurrentWhenActive="page"
+            >
+              {{ item.labelKey | translate }}
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
   </div>
 
-  <div class="app-header__auth">
-    @if (authSession.isAuthenticated()) {
-      <button class="btn btn-secondary btn-sm" type="button" (click)="signOut()">
-        <msh-icon name="logout" [size]="18" />
-        <span>{{ 'auth.actions.signOut' | translate }}</span>
-      </button>
-    } @else {
-      <button class="btn btn-primary btn-sm" type="button" (click)="openSignIn()">
-        <msh-icon name="login" [size]="18" />
-        <span>{{ 'auth.actions.signIn' | translate }}</span>
-      </button>
-    }
+  <div class="app-header__controls">
+    <div class="app-header__search">
+      <ng-content select="[header-search]" />
+    </div>
+
+    <msh-language-selector />
+    <msh-theme-selector />
+
+    <div class="app-header__account-controls">
+      <span class="app-header__separator" aria-hidden="true"></span>
+
+      <div class="app-header__auth">
+        @if (authSession.isAuthenticated()) {
+          <button class="btn btn-secondary btn-sm" type="button" (click)="signOut()">
+            <msh-icon name="logout" [size]="18" />
+            <span>{{ 'auth.actions.signOut' | translate }}</span>
+          </button>
+        } @else {
+          <button class="btn btn-primary btn-sm" type="button" (click)="openSignIn()">
+            <msh-icon name="login" [size]="18" />
+            <span>{{ 'auth.actions.signIn' | translate }}</span>
+          </button>
+        }
+      </div>
+    </div>
   </div>
 </header>

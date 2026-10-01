@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, DestroyRef, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthDialog } from '@msh-core/auth/auth-dialog/auth-dialog';
@@ -8,9 +8,12 @@ import { NavigationItem } from '@msh-core/navigation';
 import { Icon } from '@msh-shared/components/icon/icon';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { ToastStore } from '@msh-shared/services/toast-store';
+import { LanguageSelector } from './language-selector/language-selector';
+import { ThemeSelector } from './theme-selector/theme-selector';
 
 @Component({
-  imports: [Icon, NgOptimizedImage, RouterLink, RouterLinkActive, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [Icon, LanguageSelector, NgOptimizedImage, RouterLink, RouterLinkActive, ThemeSelector, TranslatePipe],
   selector: 'msh-header',
   styleUrl: './header.scss',
   templateUrl: './header.html',

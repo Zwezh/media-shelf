@@ -1,0 +1,39 @@
+.media-card--movie {
+  --media-card-hover-border: var(--color-media-card-movie-hover-border);
+  --media-card-hover-text: var(--color-media-card-movie-hover-text);
+  --media-card-action-hover: var(--color-media-card-movie-action-hover);
+}
+
+.media-card--series {
+  --media-card-hover-border: var(--color-media-card-series-hover-border);
+  --media-card-hover-text: var(--color-media-card-series-hover-text);
+  --media-card-action-hover: var(--color-media-card-series-action-hover);
+}
+
+.media-card__action:not(.btn-overlay-danger):hover,
+.media-card__action:not(.btn-overlay-danger):focus-visible {
+  color: var(--color-on-primary);
+  background: var(--media-card-action-hover);
+}
+
+@media (hover: none) {
+  .media-card__overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-card,
+  .media-card__poster > img,
+  .media-card__overlay {
+    transition: none;
+  }
+
+  .media-card:hover,
+  .media-card:focus-within,
+  .media-card:hover .media-card__poster > img,
+  .media-card:focus-within .media-card__poster > img {
+    transform: none;
+  }
+}

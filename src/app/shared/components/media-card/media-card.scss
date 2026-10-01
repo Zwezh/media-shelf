@@ -9,9 +9,9 @@
   height: 100%;
   overflow: hidden;
   flex-direction: column;
-  background: var(--color-surface-container-lowest);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  background: var(--color-media-card-background);
+  border: 1px solid var(--color-media-card-border);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-level-1);
   transition:
     transform var(--duration-fast) var(--easing-standard),
@@ -20,9 +20,9 @@
 
   &:hover,
   &:focus-within {
-    border-color: var(--color-border-strong);
+    border-color: var(--media-card-hover-border);
     box-shadow: var(--shadow-level-2);
-    transform: translateY(-0.125rem);
+    transform: translateY(-0.25rem);
   }
 
   &:active {
@@ -37,7 +37,7 @@
     aspect-ratio: var(--size-poster-aspect-ratio);
     overflow: hidden;
     flex: 0 0 auto;
-    background: var(--color-surface-container);
+    background: var(--color-media-card-poster-background);
     box-shadow: var(--shadow-poster-image-stroke);
 
     > img {
@@ -81,7 +81,7 @@
     justify-content: flex-end;
     gap: var(--space-xs);
     color: var(--color-on-primary);
-    background: linear-gradient(to top, rgba(40, 48, 68, 0.92), rgba(40, 48, 68, 0.38) 45%, transparent 75%);
+    background: linear-gradient(to top, var(--color-media-card-overlay-start), var(--color-media-card-overlay-middle) 45%, transparent 75%);
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--duration-fast) var(--easing-standard);
@@ -131,6 +131,7 @@
     flex-direction: column;
     justify-content: space-between;
     gap: var(--space-xs);
+    background: var(--color-media-card-background);
   }
 
   &__heading {
@@ -143,7 +144,7 @@
       min-width: 0;
       margin: 0;
       overflow: hidden;
-      color: var(--color-on-surface);
+      color: var(--color-media-card-title);
       font-weight: var(--font-weight-bold);
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -152,19 +153,19 @@
 
     > span {
       flex: 0 0 auto;
-      color: var(--color-outline);
+      color: var(--color-media-card-meta);
     }
   }
 
   &:hover &__heading h2,
   &:focus-within &__heading h2 {
-    color: var(--color-primary);
+    color: var(--media-card-hover-text);
   }
 
   &__details p {
     margin: 0;
     overflow: hidden;
-    color: var(--color-on-surface-variant);
+    color: var(--color-media-card-meta);
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -176,35 +177,14 @@
     justify-content: space-between;
     gap: var(--space-sm);
     padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-media-card-divider);
 
     > span {
       min-width: 0;
       overflow: hidden;
-      color: var(--color-outline);
+      color: var(--color-media-card-meta);
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-  }
-}
-
-@media (hover: none) {
-  .media-card__overlay {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .media-card,
-  .media-card__poster > img,
-  .media-card__overlay {
-    transition: none;
-  }
-
-  .media-card:hover,
-  .media-card:focus-within,
-  .media-card:hover .media-card__poster > img,
-  .media-card:focus-within .media-card__poster > img {
-    transform: none;
   }
 }

@@ -1,44 +1,16 @@
-import { NgOptimizedImage } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, numberAttribute, ViewEncapsulation } from '@angular/core';
+import { IconName, IconRegistry } from './icon-registry';
 
-export type IconName =
-  | 'add'
-  | 'arrow-down'
-  | 'arrow-up'
-  | 'delete'
-  | 'edit'
-  | 'filters'
-  | 'key'
-  | 'login'
-  | 'logout'
-  | 'shield'
-  | 'sort'
-  | 'sort-chevron'
-  | 'view'
-  | 'visibility'
-  | 'visibility-off';
-
-const ICON_ASPECT_RATIOS: Readonly<Record<IconName, number>> = {
-  add: 1,
-  'arrow-down': 1,
-  'arrow-up': 1,
-  delete: 1,
-  edit: 1,
-  filters: 1,
-  key: 1,
-  login: 1,
-  logout: 1,
-  shield: 1,
-  sort: 1,
-  'sort-chevron': 9 / 14,
-  view: 1,
-  visibility: 1,
-  'visibility-off': 1,
-};
+export type { IconName } from './icon-registry';
 
 @Component({
-  host: { 'aria-hidden': 'true' },
-  imports: [NgOptimizedImage],
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'aria-hidden': 'true',
+    '[style.color]': 'color()',
+    '[style.height.px]': 'size()',
+    '[style.width.px]': 'size()',
+  },
   selector: 'msh-icon',
   styles: `
     :host {
@@ -46,16 +18,46 @@ const ICON_ASPECT_RATIOS: Readonly<Record<IconName, number>> = {
       flex: 0 0 auto;
     }
 
-    img {
+    msh-icon > svg {
       display: block;
+      width: 100%;
+      height: 100%;
     }
   `,
-  template: '<img alt="" loading="lazy" [height]="size()" [ngSrc]="source()" [width]="width()" />',
+  template: '',
 })
 export class Icon {
   readonly name = input.required<IconName>();
-  readonly size = input(14);
+  readonly size = input(14, { transform: numberAttribute });
+  readonly color = input<string>();
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly registry = inject(IconRegistry);
 
-  protected readonly source = computed(() => `/icons/${this.name()}.svg`);
-  protected readonly width = computed(() => Math.round(this.size() * ICON_ASPECT_RATIOS[this.name()]));
+  constructor() {
+    effect((onCleanup) => {
+      const name = this.name();
+      const host = this.element.nativeElement;
+      let active = true;
+
+      host.replaceChildren();
+      host.dataset['loading'] = 'true';
+      void this.registry
+        .getIcon(name)
+        .then((svg) => {
+          if (!active) return;
+          host.replaceChildren(svg);
+          delete host.dataset['loading'];
+          delete host.dataset['error'];
+        })
+        .catch(() => {
+          if (!active) return;
+          delete host.dataset['loading'];
+          host.dataset['error'] = name;
+        });
+
+      onCleanup(() => {
+        active = false;
+      });
+    });
+  }
 }

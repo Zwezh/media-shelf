@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { NavigationItem } from '@msh-core/navigation';
+import { IconRegistry } from '@msh-shared/components/icon/icon-registry';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
 import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
@@ -28,6 +29,10 @@ describe('Header', () => {
       imports: [Header],
       providers: [
         provideI18nTesting(),
+        {
+          provide: IconRegistry,
+          useValue: { getIcon: vi.fn(async () => document.createElementNS('http://www.w3.org/2000/svg', 'svg')) },
+        },
         provideRouter([
           {
             path: 'gallery',
@@ -90,5 +95,14 @@ describe('Header', () => {
     fixture.detectChanges();
     expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(false);
     expect(authButton().textContent).toContain('Sign In');
+  });
+
+  it('composes dedicated language and theme selectors', async () => {
+    const fixture = TestBed.createComponent(Header);
+    fixture.componentRef.setInput('navigationItems', navigationItems);
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.querySelector('msh-language-selector')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('msh-theme-selector')).not.toBeNull();
   });
 });
