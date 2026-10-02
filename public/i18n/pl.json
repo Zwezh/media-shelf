@@ -56,7 +56,15 @@
   },
   "header": {
     "home": "Strona główna MediaShelf",
-    "primaryNavigation": "Główna nawigacja"
+    "language": {
+      "label": "Język aplikacji"
+    },
+    "primaryNavigation": "Główna nawigacja",
+    "theme": {
+      "dark": "Ciemny motyw. Przełącz na motyw przeglądarki",
+      "light": "Jasny motyw. Przełącz na ciemny motyw",
+      "system": "Motyw zgodny z przeglądarką. Przełącz na jasny motyw"
+    }
   },
   "quickSearch": {
     "applyHint": "aby wyświetlić wszystkie wyniki",

@@ -7,6 +7,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { languageInitializer } from '@msh-core/i18n/language-initializer';
 import { TranslatedTitleStrategy } from '@msh-core/i18n/translated-title-strategy';
+import { themeInitializer } from '@msh-core/theme/theme-initializer';
 import { KINOPOISK_REPOSITORY } from '@msh-features/gallery/movies/application/kinopoisk.repository';
 import { MOVIES_REPOSITORY } from '@msh-features/gallery/movies/application/movies.repository';
 import { HttpMoviesRepository } from '@msh-features/gallery/movies/infrastructure/http-movies.repository';
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json',
       }),
     }),
+    provideAppInitializer(themeInitializer),
     provideAppInitializer(languageInitializer),
     provideRouter(routes, withViewTransitions()),
     { provide: MOVIES_REPOSITORY, useExisting: HttpMoviesRepository },

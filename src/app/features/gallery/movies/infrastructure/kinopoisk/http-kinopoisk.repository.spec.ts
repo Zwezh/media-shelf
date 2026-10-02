@@ -1,79 +1,105 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { AuthSession } from '@msh-core/auth/auth-session';
+import { authenticationInterceptor } from '@msh-core/auth/authentication-interceptor';
 import { provideEnvironment } from '@msh-core/config/environment.token';
+import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { type MovieAutofill } from '../../../movie-editor/models/movie-autofill.model';
 import { HttpKinopoiskRepository } from './http-kinopoisk.repository';
-import { KinopoiskApiClient } from './kinopoisk-api.client';
+
+const autofill: MovieAutofill = {
+  actors: ['Keanu Reeves'],
+  ageRating: 16,
+  backdropUrl: 'https://images.example/backdrop.jpg',
+  compactPosterUrl: 'https://images.example/preview.jpg',
+  countries: ['США'],
+  description: 'Описание',
+  directors: ['Лана Вачовски'],
+  enName: 'The Matrix',
+  genres: ['фантастика'],
+  kpId: 301,
+  movieLength: 136,
+  name: 'Матрица',
+  posterUrl: 'https://images.example/poster.jpg',
+  rating: 8.5,
+  sequelsAndPrequels: ['Матрица: Перезагрузка'],
+  similarMovies: ['Тёмный город'],
+  year: 1999,
+};
 
 describe('HttpKinopoiskRepository', () => {
   beforeEach(() => {
+    resetTestAuthStorage();
     TestBed.configureTestingModule({
       providers: [
-        HttpKinopoiskRepository,
-        KinopoiskApiClient,
-        provideEnvironment({ apiUrl: '/api', kinopoiskToken: 'test-token', production: false }),
-        provideHttpClient(),
+        provideEnvironment({ apiUrl: '/api/', production: false }),
+        provideHttpClient(withInterceptors([authenticationInterceptor])),
         provideHttpClientTesting(),
       ],
     });
+    TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
   });
 
-  it('loads and maps the complete PoiskKino movie response with one request', () => {
-    const repository = TestBed.inject(HttpKinopoiskRepository);
-    const http = TestBed.inject(HttpTestingController);
+  afterEach(() => TestBed.inject(HttpTestingController).verify());
+
+  it('loads normalized metadata from the backend using the user JWT and no provider key', () => {
     let result: MovieAutofill | undefined;
-
-    repository.getMovieAutofill(301).subscribe((movie) => {
-      result = movie;
-    });
-
-    const request = http.expectOne('https://api.poiskkino.dev/v1.4/movie/301');
+    TestBed.inject(HttpKinopoiskRepository)
+      .getMovieAutofill(301)
+      .subscribe((movie) => (result = movie));
+    const request = TestBed.inject(HttpTestingController).expectOne('/api/kinopoisk/movies/301/autofill');
     expect(request.request.method).toBe('GET');
-    expect(request.request.headers.get('X-API-KEY')).toBe('test-token');
-    request.flush({
-      ageRating: 16,
-      backdrop: { url: '/backdrop.jpg' },
-      countries: [{ name: 'США' }],
-      description: 'Описание',
-      genres: [{ name: 'фантастика' }],
-      id: 301,
-      movieLength: 136,
-      name: 'Матрица',
-      persons: [{ enProfession: 'director', name: 'Лана Вачовски' }],
-      poster: { previewUrl: '/poster-preview.jpg', url: '/poster.jpg' },
-      rating: { kp: 8.5 },
-      sequelsAndPrequels: [{ name: 'Матрица: Перезагрузка' }],
-      similarMovies: [{ name: 'Тёмный город' }],
-      year: 1999,
-    });
-
-    expect(result).toMatchObject({
-      ageRating: 16,
-      backdropUrl: '/backdrop.jpg',
-      countries: ['США'],
-      directors: ['Лана Вачовски'],
-      genres: ['фантастика'],
-      kpId: 301,
-      name: 'Матрица',
-      posterUrl: '/poster.jpg',
-      rating: 8.5,
-      sequelsAndPrequels: ['Матрица: Перезагрузка'],
-      similarMovies: ['Тёмный город'],
-      year: 1999,
-    });
-    http.verify();
+    expect(request.request.headers.get('Authorization')).toBe(`Bearer ${TEST_ACCESS_TOKEN}`);
+    expect(request.request.headers.has('X-API-KEY')).toBe(false);
+    request.flush(autofill);
+    expect(result).toEqual(autofill);
   });
 
-  it('rejects a malformed required movie response', () => {
-    const repository = TestBed.inject(HttpKinopoiskRepository);
-    const http = TestBed.inject(HttpTestingController);
+  it('accepts absent optional numbers and empty metadata for draft preservation', () => {
+    const empty = { ...autofill, actors: [], name: '', ageRating: undefined, rating: undefined, year: undefined, movieLength: undefined };
+    let result: MovieAutofill | undefined;
+    TestBed.inject(HttpKinopoiskRepository)
+      .getMovieAutofill(301)
+      .subscribe((movie) => (result = movie));
+    TestBed.inject(HttpTestingController).expectOne('/api/kinopoisk/movies/301/autofill').flush(empty);
+    expect(result).toEqual(empty);
+  });
+
+  it.each([
+    { ...autofill, kpId: undefined },
+    { ...autofill, kpId: 0 },
+    { ...autofill, directors: [{}] },
+    { ...autofill, rating: 11 },
+    { ...autofill, year: 1999.5 },
+    { ...autofill, ageRating: null },
+    { id: 301, persons: [] },
+  ])('rejects malformed normalized metadata', (body) => {
     const error = vi.fn();
-
-    repository.getMovieAutofill(301).subscribe({ error });
-    http.expectOne('https://api.poiskkino.dev/v1.4/movie/301').flush({ name: 'Missing ID' });
-
+    TestBed.inject(HttpKinopoiskRepository).getMovieAutofill(301).subscribe({ error });
+    TestBed.inject(HttpTestingController).expectOne('/api/kinopoisk/movies/301/autofill').flush(body);
     expect(error).toHaveBeenCalledWith(expect.objectContaining({ kind: 'unexpected' }));
-    http.verify();
+  });
+
+  it.each([
+    [404, 'not-found'],
+    [502, 'unexpected'],
+    [504, 'unexpected'],
+  ] as const)('normalizes backend %s failures without signing out', (status, kind) => {
+    const error = vi.fn();
+    TestBed.inject(HttpKinopoiskRepository).getMovieAutofill(301).subscribe({ error });
+    TestBed.inject(HttpTestingController).expectOne('/api/kinopoisk/movies/301/autofill').flush({}, { status, statusText: 'Failure' });
+    expect(error).toHaveBeenCalledWith(expect.objectContaining({ kind }));
+    expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(true);
+  });
+
+  it('clears the user session only when the backend rejects its JWT', () => {
+    const error = vi.fn();
+    TestBed.inject(HttpKinopoiskRepository).getMovieAutofill(301).subscribe({ error });
+    TestBed.inject(HttpTestingController)
+      .expectOne('/api/kinopoisk/movies/301/autofill')
+      .flush({}, { status: 401, statusText: 'Unauthorized' });
+    expect(error).toHaveBeenCalledWith(expect.objectContaining({ kind: 'unauthorized' }));
+    expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(false);
   });
 });

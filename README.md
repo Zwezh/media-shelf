@@ -75,3 +75,7 @@ SSH remote:
 ```bash
 git@github.com:Zwezh/media-shelf.git
 ```
+
+## Kinopoisk autofill
+
+The editor requests normalized metadata from authenticated `GET {apiUrl}/kinopoisk/movies/{id}/autofill`. Set `KINOPOISK_API_TOKEN` only in the sibling NestJS backend’s ignored `.env` or deployment environment. Frontend environments contain no provider keys. Deploy the backend endpoint before the frontend update. See [the Lode contract](lode/gallery/kinopoisk-autofill.md).

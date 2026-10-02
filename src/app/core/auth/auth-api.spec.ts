@@ -10,7 +10,7 @@ describe('AuthApi', () => {
     TestBed.configureTestingModule({
       providers: [
         AuthApi,
-        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', kinopoiskToken: '', production: false }),
+        provideEnvironment({ apiUrl: 'http://localhost:4200/api/', production: false }),
         provideHttpClient(),
         provideHttpClientTesting(),
       ],

@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.theme-selector__button {
+  width: var(--size-control-standard);
+  padding: 0;
+  color: var(--color-shell-text);
+}
+
+.theme-selector__button--dark {
+  color: var(--color-theme-dark-icon);
+}

@@ -1,4 +1,4 @@
-<article class="media-card">
+<article class="media-card" [class.media-card--movie]="media().type === 'movie'" [class.media-card--series]="media().type === 'series'">
   <div class="media-card__poster">
     <img
       [src]="media().posterUrl"

@@ -142,17 +142,12 @@ type MovieEditorModel = {
 
 ## Kinopoisk autofill
 
-`KinopoiskApiClient` performs the external request, while `HttpKinopoiskRepository` validates and maps the response for `AutofillMovieUseCase`.
+`KinopoiskApiClient` requests the authenticated MediaShelf endpoint `GET {apiUrl}/kinopoisk/movies/{id}/autofill`. `HttpKinopoiskRepository` validates its normalized `MovieAutofill` response for `AutofillMovieUseCase`. NestJS owns all provider calls, DTO parsing, staff/relationship mapping, artwork/name fallbacks, and the server-only `KINOPOISK_API_TOKEN` environment variable.
 
-- Base URL: `https://api.poiskkino.dev`.
-- Header: `X-API-KEY` from configuration.
-- Request: `GET /v1.4/movie/{id}`. The response already embeds artwork, persons, similar movies, and sequels/prequels, so autofill makes one request.
-- Map `name` to `name`, `enName || alternativeName` to `enName`, `rating.kp`, `year`, `movieLength`, `description`, `ageRating`, `genres[].name`, and `countries[].name` to their editor fields.
-- Map persons with lowercase `enProfession === 'director'` to directors and `enProfession === 'actor'` to actors, preferring `name || enName`.
-- Map `backdrop.url || backdrop.previewUrl` to `backdropUrl`; map `poster.previewUrl` to `compactPosterUrl` and `poster.url` to `posterUrl`.
-- Map embedded `similarMovies` and `sequelsAndPrequels` names directly, preferring `name || enName || alternativeName`.
-- The movie request is atomic: request or required-schema failures leave the form unchanged and show an error toast; a valid response applies all available metadata and shows a success toast. Missing nullable fields retain the current form values during the merge.
-- Do not log API keys or include them in URLs. The repository currently configures a browser-side token, which is extractable from production bundles. Before shipping, rotate any committed token and preferably proxy Kinopoisk through the backend; direct browser access is acceptable only as an explicit private/local-project risk decision.
+- The browser sends its MediaShelf JWT through the existing scoped interceptor; it contains no provider key and makes no direct PoiskKino calls.
+- The request is atomic: HTTP or required-schema failures leave the form unchanged and show an error toast. Empty optional metadata preserves existing draft values.
+- One autofill action makes one backend request. Provider failures never forward raw bodies/headers or return a provider 401 to the frontend; only a rejected user JWT clears the session.
+- The complete endpoint, ownership, limits, mapping and verification contract lives in [Kinopoisk autofill](../gallery/kinopoisk-autofill.md).
 
 ## SignalStore behavior
 
@@ -161,7 +156,7 @@ Provide `MovieEditorStore` at the editor route/page. State owns `mode`, editor s
 - Edit initialization reads `paramMap`, cancels stale loads with `switchMap`, clears stale content, and obtains `MovieEditorModel` from `LoadMovieEditorQuery`.
 - The page owns the writable form-model signal required by Signal Forms and resets it only when the store publishes a new load/autofill seed; ordinary typing remains local and synchronous.
 - `autofill(kpId, currentModel)` reads the live form signal when the response arrives and merges returned fields into that latest draft. It never restores the click-time snapshot, changes local-only fields (`id`, `addedDate`, `quality`, `extension`), or clears existing values when optional Kinopoisk data is absent.
-- The PoiskKino movie response is parsed from `unknown`. An invalid required movie response fails autofill, while documented nullable metadata is converted to empty optional values so the merge retains current form values.
+- The normalized backend autofill response is parsed from `unknown`. An invalid required movie response fails autofill, while documented nullable metadata is converted to empty optional values so the merge retains current form values.
 - `save(model)` delegates create/update selection to `SaveMovieUseCase`, rejects every call while another editor operation is active, shows localized success/error feedback, and navigates only after success. An infrastructure `AppError` with kind `conflict` produces the duplicate-movie message in add mode.
 - Keep transport in infrastructure, reusable workflows in application operations, request state in stores, and route/form event wiring in page containers.
 
@@ -182,8 +177,8 @@ Changes to the editor keep DTOs and external transport in infrastructure reposit
 ## Verification and acceptance
 
 - Route tests prove static `movies/new` is not captured as an ID, edit deep links load raw DTOs, query parameters survive transitions, and editor routes do not add Gallery tabs.
-- API tests assert exact methods, URLs, encoded IDs, bodies, headers, and error propagation for GET/POST/PUT/DELETE and every Kinopoisk request.
-- Converter tests cover nullable Kinopoisk fields, age parsing, name fallbacks, staff filtering, cover fallback, relation filtering, CSV normalization, number conversion, and complete `MediaDto` output.
+- API tests assert exact methods, URLs, encoded IDs, bodies, headers, and error propagation for GET/POST/PUT/DELETE and the authenticated backend autofill request.
+- Frontend tests cover normalized autofill validation, CSV normalization, number conversion, complete `MediaDto` output and latest-draft merging. Backend tests own provider nulls, name/artwork fallbacks, staff filtering and relation mapping.
 - Store tests cover add/edit initialization, stale-load cancellation, autofill, duplicate-action prevention, save success/error, toast variants, and navigation timing.
 - Component tests cover requested omissions and labels, signal-form validation, accessible errors/status, desktop/mobile section order, discard behavior, and disabled busy controls.
 - Settings/editor tests cover nested catalog parsing, computed defaults, delayed add-mode default selection, non-overwriting of a non-empty draft, and preservation of edit values absent from current catalogs.

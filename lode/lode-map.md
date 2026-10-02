@@ -17,6 +17,7 @@
 - [auth/summary.md](auth/summary.md) - Persisted JWT session, authorization dialog, interceptor, guarded routes, and protected-control contract.
 - [storage/summary.md](storage/summary.md) - Guarded localStorage wrapper and centralized token/language key contract.
 - [settings/summary.md](settings/summary.md) - Validated app-wide settings resource, backend-owned catalogs, defaults, and Gallery consumers.
+- [gallery/kinopoisk-autofill.md](gallery/kinopoisk-autofill.md) - Authenticated backend autofill, server-only provider key, normalized contract, limits and error handling.
 - [gallery/business-logic-architecture.md](gallery/business-logic-architecture.md) - Current layered Gallery dependency contract, state ownership, workflows, runtime boundaries, and extension rules.
 - [plans/media-sorting.md](plans/media-sorting.md) - Responsive, URL-backed Movies sorting contract and structure.
 - [plans/movie-details.md](plans/movie-details.md) - Movie details route, API/store flow, prototype adaptation, components, navigation, and verification contract.
@@ -54,6 +55,7 @@ flowchart TD
   Root --> Settings[settings]
   Settings --> SettingsSummary[summary.md]
   Root --> Gallery[gallery]
+  Gallery --> KinopoiskAutofill[kinopoisk-autofill.md]
   Gallery --> GalleryArchitecture[business-logic-architecture.md]
   Root --> Plans[plans]
   Plans --> MediaSorting[media-sorting.md]
