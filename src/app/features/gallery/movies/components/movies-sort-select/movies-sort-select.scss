@@ -18,8 +18,7 @@
   }
 
   &__chevron {
-    color: var(--color-primary);
-    transform: rotate(180deg);
+    color: var(--color-on-surface);
     transition: transform var(--duration-fast) var(--easing-standard);
   }
 
@@ -33,7 +32,7 @@
     }
 
     .sort-select__chevron {
-      transform: none;
+      transform: rotate(180deg);
     }
   }
 
