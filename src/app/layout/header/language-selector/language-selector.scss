@@ -9,7 +9,7 @@
 
   select {
     height: var(--size-control-compact);
-    padding: 0 1.75rem 0 var(--space-sm);
+    padding: 0 var(--space-md) 0 var(--space-sm);
     color: var(--color-shell-text);
     font: var(--text-label-md);
     background-color: var(--color-shell-surface);
