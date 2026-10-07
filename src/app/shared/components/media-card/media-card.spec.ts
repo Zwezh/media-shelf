@@ -64,3 +64,20 @@ describe('MediaCard', () => {
     expect(actions[2]?.disabled).toBe(true);
   });
 });
+
+describe('MediaCard nullable collection metadata', () => {
+  it('keeps zero ratings and hides unknown fields and unrequested mutation actions', async () => {
+    TestBed.configureTestingModule({ providers: provideI18nTesting() });
+    const fixture = TestBed.createComponent(MediaCard);
+    fixture.componentRef.setInput('media', { ...media, type: 'series', rating: 0, ageRating: null, quality: null, durationMinutes: null });
+    fixture.componentRef.setInput('actions', ['view']);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelectorAll('.media-card__action')).toHaveLength(1);
+    expect(element.querySelector('msh-media-rating')?.textContent).toContain('0.0');
+    expect(element.querySelectorAll('msh-media-badge')).toHaveLength(1);
+    fixture.componentRef.setInput('media', { ...media, rating: null });
+    await fixture.whenStable();
+    expect(element.querySelector('msh-media-rating')).toBeNull();
+  });
+});

@@ -1,0 +1,26 @@
+@let currentMovie = movie();
+@if (currentMovie.similarMovies.length > 0 || currentMovie.sequelsAndPrequels.length > 0) {
+  <div class="related-lists">
+    @if (currentMovie.similarMovies.length > 0) {
+      <section aria-labelledby="similar-movies-title">
+        <h2 id="similar-movies-title">{{ similarTitleKey() | translate }}</h2>
+        <ul>
+          @for (item of currentMovie.similarMovies; track $index) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (currentMovie.sequelsAndPrequels.length > 0) {
+      <section aria-labelledby="sequels-prequels-title">
+        <h2 id="sequels-prequels-title">{{ 'movieDetails.related.sequelsAndPrequels' | translate }}</h2>
+        <ul>
+          @for (item of currentMovie.sequelsAndPrequels; track $index) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+}

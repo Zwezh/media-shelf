@@ -27,9 +27,9 @@ flowchart LR
   Store --> Autofill[AutofillMovieUseCase]
   Save --> MoviesRepo[MoviesRepository]
   Autofill --> KinopoiskRepo[KinopoiskRepository]
-  Store --> Toasts[MovieFeedback]
+  Store --> Toasts[GalleryFeedback]
   Save --> Details
-  Details -->|Delete| Coordinator[MovieDeletionCoordinator]
+  Details -->|Delete| Coordinator[DeletionConfirmation]
   Coordinator --> Confirm[Confirmation dialog]
   Confirm --> Delete[DeleteMovieUseCase]
   Delete --> List
@@ -135,14 +135,14 @@ type MovieEditorModel = {
 ```
 
 - Basic Information, Classification & Metrics, Artwork & Scraper Assets, Production & Cast, Local File & Technical, and Relationships & Universe each own their section markup and local responsive presentation.
-- Section components accept the shared typed `MovieEditorForm` field tree through signal inputs. They do not inject stores, API services, or the router and never mutate route/application state directly.
+- Shared sections in `gallery/catalog/components/editor/` accept narrow typed `EditorFields` subsets through signal inputs; Movie-specific Local File retains `MovieEditorForm`. Basic Information projects the Movie release-year field from the container. They do not inject stores, API services, or the router and never mutate route/application state directly.
 - Basic Information emits `genreToggled`; Artwork emits `autofillRequested`. The container handles both events because they change the draft or start an external request.
-- `MovieEditorSection` remains the small reusable card/heading shell. Shared form-section layout rules live in `movie-editor-form-section.scss`; artwork-specific preview rules stay with Artwork Assets.
+- `MovieEditorSection` remains the small reusable card/heading shell. Shared form-section layout rules live in `catalog/components/editor/editor-form-section.scss`; artwork-specific preview rules stay with Artwork Assets.
 - Age ratings remain a frontend domain catalog in `gallery/models/media-options.ts`. Quality and extension options come from the cached `/settings` resource in backend order; quality renders `title` while both fields persist `value`. A source-aware `linkedSignal` applies each backend-marked default once when settings become available in add mode without replacing a non-empty draft, while edit mode always retains the movie's saved scalar values. If a saved legacy value is absent from current settings, the page appends it to that editor option list so the native select can still display and submit it. Editor selects keep their local empty “Not set” option.
 
 ## Kinopoisk autofill
 
-`KinopoiskApiClient` requests the authenticated MediaShelf endpoint `GET {apiUrl}/kinopoisk/movies/{id}/autofill`. `HttpKinopoiskRepository` validates its normalized `MovieAutofill` response for `AutofillMovieUseCase`. NestJS owns all provider calls, DTO parsing, staff/relationship mapping, artwork/name fallbacks, and the server-only `KINOPOISK_API_TOKEN` environment variable.
+`TitleAutofillApiClient` requests the authenticated MediaShelf endpoint `GET {apiUrl}/kinopoisk/titles/{id}/autofill`. `HttpTitleAutofillRepository` validates its normalized `TitleAutofill` response for `AutofillMovieUseCase`. NestJS owns all provider calls, DTO parsing, staff/relationship mapping, artwork/name fallbacks, and the server-only `KINOPOISK_API_TOKEN` environment variable.
 
 - The browser sends its MediaShelf JWT through the existing scoped interceptor; it contains no provider key and makes no direct PoiskKino calls.
 - The request is atomic: HTTP or required-schema failures leave the form unchanged and show an error toast. Empty optional metadata preserves existing draft values.
@@ -164,11 +164,11 @@ Provide `MovieEditorStore` at the editor route/page. State owns `mode`, editor s
 
 Create a shared `ConfirmationDialog` on the existing native-dialog `FloatingPanel` infrastructure with typed data (`titleKey`, `messageKey`, confirm/cancel keys, tone) and boolean result. It owns heading semantics and initial focus, while `FloatingPanel` continues to own modality, Escape/backdrop behavior, cleanup, and focus restoration.
 
-- Enable Delete on movie details and emit Edit/Delete outputs from `MovieDetailsHero`; the page owns routing while `MovieDeletionCoordinator` owns shared deletion-dialog orchestration for list and detail callers.
+- Enable Delete on movie details and emit Edit/Delete outputs from `MovieDetailsHero`; the page owns routing while `DeletionConfirmation` owns shared deletion-dialog orchestration for list and detail callers.
 - Confirmed deletion calls `DeleteMovieUseCase.execute(movie.id)`. Cancel/Escape/backdrop performs no mutation.
 - During deletion, prevent duplicate confirmation/action. Success shows a localized toast and navigates to `/gallery/movies` with preserved query parameters. Failure stays on details and shows an error toast.
 - The dialog wording includes the movie title and clearly identifies the irreversible action; confirmation uses the danger button style and is never the initially focused control.
-- `MovieDeletionCoordinator.confirm()` centralizes dialog data, placement, one-result filtering, and owner destruction cleanup, then returns a confirmed observable result. Pages own the context-specific store action.
+- `DeletionConfirmation.confirm()` centralizes dialog data, placement, one-result filtering, and owner destruction cleanup, then returns a confirmed observable result. Pages own the context-specific store action.
 
 ## Maintenance workflow
 

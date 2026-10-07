@@ -1,4 +1,5 @@
 export type ExtensionSettingOption = {
+  readonly id?: string;
   readonly default?: boolean;
   readonly value: string;
 };

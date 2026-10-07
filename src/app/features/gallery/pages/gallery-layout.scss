@@ -41,8 +41,8 @@
   }
 
   a.gallery-navigation__link--active {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+    color: var(--color-shell-navigation-active-text);
+    border-bottom-color: var(--color-shell-navigation-active-text);
   }
 
   @include breakpoint.mobile {

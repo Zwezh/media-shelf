@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.movie-editor {
+  min-height: 100%;
+  background: var(--color-surface);
+
+  &__utility {
+    background: var(--color-surface-container-lowest);
+    border-bottom: var(--border-subtle);
+    box-shadow: var(--shadow-level-1);
+  }
+
+  &__utility-inner {
+    display: flex;
+    width: min(100%, 97.5rem);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-base);
+    margin-inline: auto;
+    padding: var(--space-md) var(--size-shell-inline-padding);
+  }
+
+  &__breadcrumbs {
+    min-width: 0;
+
+    ol {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: var(--space-sm);
+      margin: 0;
+      padding: 0;
+      color: var(--color-on-surface-variant);
+      font: var(--text-label-md);
+      list-style: none;
+    }
+
+    li {
+      flex: 0 0 auto;
+
+      &:last-child {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--color-on-surface);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--color-on-surface);
+      }
+
+      &:focus-visible {
+        outline: var(--border-focus);
+        outline-offset: var(--space-xxs);
+      }
+    }
+  }
+
+  &__top-actions,
+  &__bottom-actions,
+  &__load-error-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  &__workspace {
+    width: min(100%, 97.5rem);
+    margin-inline: auto;
+    padding: var(--space-xl) var(--size-shell-inline-padding) var(--space-3xl);
+
+    > h1 {
+      margin: 0 0 var(--space-xl);
+      color: var(--color-on-surface);
+      font: var(--text-display-lg);
+    }
+  }
+
+  &__form {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+
+  &__main-column {
+    display: contents;
+
+    > :not(.movie-editor__artwork) {
+      grid-column: 1;
+    }
+  }
+
+  &__artwork {
+    position: sticky;
+    top: calc(var(--size-shell-header-height) + var(--space-xl));
+    grid-row: 1 / span 6;
+    grid-column: 2;
+    min-width: 0;
+    align-self: start;
+  }
+
+  &__bottom-actions {
+    justify-content: flex-end;
+    padding-block: var(--space-sm);
+  }
+
+  &__load-error {
+    display: grid;
+    justify-items: center;
+  }
+
+  &__load-error-actions {
+    justify-content: center;
+    margin-top: calc(-1 * var(--space-xl));
+  }
+}

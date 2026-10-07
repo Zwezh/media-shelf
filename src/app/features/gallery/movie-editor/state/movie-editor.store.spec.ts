@@ -10,7 +10,7 @@ import { type MediaDto } from '../../models/media.dto';
 import { AutofillMovieUseCase } from '../../movies/application/autofill-movie.use-case';
 import { LoadMovieEditorQuery } from '../../movies/application/load-movie-editor.query';
 import { SaveMovieUseCase } from '../../movies/application/save-movie.use-case';
-import type { MovieAutofill } from '../models/movie-autofill.model';
+import type { TitleAutofill } from '../../catalog/models/title-autofill';
 import { MovieEditorStore } from './movie-editor.store';
 import { toMovieEditorModel } from '../utils/movie-editor.converter';
 
@@ -127,7 +127,7 @@ describe('MovieEditorStore', () => {
   });
 
   it('merges delayed autofill data into the latest editor draft', () => {
-    const response = new Subject<MovieAutofill>();
+    const response = new Subject<TitleAutofill>();
     TestBed.configureTestingModule({
       providers: [
         MovieEditorStore,
@@ -136,7 +136,7 @@ describe('MovieEditorStore', () => {
           provide: AutofillMovieUseCase,
           useValue: {
             execute: (_id: number, currentModel: () => ReturnType<typeof toMovieEditorModel>) =>
-              response.pipe(map((autofill) => ({ ...currentModel(), name: autofill.name }))),
+              response.pipe(map((autofill) => ({ ...currentModel(), name: autofill.title }))),
           },
         },
         { provide: LoadMovieEditorQuery, useValue: { execute: vi.fn() } },
@@ -155,16 +155,23 @@ describe('MovieEditorStore', () => {
     currentModel.update((value) => ({ ...value, extension: 'mp4', quality: '4K' }));
 
     response.next({
+      kind: 'movie',
+      series: null,
+      ageRating: null,
+      rating: null,
+      year: null,
+      releaseDate: null,
+      durationMinutes: null,
       actors: [],
       backdropUrl: '',
       compactPosterUrl: '',
       countries: [],
       description: '',
       directors: [],
-      enName: '',
+      originalTitle: '',
       genres: [],
-      kpId: 999,
-      name: 'Autofilled title',
+      kpId: '999',
+      title: 'Autofilled title',
       posterUrl: '',
       sequelsAndPrequels: [],
       similarMovies: [],

@@ -1,7 +1,4 @@
-import { type MediaDto } from './media.dto';
+import type { CollectionPageDto } from './collection-page';
+import type { MediaDto } from './media.dto';
 
-export type MoviesPageDto = {
-  currentPage: number | string;
-  list: MediaDto[];
-  totalCount: number;
-};
+export type MoviesPageDto = CollectionPageDto<MediaDto>;

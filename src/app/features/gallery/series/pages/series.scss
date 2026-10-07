@@ -1,0 +1,23 @@
+@use '../../catalog/components/collection-list';
+@use 'abstracts/breakpoints' as breakpoint;
+.series {
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-base);
+  }
+  &__card-metadata {
+    display: grid;
+    gap: var(--space-xs);
+    color: var(--color-text-secondary);
+    font: var(--text-label-sm);
+    overflow-wrap: anywhere;
+  }
+}
+@include breakpoint.mobile {
+  .movies__toolbar {
+    flex-wrap: wrap;
+  }
+}

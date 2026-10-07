@@ -22,6 +22,7 @@ function optionArray<T>(value: unknown, field: string, parseOption: (value: unkn
 function parseExtensionOption(value: unknown, field: string): ExtensionSettingOption {
   const record = optionRecord(value, field);
   return {
+    ...optionalId(record['id'], `${field}.id`),
     ...optionalDefault(record['default'], `${field}.default`),
     value: nonEmptyStringValue(record['value'], `${field}.value`),
   };
@@ -30,6 +31,7 @@ function parseExtensionOption(value: unknown, field: string): ExtensionSettingOp
 function parseQualityOption(value: unknown, field: string): QualitySettingOption {
   const record = optionRecord(value, field);
   return {
+    ...optionalId(record['id'], `${field}.id`),
     ...optionalDefault(record['default'], `${field}.default`),
     title: nonEmptyStringValue(record['title'], `${field}.title`),
     value: nonEmptyStringValue(record['value'], `${field}.value`),
@@ -60,4 +62,8 @@ function stringValue(value: unknown, field: string): string {
 
 function invalid(field: string): TypeError {
   return new TypeError(`Invalid settings response field: ${field}`);
+}
+
+function optionalId(value: unknown, field: string): { readonly id?: string } {
+  return value === undefined ? {} : { id: nonEmptyStringValue(value, field) };
 }

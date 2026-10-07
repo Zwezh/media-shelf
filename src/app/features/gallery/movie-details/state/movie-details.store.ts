@@ -6,7 +6,7 @@ import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, switchMap, 
 import { type MovieDetails } from '../../models/movie-details';
 import { DeleteMovieUseCase } from '../../movies/application/delete-movie.use-case';
 import { GetMovieDetailsQuery } from '../../movies/application/get-movie-details.query';
-import { MovieFeedback } from '../../movies/ui/movie-feedback';
+import { GalleryFeedback } from '../../catalog/ui/gallery-feedback';
 
 type MovieDetailsState = {
   readonly hasError: boolean;
@@ -30,7 +30,7 @@ export const MovieDetailsStore = signalStore(
     (
       store,
       deleteMovieUseCase = inject(DeleteMovieUseCase),
-      feedback = inject(MovieFeedback),
+      feedback = inject(GalleryFeedback),
       getMovieDetails = inject(GetMovieDetailsQuery),
       router = inject(Router),
     ) => {

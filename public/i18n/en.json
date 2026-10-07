@@ -109,6 +109,7 @@
       "addedDate": "Added to Library",
       "extension": "Extension",
       "quality": "Quality",
+      "similarTitles": "Similar titles",
       "title": "Additional information"
     },
     "backToMovies": "Back to movies",
@@ -198,12 +199,30 @@
     "loading": "Loading movie editor…",
     "posterPreviewAlt": "Poster preview for {{title}}",
     "sections": {
-      "artwork": { "eyebrow": "Visual assets", "title": "Section 3: Artwork & Scraper Assets" },
-      "basic": { "eyebrow": "Primary identifiers", "title": "Section 1: Basic Information" },
-      "classification": { "eyebrow": "Evaluation scores", "title": "Section 2: Classification & Metrics" },
-      "localFile": { "eyebrow": "Filesystem metadata", "title": "Section 5: Local File & Physical Stream" },
-      "production": { "eyebrow": "Credits & origin", "title": "Section 4: Production & Cast" },
-      "relationships": { "eyebrow": "Cross-references", "title": "Section 6: Relationships & Universe" }
+      "artwork": {
+        "eyebrow": "Visual assets",
+        "title": "Section 3: Artwork & Scraper Assets"
+      },
+      "basic": {
+        "eyebrow": "Primary identifiers",
+        "title": "Section 1: Basic Information"
+      },
+      "classification": {
+        "eyebrow": "Evaluation scores",
+        "title": "Section 2: Classification & Metrics"
+      },
+      "localFile": {
+        "eyebrow": "Filesystem metadata",
+        "title": "Section 5: Local File & Physical Stream"
+      },
+      "production": {
+        "eyebrow": "Credits & origin",
+        "title": "Section 4: Production & Cast"
+      },
+      "relationships": {
+        "eyebrow": "Cross-references",
+        "title": "Section 6: Relationships & Universe"
+      }
     },
     "toasts": {
       "autofillErrorMessage": "Check the Kinopoisk ID, API key, and connection, then try again.",
@@ -346,13 +365,42 @@
       },
       "field": "Sort field",
       "hints": {
-        "addedDate": { "asc": "Oldest", "desc": "Newest" },
-        "ageRating": { "asc": "0 → 18+", "desc": "18+ → 0" },
-        "enName": { "asc": "A → Z", "desc": "Z → A" },
-        "name": { "asc": "А → Я", "desc": "Я → А" },
-        "quality": { "asc": "SD → 4K", "desc": "4K → SD" },
-        "rating": { "asc": "0 → 10.0", "desc": "10.0 → 0" },
-        "year": { "asc": "Oldest → Newest", "desc": "Newest → Oldest" }
+        "addedDate": {
+          "asc": "Oldest",
+          "desc": "Newest"
+        },
+        "ageRating": {
+          "asc": "0 → 18+",
+          "desc": "18+ → 0"
+        },
+        "enName": {
+          "asc": "A → Z",
+          "desc": "Z → A"
+        },
+        "name": {
+          "asc": "А → Я",
+          "desc": "Я → А"
+        },
+        "quality": {
+          "asc": "SD → 4K",
+          "desc": "4K → SD"
+        },
+        "rating": {
+          "asc": "0 → 10.0",
+          "desc": "10.0 → 0"
+        },
+        "year": {
+          "asc": "Oldest → Newest",
+          "desc": "Newest → Oldest"
+        },
+        "kpId": {
+          "asc": "Lowest ID first",
+          "desc": "Highest ID first"
+        },
+        "movieLength": {
+          "asc": "Shortest first",
+          "desc": "Longest first"
+        }
       },
       "keys": {
         "addedDate": "Added date",
@@ -361,7 +409,9 @@
         "name": "Russian name",
         "quality": "Quality",
         "rating": "Rating",
-        "year": "Year"
+        "year": "Year",
+        "kpId": "Kinopoisk ID",
+        "movieLength": "Duration"
       },
       "mobileButton": "Sorting",
       "reset": "Reset to Default",
@@ -382,7 +432,8 @@
     "movies": "Movies",
     "settings": "Settings",
     "statistics": "Statistics",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "series": "Series"
   },
   "pagination": {
     "first": "First page",
@@ -402,6 +453,82 @@
     "moviesTitle": "Movies | MediaShelf",
     "settingsTitle": "Settings | MediaShelf",
     "statisticsTitle": "Statistics | MediaShelf",
-    "wishlistTitle": "Wishlist | MediaShelf"
+    "wishlistTitle": "Wishlist | MediaShelf",
+    "seriesTitle": "Series | MediaShelf",
+    "seriesDetailsTitle": "Series details | MediaShelf"
+  },
+  "series": {
+    "title": "Series",
+    "details": "Series details",
+    "loading": "Loading series…",
+    "loadError": "Series could not be loaded. Try again.",
+    "empty": "No series in the library yet.",
+    "noMatches": "No series match these filters.",
+    "back": "Back to Series",
+    "present": "present",
+    "unknown": "Unknown",
+    "unknownFormat": "Unknown format",
+    "search": "Search: {{value}}",
+    "clearFilters": "Clear filters",
+    "seasonSummary": "Available: {{available}} · recorded seasons: {{recorded}}",
+    "announced": "Announced seasons: {{count}}",
+    "seasonTable": "Season availability and formats",
+    "seasons": "Seasons",
+    "season": "Season",
+    "releaseYear": "Release year",
+    "releaseDate": "Release date",
+    "availability": "Availability",
+    "formats": "Formats",
+    "specials": "Specials (season 0)",
+    "seasonNumber": "Season {{number}}",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "noFormats": "No formats recorded",
+    "noSeasons": "No season information",
+    "status": {
+      "unknown": "Production status unknown",
+      "in_production": "In production",
+      "finished": "Finished"
+    },
+    "delete": {
+      "confirm": "Delete series",
+      "errorMessage": "The series remains in your library. Try again.",
+      "errorTitle": "Series could not be deleted",
+      "message": "Delete {{title}} from the library? This action cannot be undone.",
+      "successMessage": "The series was removed from your library.",
+      "successTitle": "Series deleted",
+      "title": "Delete this series?"
+    }
+  },
+  "seriesEditor": {
+    "title": "Series editor",
+    "addTitle": "Add series",
+    "editTitle": "Edit series",
+    "information": "Series information",
+    "status": "Production status",
+    "startYear": "Start year",
+    "endYear": "End year",
+    "announcedCount": "Announced seasons",
+    "availableCount": "Available seasons",
+    "seasons": "Seasons",
+    "season": "Season {{number}}",
+    "seasonNumber": "Season number",
+    "releaseYear": "Release year",
+    "isAvailable": "Available in library",
+    "addSeason": "Add season",
+    "removeSeason": "Remove season {{number}}",
+    "settingsLoading": "Loading format options…",
+    "settingsError": "Could not load format options.",
+    "busy": "Processing…",
+    "invalidNumber": "Enter a number within the allowed range.",
+    "invalidId": "Enter a valid positive Kinopoisk ID.",
+    "invalidDate": "Enter a valid date.",
+    "invalidRange": "End year requires a finished series and cannot precede start year.",
+    "duplicateSeasons": "Season numbers must be unique.",
+    "saved": "Series saved.",
+    "conflict": "This series is already in the library.",
+    "saveError": "Could not save the series. Your changes are retained.",
+    "autofilled": "Metadata updated.",
+    "autofillError": "Could not update metadata. Your changes are retained."
   }
 }

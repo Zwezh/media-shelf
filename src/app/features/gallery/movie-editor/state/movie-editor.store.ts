@@ -7,7 +7,7 @@ import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, switchMap, 
 import { AppError } from '@msh-core/http/app-error';
 import { AutofillMovieUseCase } from '../../movies/application/autofill-movie.use-case';
 import { LoadMovieEditorQuery } from '../../movies/application/load-movie-editor.query';
-import { MovieFeedback } from '../../movies/ui/movie-feedback';
+import { GalleryFeedback } from '../../catalog/ui/gallery-feedback';
 import { SaveMovieUseCase } from '../../movies/application/save-movie.use-case';
 import { type MovieEditorModel, type MovieEditorMode, createEmptyMovieEditorModel } from '../models/movie-editor.model';
 
@@ -47,7 +47,7 @@ export const MovieEditorStore = signalStore(
     (
       store,
       autofillMovie = inject(AutofillMovieUseCase),
-      feedback = inject(MovieFeedback),
+      feedback = inject(GalleryFeedback),
       loadMovieEditor = inject(LoadMovieEditorQuery),
       location = inject(Location),
       router = inject(Router),

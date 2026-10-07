@@ -109,6 +109,7 @@
       "addedDate": "Dodano do biblioteki",
       "extension": "Rozszerzenie",
       "quality": "Jakość",
+      "similarTitles": "Podobne tytuły",
       "title": "Informacje dodatkowe"
     },
     "backToMovies": "Wróć do filmów",
@@ -198,12 +199,30 @@
     "loading": "Ładowanie edytora filmu…",
     "posterPreviewAlt": "Podgląd plakatu: {{title}}",
     "sections": {
-      "artwork": { "eyebrow": "Materiały wizualne", "title": "Sekcja 3: Grafika i dane scrapera" },
-      "basic": { "eyebrow": "Główne identyfikatory", "title": "Sekcja 1: Informacje podstawowe" },
-      "classification": { "eyebrow": "Oceny", "title": "Sekcja 2: Klasyfikacja i wskaźniki" },
-      "localFile": { "eyebrow": "Metadane pliku", "title": "Sekcja 5: Lokalny plik i strumień" },
-      "production": { "eyebrow": "Twórcy i pochodzenie", "title": "Sekcja 4: Produkcja i obsada" },
-      "relationships": { "eyebrow": "Powiązania", "title": "Sekcja 6: Relacje i uniwersum" }
+      "artwork": {
+        "eyebrow": "Materiały wizualne",
+        "title": "Sekcja 3: Grafika i dane scrapera"
+      },
+      "basic": {
+        "eyebrow": "Główne identyfikatory",
+        "title": "Sekcja 1: Informacje podstawowe"
+      },
+      "classification": {
+        "eyebrow": "Oceny",
+        "title": "Sekcja 2: Klasyfikacja i wskaźniki"
+      },
+      "localFile": {
+        "eyebrow": "Metadane pliku",
+        "title": "Sekcja 5: Lokalny plik i strumień"
+      },
+      "production": {
+        "eyebrow": "Twórcy i pochodzenie",
+        "title": "Sekcja 4: Produkcja i obsada"
+      },
+      "relationships": {
+        "eyebrow": "Powiązania",
+        "title": "Sekcja 6: Relacje i uniwersum"
+      }
     },
     "toasts": {
       "autofillErrorMessage": "Sprawdź ID Kinopoisk, klucz API i połączenie, a następnie spróbuj ponownie.",
@@ -346,13 +365,42 @@
       },
       "field": "Pole sortowania",
       "hints": {
-        "addedDate": { "asc": "Najstarsze", "desc": "Najnowsze" },
-        "ageRating": { "asc": "0 → 18+", "desc": "18+ → 0" },
-        "enName": { "asc": "A → Z", "desc": "Z → A" },
-        "name": { "asc": "А → Я", "desc": "Я → А" },
-        "quality": { "asc": "SD → 4K", "desc": "4K → SD" },
-        "rating": { "asc": "0 → 10.0", "desc": "10.0 → 0" },
-        "year": { "asc": "Najstarsze → Najnowsze", "desc": "Najnowsze → Najstarsze" }
+        "addedDate": {
+          "asc": "Najstarsze",
+          "desc": "Najnowsze"
+        },
+        "ageRating": {
+          "asc": "0 → 18+",
+          "desc": "18+ → 0"
+        },
+        "enName": {
+          "asc": "A → Z",
+          "desc": "Z → A"
+        },
+        "name": {
+          "asc": "А → Я",
+          "desc": "Я → А"
+        },
+        "quality": {
+          "asc": "SD → 4K",
+          "desc": "4K → SD"
+        },
+        "rating": {
+          "asc": "0 → 10.0",
+          "desc": "10.0 → 0"
+        },
+        "year": {
+          "asc": "Najstarsze → Najnowsze",
+          "desc": "Najnowsze → Najstarsze"
+        },
+        "kpId": {
+          "asc": "Najniższe ID najpierw",
+          "desc": "Najwyższe ID najpierw"
+        },
+        "movieLength": {
+          "asc": "Najkrótsze najpierw",
+          "desc": "Najdłuższe najpierw"
+        }
       },
       "keys": {
         "addedDate": "Data dodania",
@@ -361,7 +409,9 @@
         "name": "Rosyjska nazwa",
         "quality": "Jakość",
         "rating": "Ocena",
-        "year": "Rok"
+        "year": "Rok",
+        "kpId": "ID Kinopoisk",
+        "movieLength": "Czas trwania"
       },
       "mobileButton": "Sortowanie",
       "reset": "Przywróć domyślne",
@@ -382,7 +432,8 @@
     "movies": "Filmy",
     "settings": "Ustawienia",
     "statistics": "Statystyki",
-    "wishlist": "Lista życzeń"
+    "wishlist": "Lista życzeń",
+    "series": "Seriale"
   },
   "pagination": {
     "first": "Pierwsza strona",
@@ -402,6 +453,82 @@
     "moviesTitle": "Filmy | MediaShelf",
     "settingsTitle": "Ustawienia | MediaShelf",
     "statisticsTitle": "Statystyki | MediaShelf",
-    "wishlistTitle": "Lista życzeń | MediaShelf"
+    "wishlistTitle": "Lista życzeń | MediaShelf",
+    "seriesTitle": "Seriale | MediaShelf",
+    "seriesDetailsTitle": "Szczegóły serialu | MediaShelf"
+  },
+  "series": {
+    "title": "Seriale",
+    "details": "Szczegóły serialu",
+    "loading": "Ładowanie seriali…",
+    "loadError": "Nie udało się załadować seriali. Spróbuj ponownie.",
+    "empty": "Brak seriali w bibliotece.",
+    "noMatches": "Brak seriali pasujących do filtrów.",
+    "back": "Wróć do seriali",
+    "present": "obecnie",
+    "unknown": "Nieznane",
+    "unknownFormat": "Nieznany format",
+    "search": "Wyszukiwanie: {{value}}",
+    "clearFilters": "Wyczyść filtry",
+    "seasonSummary": "Dostępne: {{available}} · sezony w katalogu: {{recorded}}",
+    "announced": "Zapowiedziane sezony: {{count}}",
+    "seasonTable": "Dostępność i formaty sezonów",
+    "seasons": "Sezony",
+    "season": "Sezon",
+    "releaseYear": "Rok premiery",
+    "releaseDate": "Data premiery",
+    "availability": "Dostępność",
+    "formats": "Formaty",
+    "specials": "Odcinki specjalne (sezon 0)",
+    "seasonNumber": "Sezon {{number}}",
+    "available": "Dostępny",
+    "unavailable": "Niedostępny",
+    "noFormats": "Brak zapisanych formatów",
+    "noSeasons": "Brak informacji o sezonach",
+    "status": {
+      "unknown": "Status produkcji nieznany",
+      "in_production": "W produkcji",
+      "finished": "Zakończony"
+    },
+    "delete": {
+      "confirm": "Usuń serial",
+      "errorMessage": "Serial pozostał w bibliotece. Spróbuj ponownie.",
+      "errorTitle": "Nie udało się usunąć serialu",
+      "message": "Usunąć {{title}} z biblioteki? Tej operacji nie można cofnąć.",
+      "successMessage": "Serial został usunięty z biblioteki.",
+      "successTitle": "Serial usunięty",
+      "title": "Usunąć ten serial?"
+    }
+  },
+  "seriesEditor": {
+    "title": "Edytor serialu",
+    "addTitle": "Dodaj serial",
+    "editTitle": "Edytuj serial",
+    "information": "Informacje o serialu",
+    "status": "Status produkcji",
+    "startYear": "Rok rozpoczęcia",
+    "endYear": "Rok zakończenia",
+    "announcedCount": "Zapowiedziane sezony",
+    "availableCount": "Dostępne sezony",
+    "seasons": "Sezony",
+    "season": "Sezon {{number}}",
+    "seasonNumber": "Numer sezonu",
+    "releaseYear": "Rok premiery",
+    "isAvailable": "Dostępny w bibliotece",
+    "addSeason": "Dodaj sezon",
+    "removeSeason": "Usuń sezon {{number}}",
+    "settingsLoading": "Ładowanie formatów…",
+    "settingsError": "Nie udało się załadować formatów.",
+    "busy": "Przetwarzanie…",
+    "invalidNumber": "Wpisz liczbę w dozwolonym zakresie.",
+    "invalidId": "Wpisz prawidłowy dodatni identyfikator Kinopoisk.",
+    "invalidDate": "Wpisz prawidłową datę.",
+    "invalidRange": "Rok zakończenia wymaga zakończonego serialu i nie może poprzedzać roku rozpoczęcia.",
+    "duplicateSeasons": "Numery sezonów muszą być unikalne.",
+    "saved": "Serial zapisany.",
+    "conflict": "Ten serial jest już w bibliotece.",
+    "saveError": "Nie udało się zapisać serialu. Zmiany zostały zachowane.",
+    "autofilled": "Metadane zaktualizowane.",
+    "autofillError": "Nie udało się zaktualizować metadanych. Zmiany zostały zachowane."
   }
 }
