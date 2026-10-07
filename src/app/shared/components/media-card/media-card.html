@@ -1,3 +1,4 @@
+@let currentMedia = media();
 <article class="media-card" [class.media-card--movie]="media().type === 'movie'" [class.media-card--series]="media().type === 'series'">
   <div class="media-card__poster">
     <img
@@ -9,51 +10,61 @@
     <div class="media-card__topline">
       <div class="media-card__topline-start">
         <msh-media-badge [tone]="media().type">{{ 'media.type.' + media().type | translate }}</msh-media-badge>
-        <msh-media-badge tone="quality">{{ media().quality }}</msh-media-badge>
+        @if (currentMedia.quality) {
+          <msh-media-badge tone="quality">{{ currentMedia.quality }}</msh-media-badge>
+        }
       </div>
-      <msh-media-badge tone="age">{{ media().ageRating }}</msh-media-badge>
+      @if (currentMedia.ageRating !== null) {
+        <msh-media-badge tone="age">{{ currentMedia.ageRating }}</msh-media-badge>
+      }
     </div>
     <div class="media-card__overlay">
       <div class="media-card__overlay-meta">
         <span>
           @if (media().type === 'series') {
             {{ 'media.series' | translate }}
-          } @else {
+          } @else if (currentMedia.durationMinutes !== null) {
             {{ 'media.duration' | translate: durationParams() }}
           }
         </span>
         <span>{{ media().quality }}</span>
       </div>
       <div class="media-card__actions" [attr.aria-label]="'media.actions.label' | translate: { title: displayTitle() }" role="group">
-        <button
-          class="btn btn-xs btn-overlay media-card__action"
-          type="button"
-          [attr.aria-label]="'media.actions.view' | translate: { title: displayTitle() }"
-          [title]="'media.actions.view' | translate: { title: displayTitle() }"
-          (click)="viewRequested.emit(media())"
-        >
-          <msh-icon name="view" [size]="16" />
-        </button>
-        <button
-          class="btn btn-xs btn-overlay media-card__action"
-          type="button"
-          [attr.aria-label]="'media.actions.edit' | translate: { title: displayTitle() }"
-          [mshRequiresAuth]="actionsDisabled()"
-          [title]="'media.actions.edit' | translate: { title: displayTitle() }"
-          (click)="editRequested.emit(media())"
-        >
-          <msh-icon name="edit" [size]="16" />
-        </button>
-        <button
-          class="btn btn-xs btn-overlay btn-overlay-danger media-card__action"
-          type="button"
-          [attr.aria-label]="'media.actions.delete' | translate: { title: displayTitle() }"
-          [mshRequiresAuth]="actionsDisabled()"
-          [title]="'media.actions.delete' | translate: { title: displayTitle() }"
-          (click)="deleteRequested.emit(media())"
-        >
-          <msh-icon name="delete" [size]="16" />
-        </button>
+        @if (actions().includes('view')) {
+          <button
+            class="btn btn-xs btn-overlay media-card__action"
+            type="button"
+            [attr.aria-label]="'media.actions.view' | translate: { title: displayTitle() }"
+            [title]="'media.actions.view' | translate: { title: displayTitle() }"
+            (click)="viewRequested.emit(media())"
+          >
+            <msh-icon name="view" [size]="16" />
+          </button>
+        }
+        @if (actions().includes('edit')) {
+          <button
+            class="btn btn-xs btn-overlay media-card__action"
+            type="button"
+            [attr.aria-label]="'media.actions.edit' | translate: { title: displayTitle() }"
+            [mshRequiresAuth]="actionsDisabled()"
+            [title]="'media.actions.edit' | translate: { title: displayTitle() }"
+            (click)="editRequested.emit(media())"
+          >
+            <msh-icon name="edit" [size]="16" />
+          </button>
+        }
+        @if (actions().includes('delete')) {
+          <button
+            class="btn btn-xs btn-overlay btn-overlay-danger media-card__action"
+            type="button"
+            [attr.aria-label]="'media.actions.delete' | translate: { title: displayTitle() }"
+            [mshRequiresAuth]="actionsDisabled()"
+            [title]="'media.actions.delete' | translate: { title: displayTitle() }"
+            (click)="deleteRequested.emit(media())"
+          >
+            <msh-icon name="delete" [size]="16" />
+          </button>
+        }
       </div>
     </div>
   </div>
@@ -63,10 +74,13 @@
         <h2 class="text-headline-sm">{{ displayTitle() }}</h2>
         <span class="text-label-sm">{{ media().year }}</span>
       </div>
-      <p class="text-body-sm">{{ media().genres.slice(0, 2).join(', ') }}</p>
+      <p class="text-body-sm">{{ genresLabel() }}</p>
     </div>
+    <ng-content select="[card-metadata]" />
     <div class="media-card__metadata">
-      <msh-media-rating [rating]="media().rating" />
+      @if (currentMedia.rating !== null) {
+        <msh-media-rating [rating]="currentMedia.rating" />
+      }
       <span class="text-label-sm">{{ media().director }}</span>
     </div>
   </div>

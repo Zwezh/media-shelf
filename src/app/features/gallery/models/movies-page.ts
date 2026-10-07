@@ -1,7 +1,4 @@
-import { type Media } from './media';
+import type { CollectionPage } from './collection-page';
+import type { Media } from './media';
 
-export type MoviesPage = {
-  readonly currentPage: number;
-  readonly media: readonly Media[];
-  readonly totalCount: number;
-};
+export type MoviesPage = CollectionPage<Media>;

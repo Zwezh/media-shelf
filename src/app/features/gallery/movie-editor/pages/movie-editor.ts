@@ -1,17 +1,18 @@
-import { Component, computed, ElementRef, inject, linkedSignal } from '@angular/core';
-import { form, required, submit, validate } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, linkedSignal } from '@angular/core';
+import { FormField, form, required, submit, validate } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SettingsStore } from '@msh-core/settings/settings.store';
 import type { ExtensionSettingOption, QualitySettingOption } from '@msh-core/settings/settings.dto';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
+import { FormValidationMessage } from '@msh-shared/components/form-validation-message/form-validation-message';
 import { RequiresAuth } from '@msh-shared/directives/requires-auth';
-import { ArtworkAssets } from '../components/artwork-assets/artwork-assets';
-import { BasicInformation } from '../components/basic-information/basic-information';
-import { ClassificationMetrics } from '../components/classification-metrics/classification-metrics';
+import { ArtworkAssets } from '../../catalog/components/editor/artwork-assets/artwork-assets';
+import { BasicInformation } from '../../catalog/components/editor/basic-information/basic-information';
+import { ClassificationMetrics } from '../../catalog/components/editor/classification-metrics/classification-metrics';
 import { LocalFile } from '../components/local-file/local-file';
-import { ProductionCast } from '../components/production-cast/production-cast';
-import { RelationshipsUniverse } from '../components/relationships-universe/relationships-universe';
+import { ProductionCast } from '../../catalog/components/editor/production-cast/production-cast';
+import { RelationshipsUniverse } from '../../catalog/components/editor/relationships-universe/relationships-universe';
 import type { MovieEditorMode, MovieEditorModel } from '../models/movie-editor.model';
 import { MovieEditorStore } from '../state/movie-editor.store';
 
@@ -26,7 +27,10 @@ type MovieEditorModelSource = {
 type ValidationResult = { readonly kind: string; readonly message: string } | undefined;
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    FormField,
+    FormValidationMessage,
     ArtworkAssets,
     BasicInformation,
     ClassificationMetrics,
@@ -40,7 +44,7 @@ type ValidationResult = { readonly kind: string; readonly message: string } | un
   ],
   providers: [MovieEditorStore],
   selector: 'msh-movie-editor',
-  styleUrls: ['./movie-editor.scss', './movie-editor-responsive.scss'],
+  styleUrls: ['../../catalog/components/editor/movie-editor.scss', '../../catalog/components/editor/movie-editor-responsive.scss'],
   templateUrl: './movie-editor.html',
 })
 export class MovieEditorPage {

@@ -188,3 +188,31 @@
     }
   }
 }
+
+.media-card--series .media-card__heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  > span {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+@media (hover: none) {
+  .media-card__overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .media-card,
+  .media-card__poster > img,
+  .media-card__overlay {
+    transition: none;
+  }
+  .media-card:hover,
+  .media-card:focus-within,
+  .media-card:hover .media-card__poster > img,
+  .media-card:focus-within .media-card__poster > img {
+    transform: none;
+  }
+}

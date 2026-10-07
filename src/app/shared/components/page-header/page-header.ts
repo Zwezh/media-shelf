@@ -1,16 +1,17 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 export type PageHeaderBadgeTone = 'movie' | 'neutral' | 'series' | 'wishlist';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe],
   selector: 'msh-page-header',
   styleUrl: './page-header.scss',
   template: `
     <header class="page-header">
       <div class="page-header__summary">
-        <h1 class="text-headline-lg" [id]="headingId()">{{ titleKey() | translate }}</h1>
+        <h1 class="text-headline-lg" [id]="headingId()" tabindex="-1">{{ titleKey() | translate }}</h1>
         <p class="text-label-lg page-header__count page-header__count--{{ badgeTone() }}">
           {{ 'common.itemCount' | translate: { count: itemCount() } }}
         </p>

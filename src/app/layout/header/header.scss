@@ -155,6 +155,10 @@
 }
 
 @include breakpoint.mobile {
+  .app-header__controls {
+    flex-shrink: 0;
+  }
+
   .app-header__search {
     display: none;
   }

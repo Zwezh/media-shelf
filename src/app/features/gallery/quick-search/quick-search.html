@@ -8,7 +8,6 @@
       type="search"
       autocomplete="off"
       [attr.aria-controls]="store.isOpen() ? 'quick-search-results' : null"
-      [attr.aria-expanded]="store.isOpen()"
       [attr.aria-label]="'quickSearch.label' | translate"
       [placeholder]="'quickSearch.placeholder' | translate"
       [value]="store.query()"

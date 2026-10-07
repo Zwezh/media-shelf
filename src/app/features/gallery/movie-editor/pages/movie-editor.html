@@ -61,7 +61,19 @@
             [genresLoading]="settings.settings.isLoading()"
             [selectedGenres]="model().genres"
             (genreToggled)="toggleGenre($event)"
-          />
+          >
+            <label release-year class="form-label editor-field">
+              <span>{{ 'movieEditor.fields.year' | translate }} *</span>
+              <input
+                id="movie-editor-year"
+                class="form-control"
+                inputmode="numeric"
+                aria-describedby="movie-editor-year-error"
+                [formField]="movieForm.year"
+              />
+              <msh-form-validation-message [field]="movieForm.year()" messageId="movie-editor-year-error" />
+            </label>
+          </msh-movie-editor-basic-information>
 
           <msh-movie-editor-classification-metrics [form]="movieForm" />
 

@@ -1,17 +1,18 @@
-import { Component, computed, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
 import { type MovieDetails } from '../../models/movie-details';
-import { MovieDeletionCoordinator } from '../../services/movie-deletion-coordinator';
+import { DeletionConfirmation } from '../../catalog/ui/deletion-confirmation';
 import { AdditionalInformation } from '../components/additional-information/additional-information';
-import { MovieDetailsHero } from '../components/movie-details-hero/movie-details-hero';
-import { ProductionAndCast } from '../components/production-and-cast/production-and-cast';
-import { RelatedMovieLists } from '../components/related-movie-lists/related-movie-lists';
+import { MovieDetailsHero } from '../../catalog/components/movie-details-hero/movie-details-hero';
+import { ProductionAndCast } from '../../catalog/components/production-and-cast/production-and-cast';
+import { RelatedMovieLists } from '../../catalog/components/related-movie-lists/related-movie-lists';
 import { MovieDetailsStore } from '../state/movie-details.store';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AdditionalInformation, MovieDetailsHero, PageStatus, ProductionAndCast, RelatedMovieLists, RouterLink, TranslatePipe],
   providers: [MovieDetailsStore],
   selector: 'msh-movie-details',
@@ -20,7 +21,7 @@ import { MovieDetailsStore } from '../state/movie-details.store';
 })
 export class MovieDetailsPage {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly movieDeletion = inject(MovieDeletionCoordinator);
+  private readonly movieDeletion = inject(DeletionConfirmation);
   private readonly router = inject(Router);
   protected readonly store = inject(MovieDetailsStore);
   protected readonly breadcrumbTitle = computed(() => this.store.movie()?.title ?? '');

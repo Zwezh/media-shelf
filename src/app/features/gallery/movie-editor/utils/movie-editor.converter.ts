@@ -1,5 +1,6 @@
 import { type MediaDto } from '../../models/media.dto';
-import { type MovieAutofill } from '../models/movie-autofill.model';
+import { AppError } from '@msh-core/http/app-error';
+import type { TitleAutofill } from '../../catalog/models/title-autofill';
 import { createEmptyMovieEditorModel, type MovieEditorModel } from '../models/movie-editor.model';
 
 export function toMovieEditorModel(movie: MediaDto): MovieEditorModel {
@@ -55,7 +56,8 @@ export function toMediaDto(model: MovieEditorModel): MediaDto {
   };
 }
 
-export function mergeMovieAutofill(model: MovieEditorModel, autofill: MovieAutofill): MovieEditorModel {
+export function mergeMovieAutofill(model: MovieEditorModel, autofill: TitleAutofill): MovieEditorModel {
+  if (autofill.kind === 'series') throw new AppError('validation', 'The provider title kind does not match the draft.');
   return {
     ...model,
     actors: joinOrExisting(autofill.actors, model.actors),
@@ -65,16 +67,16 @@ export function mergeMovieAutofill(model: MovieEditorModel, autofill: MovieAutof
     countries: joinOrExisting(autofill.countries, model.countries),
     description: autofill.description || model.description,
     directors: joinOrExisting(autofill.directors, model.directors),
-    enName: autofill.enName || model.enName,
+    enName: autofill.originalTitle || model.enName,
     genres: autofill.genres.length ? [...autofill.genres] : model.genres,
     kpId: autofill.kpId.toString(),
-    movieLength: autofill.movieLength?.toString() ?? model.movieLength,
-    name: autofill.name || model.name,
+    movieLength: autofill.durationMinutes?.toString() ?? model.movieLength,
+    name: autofill.title || model.name,
     posterUrl: autofill.posterUrl || model.posterUrl,
     rating: autofill.rating?.toString() ?? model.rating,
     sequelsAndPrequels: joinOrExisting(autofill.sequelsAndPrequels, model.sequelsAndPrequels),
     similarMovies: joinOrExisting(autofill.similarMovies, model.similarMovies),
-    year: autofill.year?.toString() ?? model.year,
+    year: autofill.year === null ? model.year : typeof autofill.year === 'number' ? String(autofill.year) : autofill.year.join(', '),
   };
 }
 

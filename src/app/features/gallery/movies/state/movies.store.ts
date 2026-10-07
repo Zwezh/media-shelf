@@ -3,14 +3,21 @@ import { patchState, signalStore, withComputed, withHooks, withMethods, withStat
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, filter, pipe, switchMap, tap } from 'rxjs';
 import { type Media } from '../../models/media';
-import { type MovieFilterKey, type MoviesFilters } from '../../models/movies-filters';
+import { type CollectionFilterKey, type CollectionFilters } from '../../models/collection-filters';
 import { type MoviesParams } from '../../models/movies-params';
 import { type MoviesSorting } from '../../models/movies-sorting';
-import { countActiveMovieFilters, extractMoviesFilters, removeMovieFilters, replaceMovieFilters } from '../../utils/movies-filters';
+import type { CollectionSorting } from '../../models/collection-sorting';
+import { SORTING_KEYS } from '../../models/sorting-key';
+import {
+  countActiveCollectionFilters,
+  extractCollectionFilters,
+  removeCollectionFilters,
+  replaceCollectionFilters,
+} from '../../utils/collection-filters';
 import { DEFAULT_MOVIES_PARAMS } from '../../utils/movies-params';
 import { DeleteMovieUseCase } from '../application/delete-movie.use-case';
 import { GetMoviesQuery } from '../application/get-movies.query';
-import { MovieFeedback } from '../ui/movie-feedback';
+import { GalleryFeedback } from '../../catalog/ui/gallery-feedback';
 import { MoviesRouteState } from './movies-route-state';
 
 type MoviesState = {
@@ -34,8 +41,8 @@ const initialState: MoviesState = {
 export const MoviesStore = signalStore(
   withState(initialState),
   withComputed(({ deletingId, media, params }) => ({
-    activeFilterCount: computed(() => countActiveMovieFilters(extractMoviesFilters(params()))),
-    appliedFilters: computed(() => extractMoviesFilters(params())),
+    activeFilterCount: computed(() => countActiveCollectionFilters(extractCollectionFilters(params()))),
+    appliedFilters: computed(() => extractCollectionFilters(params())),
     isDeleting: computed(() => deletingId() !== null),
     page: computed(() => params().currentPage + 1),
     pageSize: computed(() => params().pageSize),
@@ -46,7 +53,7 @@ export const MoviesStore = signalStore(
     (
       store,
       deleteMovieUseCase = inject(DeleteMovieUseCase),
-      feedback = inject(MovieFeedback),
+      feedback = inject(GalleryFeedback),
       getMovies = inject(GetMoviesQuery),
       routeState = inject(MoviesRouteState),
     ) => {
@@ -101,13 +108,15 @@ export const MoviesStore = signalStore(
       );
 
       return {
-        applyFilters(filters: MoviesFilters): void {
-          routeState.navigate(replaceMovieFilters(store.params(), filters));
+        applyFilters(filters: CollectionFilters): void {
+          routeState.navigate(replaceCollectionFilters(store.params(), filters));
         },
-        applySorting(sorting: MoviesSorting): void {
+        applySorting(sorting: CollectionSorting): void {
+          const key = SORTING_KEYS.find((value) => value === sorting.key);
+          if (!key) return;
           const params = store.params();
           if (params.direction !== sorting.direction || params.key !== sorting.key) {
-            routeState.navigate({ ...params, ...sorting, currentPage: 0 });
+            routeState.navigate({ ...params, key, direction: sorting.direction, currentPage: 0 });
           }
         },
         changePage(page: number): void {
@@ -115,12 +124,12 @@ export const MoviesStore = signalStore(
           if (currentPage !== store.params().currentPage) routeState.navigate({ ...store.params(), currentPage });
         },
         clearFilters(): void {
-          routeState.navigate(replaceMovieFilters(store.params(), {}));
+          routeState.navigate(replaceCollectionFilters(store.params(), {}));
         },
         deleteMovie,
         loadMovies,
-        removeFilters(keys: readonly MovieFilterKey[]): void {
-          routeState.navigate(removeMovieFilters(store.params(), keys));
+        removeFilters(keys: readonly CollectionFilterKey[]): void {
+          routeState.navigate(removeCollectionFilters(store.params(), keys));
         },
         retry(): void {
           loadMovies(store.params());

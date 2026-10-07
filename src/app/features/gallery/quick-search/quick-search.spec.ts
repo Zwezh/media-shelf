@@ -50,6 +50,7 @@ describe('QuickSearch', () => {
     await fixture.whenStable();
     const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
 
+    expect(input.hasAttribute('aria-expanded')).toBe(false);
     input.value = 'Dune';
     input.dispatchEvent(new Event('input'));
     await fixture.whenStable();

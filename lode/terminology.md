@@ -16,8 +16,13 @@
 - Application query - A read-oriented operation such as `GetMoviesQuery` or `GetMovieDetailsQuery` that exposes repository data to feature state.
 - Application use case - A state-changing or reusable workflow such as delete, save, or autofill, independent of UI feedback and navigation.
 - Application error - A stable `AppError` kind produced at infrastructure boundaries instead of leaking `HttpErrorResponse` into state.
-- Media DTO - The transport shape loaded from the gallery API; it is converted before presentation code consumes it.
+- Media DTO - The legacy `/movies` transport shape extending shared media metadata; normalized Series/Wishlist endpoints use a distinct Title DTO.
+- Catalog title - Immutable MovieTitle/SeriesTitle domain union retaining nullable metadata, string provider IDs, format catalog IDs, and series season details.
+- Title draft - Writable domain title data without server IDs or derived counts; read-year null markers must be resolved explicitly for write input.
+- Wishlist promotion - Atomic POST to `/wishlist/:id/promote` moving membership to the library with a validated added date; conflicts and incomplete movie metadata remain backend-owned.
 - Media model - The immutable card-ready projection produced by `toMedia`, including formatted year, duration, and poster fallback.
+- Series viewing - Public list/details views backed by existing Series queries; production status, release ranges and backend availability counts remain distinct from recorded season data.
+- Catalog params - The Series/Wishlist list contract, defaulting to page zero, 20 records and name ascending; quality/extension sorting is unsupported.
 - Movies params - The URL-backed movie request contract containing a zero-based API page index, required sorting values, page size, and optional filters.
 - Quick search - The Gallery-owned header search that debounces preview requests to `/movies?search=...`, links preview rows to details, and applies successful non-empty searches to the URL-backed Movies list on Enter.
 - Movies filters - The optional URL-backed `MoviesParams` subset for genres, years, minimum rating, age ratings, qualities, actors, and directors.
@@ -37,7 +42,7 @@
 - Movie details - The immutable detail projection loaded from `GET /movies/{id}` and presented at `/gallery/movies/:id` without widening the card-oriented Media model.
 - Kinopoisk rating link - The detail hero rating anchor derived from `MediaDto.kpId`, opening `https://www.kinopoisk.ru/film/{kpId}` in a new tab.
 - Movie editor - The shared add/edit Signal Form at `/gallery/movies/new` and `/gallery/movies/:id/edit`; its store consumes `MovieEditorModel` while DTO conversion remains in infrastructure.
-- Kinopoisk autofill - Normalized movie-editor metadata requested from authenticated MediaShelf `GET /kinopoisk/movies/{id}/autofill`; provider HTTP, parsing, mapping and key storage belong to NestJS.
+- Kinopoisk autofill - Normalized movie-editor metadata requested from authenticated MediaShelf `GET /kinopoisk/titles/{id}/autofill`; provider HTTP, parsing, mapping and key storage belong to NestJS.
 - Confirmation dialog - Shared `FloatingPanel` content that returns an explicit boolean decision while native dialog modality, dismissal, cleanup, and focus restoration remain infrastructure concerns.
 - Auth session - The expiring JWT state persisted under `StorageKey.Token`; it survives reloads and is cleared by Sign Out, JWT expiry, invalid restoration, or authenticated 401 responses.
 - Storage key - A centralized `StorageKey` enum member used by `BrowserStorage`; current exact keys are `token` and `language`.
@@ -68,7 +73,7 @@ flowchart TD
   DTO --> Model[Media model]
   DTO --> Details[Movie details model]
   DTO --> Editor[Movie editor model]
-  Autofill[Backend MovieAutofill] --> Editor
+  Autofill[Backend TitleAutofill] --> Editor
 ```
 
 Related lodes: [summary](summary.md), [settings resource](settings/summary.md), [media gallery](ui/media-gallery.md), [UI design tokens](ui/design-tokens.md), [toast notifications](ui/toast-notifications.md).

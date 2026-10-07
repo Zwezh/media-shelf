@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { of, Subject } from 'rxjs';
-import { type MovieAutofill } from '../../movie-editor/models/movie-autofill.model';
+import type { TitleAutofill } from '../../catalog/models/title-autofill';
 import { createEmptyMovieEditorModel } from '../../movie-editor/models/movie-editor.model';
 import { AutofillMovieUseCase } from './autofill-movie.use-case';
-import { KINOPOISK_REPOSITORY } from './kinopoisk.repository';
+import { TITLE_AUTOFILL_REPOSITORY } from '../../catalog/application/title-autofill.repository';
 import { MOVIES_REPOSITORY } from './movies.repository';
 import { SaveMovieUseCase } from './save-movie.use-case';
 
@@ -26,14 +26,14 @@ describe('movie application use cases', () => {
 
   it('merges autofill into the latest draft when the response arrives', () => {
     let draft = { ...createEmptyMovieEditorModel(), extension: 'mkv', name: 'Original' };
-    const response = new Subject<MovieAutofill>();
+    const response = new Subject<TitleAutofill>();
     TestBed.configureTestingModule({
       providers: [
         AutofillMovieUseCase,
         {
-          provide: KINOPOISK_REPOSITORY,
+          provide: TITLE_AUTOFILL_REPOSITORY,
           useValue: {
-            getMovieAutofill: () => response.asObservable(),
+            getTitleAutofill: () => response.asObservable(),
           },
         },
       ],
@@ -44,16 +44,23 @@ describe('movie application use cases', () => {
       .subscribe((value) => (result = value));
     draft = { ...draft, extension: 'mp4' };
     response.next({
+      kind: 'movie',
+      series: null,
+      ageRating: null,
+      rating: null,
+      year: null,
+      releaseDate: null,
+      durationMinutes: null,
       actors: [],
       backdropUrl: '',
       compactPosterUrl: '',
       countries: [],
       description: '',
       directors: [],
-      enName: '',
+      originalTitle: '',
       genres: [],
-      kpId: 301,
-      name: 'Autofilled',
+      kpId: '301',
+      title: 'Autofilled',
       posterUrl: '',
       sequelsAndPrequels: [],
       similarMovies: [],

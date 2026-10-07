@@ -8,8 +8,11 @@ describe('gallery routes', () => {
 
     expect(paths.indexOf('movies/new')).toBeLessThan(paths.indexOf('movies/:id'));
     expect(paths).toContain('movies/:id/edit');
+    expect(paths.indexOf('series/new')).toBeLessThan(paths.indexOf('series/:id'));
+    expect(paths).toContain('series/:id/edit');
     expect(GALLERY_NAVIGATION_ITEMS).toEqual([
       { labelKey: 'navigation.movies', path: '/gallery/movies' },
+      { labelKey: 'navigation.series', path: '/gallery/series' },
       { labelKey: 'navigation.wishlist', path: '/gallery/wishlist' },
     ]);
   });
@@ -17,6 +20,8 @@ describe('gallery routes', () => {
   it('assigns explicit add and edit modes to their lazy routes', () => {
     const children = GALLERY_ROUTES[0]?.children ?? [];
 
+    expect(children.find((route) => route.path === 'series/new')?.canActivate).toContain(authenticatedGuard);
+    expect(children.find((route) => route.path === 'series/:id/edit')?.canActivate).toContain(authenticatedGuard);
     expect(children.find((route) => route.path === 'movies/new')?.data?.['mode']).toBe('add');
     expect(children.find((route) => route.path === 'movies/:id/edit')?.data?.['mode']).toBe('edit');
     expect(children.find((route) => route.path === 'movies/new')?.canActivate).toContain(authenticatedGuard);

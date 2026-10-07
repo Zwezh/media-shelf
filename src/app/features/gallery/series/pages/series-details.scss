@@ -1,0 +1,33 @@
+@use '../../catalog/components/title-details';
+.series-details {
+  &__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-base);
+    margin-bottom: var(--space-base);
+    color: var(--color-text-secondary);
+    font: var(--text-label-md);
+  }
+  &__information {
+    display: grid;
+    gap: var(--space-base);
+    margin: 0;
+    div {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    dt {
+      color: var(--color-text-secondary);
+      font: var(--text-label-sm);
+    }
+    dd {
+      margin: 0;
+      color: var(--color-text-primary);
+      overflow-wrap: anywhere;
+    }
+    ul {
+      margin: 0;
+      padding-inline-start: var(--space-base);
+    }
+  }
+}

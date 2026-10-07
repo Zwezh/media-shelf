@@ -1,0 +1,143 @@
+<article class="movie-editor">
+  <div class="movie-editor__utility">
+    <div class="movie-editor__utility-inner">
+      <nav class="movie-editor__breadcrumbs" [attr.aria-label]="'movieEditor.breadcrumbs.label' | translate">
+        <ol>
+          <li>
+            <a routerLink="/gallery" queryParamsHandling="preserve">{{ 'navigation.gallery' | translate }}</a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <a routerLink="/gallery/series" queryParamsHandling="preserve">{{ 'navigation.series' | translate }}</a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page">{{ titleKey() | translate }}</li>
+        </ol>
+      </nav>
+      <div class="movie-editor__top-actions">
+        <button class="btn btn-ghost" type="button" [disabled]="store.isBusy()" (click)="store.discard()">
+          {{ 'movieEditor.actions.discard' | translate }}
+        </button>
+        <button class="btn btn-primary" type="submit" form="series-editor-form" [mshRequiresAuth]="store.isBusy() || store.hasLoadError()">
+          {{ 'movieEditor.actions.save' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="movie-editor__workspace">
+    <h1 tabindex="-1">{{ titleKey() | translate }}</h1>
+    @if (store.operation() === 'loading') {
+      <msh-page-status messageKey="series.loading" />
+    } @else if (store.hasLoadError()) {
+      <msh-page-status kind="error" messageKey="series.loadError" />
+      <button class="btn btn-primary" type="button" (click)="store.retry()">{{ 'movies.retry' | translate }}</button>
+    } @else {
+      <form id="series-editor-form" class="movie-editor__form" [attr.aria-busy]="store.isBusy()" (submit)="save($event)">
+        <fieldset class="movie-editor__main-column" [disabled]="store.isBusy()">
+          <msh-movie-editor-basic-information
+            [form]="editorForm"
+            [genres]="settings.genresForFilters()"
+            [selectedGenres]="model().genres"
+            [genresLoading]="settings.settings.isLoading()"
+            [genresError]="!!settings.settings.error()"
+            (genreToggled)="toggleGenre($event)"
+          />
+          <msh-movie-editor-classification-metrics [form]="editorForm" />
+          <msh-movie-editor-artwork-assets
+            class="movie-editor__artwork"
+            [form]="editorForm"
+            [posterUrl]="model().posterUrl"
+            [backdropUrl]="model().backdropUrl"
+            [movieTitle]="model().name"
+            [canAutofill]="canAutofill()"
+            [isAutofilling]="store.operation() === 'autofilling'"
+            (autofillRequested)="autofill()"
+          />
+          <msh-movie-editor-production-cast [form]="editorForm" />
+          <msh-movie-editor-section headingId="series-information-title" titleKey="seriesEditor.information">
+            <div class="series-editor__fields">
+              <label class="form-label"
+                ><span>{{ 'seriesEditor.status' | translate }}</span>
+                <select class="form-control" [formField]="editorForm.productionStatus">
+                  <option value="unknown">{{ 'series.status.unknown' | translate }}</option>
+                  <option value="in_production">{{ 'series.status.in_production' | translate }}</option>
+                  <option value="finished">{{ 'series.status.finished' | translate }}</option>
+                </select>
+              </label>
+              <label class="form-label"
+                ><span>{{ 'seriesEditor.startYear' | translate }}</span>
+                <input class="form-control" inputmode="numeric" [formField]="editorForm.startYear" aria-describedby="start-year-error" />
+                <msh-form-validation-message [field]="editorForm.startYear()" messageId="start-year-error" />
+              </label>
+              <label class="form-label"
+                ><span>{{ 'seriesEditor.endYear' | translate }}</span>
+                <input class="form-control" inputmode="numeric" [formField]="editorForm.endYear" aria-describedby="end-year-error" />
+                <msh-form-validation-message [field]="editorForm.endYear()" messageId="end-year-error" />
+              </label>
+              <label class="form-label"
+                ><span>{{ 'seriesEditor.announcedCount' | translate }}</span>
+                <input
+                  class="form-control"
+                  inputmode="numeric"
+                  [formField]="editorForm.announcedSeasonCount"
+                  aria-describedby="announced-count-error"
+                />
+                <msh-form-validation-message [field]="editorForm.announcedSeasonCount()" messageId="announced-count-error" />
+              </label>
+              <label class="form-label"
+                ><span>{{ 'series.releaseDate' | translate }}</span>
+                <input class="form-control" type="date" [formField]="editorForm.releaseDate" aria-describedby="release-date-error" />
+                <msh-form-validation-message [field]="editorForm.releaseDate()" messageId="release-date-error" />
+              </label>
+            </div>
+          </msh-movie-editor-section>
+          <msh-series-seasons-editor
+            [form]="editorForm.seasons"
+            [qualities]="settings.qualityOptions()"
+            [extensions]="settings.extensionOptions()"
+            [disabled]="store.isBusy()"
+            (seasonAdded)="addSeason()"
+            (seasonRemoved)="removeSeason($event)"
+          />
+          <msh-movie-editor-section headingId="series-formats-title" titleKey="movieEditor.sections.localFile.title">
+            @if (settings.settings.isLoading()) {
+              <p role="status">{{ 'seriesEditor.settingsLoading' | translate }}</p>
+            } @else if (settings.settings.error()) {
+              <p role="alert">{{ 'seriesEditor.settingsError' | translate }}</p>
+              <button class="btn btn-secondary" type="button" (click)="settings.settings.reload()">{{ 'movies.retry' | translate }}</button>
+            }
+            <div class="form-label series-editor__qualities">
+              <span>{{ 'movieEditor.fields.quality' | translate }}</span>
+              @if (selectedQualities().length) {
+                <ul>
+                  @for (quality of selectedQualities(); track quality.id) {
+                    <li>{{ quality.title }}</li>
+                  }
+                </ul>
+              } @else {
+                <p>{{ 'series.noFormats' | translate }}</p>
+              }
+            </div>
+            <label class="form-label"
+              ><span>{{ 'movieEditor.fields.addedDate' | translate }} *</span>
+              <input class="form-control" type="date" [formField]="editorForm.addedDate" aria-describedby="added-date-error" />
+              <msh-form-validation-message [field]="editorForm.addedDate()" messageId="added-date-error" />
+            </label>
+          </msh-movie-editor-section>
+          <msh-movie-editor-relationships-universe [form]="editorForm" />
+          <div class="movie-editor__bottom-actions">
+            <button class="btn btn-ghost" type="button" [disabled]="store.isBusy()" (click)="store.discard()">
+              {{ 'movieEditor.actions.discard' | translate }}
+            </button>
+            <button class="btn btn-primary" type="submit" [mshRequiresAuth]="store.isBusy()">
+              {{ (store.operation() === 'saving' ? 'movieEditor.actions.saving' : 'movieEditor.actions.save') | translate }}
+            </button>
+          </div>
+          @if (store.isBusy()) {
+            <p role="status">{{ 'seriesEditor.busy' | translate }}</p>
+          }
+        </fieldset>
+      </form>
+    }
+  </div>
+</article>

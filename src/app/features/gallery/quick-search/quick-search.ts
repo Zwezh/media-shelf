@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MEDIA_POSTER_PLACEHOLDER } from '@msh-core/config/media';
@@ -6,6 +6,7 @@ import { MediaBadge } from '@msh-shared/components/media-badge/media-badge';
 import { QuickSearchStore } from './quick-search.store';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:click)': 'handleDocumentClick($event)',
     '(document:keydown)': 'handleDocumentKeydown($event)',

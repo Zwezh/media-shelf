@@ -1,24 +1,13 @@
-export type MediaDto = {
-  addedDate: string;
-  ageRating?: number | null;
-  backdropUrl: string;
-  compactPosterUrl: string;
-  countries: string[];
-  description: string;
-  director: string[];
-  enName: string;
+import type { MediaMetadataDto } from './media-metadata.dto';
+
+/** Legacy /movies transport contract; series and wishlist use TitleDto. */
+export type MediaDto = MediaMetadataDto & {
   extension: string;
-  genres: string[];
   id: string;
   isSeries: boolean;
   kpId: number;
-  posterUrl: string;
-  name: string;
   movieLength: number;
-  actors: string[];
   quality: string;
   rating: number;
   year: number | number[];
-  sequelsAndPrequels: string[];
-  similarMovies: string[];
 };

@@ -1,26 +1,10 @@
+import type { EditorMetadataModel } from '../../catalog/models/editor-fields';
 export type MovieEditorMode = 'add' | 'edit';
 
-export type MovieEditorModel = {
-  readonly addedDate: string;
-  readonly actors: string;
-  readonly ageRating: string;
-  readonly backdropUrl: string;
-  readonly compactPosterUrl: string;
-  readonly countries: string;
-  readonly description: string;
-  readonly directors: string;
-  readonly enName: string;
+export type MovieEditorModel = EditorMetadataModel & {
   readonly extension: string;
-  readonly genres: string[];
   readonly id: string;
-  readonly kpId: string;
-  readonly movieLength: string;
-  readonly name: string;
-  readonly posterUrl: string;
   readonly quality: string;
-  readonly rating: string;
-  readonly sequelsAndPrequels: string;
-  readonly similarMovies: string;
   readonly year: string;
 };
 
