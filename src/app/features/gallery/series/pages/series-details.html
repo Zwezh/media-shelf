@@ -36,10 +36,12 @@
         (deleteRequested)="confirmDelete(title.id, title.title)"
       >
         <div hero-metadata class="series-details__summary">
-          <span>{{ 'series.status.' + title.series.productionStatus | translate }}</span>
-          <span>{{
-            'series.seasonSummary' | translate: { available: title.availableSeasonCount, recorded: title.series.seasons.length }
+          <span class="series-production-status" [attr.data-status]="title.series.productionStatus">{{
+            'series.status.' + title.series.productionStatus | translate
           }}</span>
+          <msh-media-badge tone="movie">{{
+            'series.seasonSummary' | translate: { available: title.availableSeasonCount, recorded: title.series.seasons.length }
+          }}</msh-media-badge>
           @if (title.series.announcedSeasonCount !== null) {
             <span>{{ 'series.announced' | translate: { count: title.series.announcedSeasonCount } }}</span>
           }

@@ -37,8 +37,16 @@ export class Header {
     });
   }
 
-  protected signOut(): void {
-    this.authSession.signOut();
+  protected async signOut(): Promise<void> {
+    try {
+      await this.authSession.signOut();
+    } catch {
+      this.toastStore.error({
+        message: String(this.translate.instant('auth.toasts.signOutErrorMessage')),
+        title: String(this.translate.instant('auth.toasts.signOutErrorTitle')),
+      });
+      return;
+    }
     this.toastStore.success({
       message: String(this.translate.instant('auth.toasts.signOutSuccessMessage')),
       title: String(this.translate.instant('auth.toasts.signOutSuccessTitle')),

@@ -1,3 +1,4 @@
+import { provideAuthSessionTesting } from '@msh/testing/auth-testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -13,17 +14,22 @@ describe('Series details page', () => {
     const store = { isDeleting: signal(false), title: signal(toTitle(seriesDto)), status: signal('loaded'), retry: vi.fn() };
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         provideRouter([]),
         ...provideI18nTesting(),
         { provide: SettingsStore, useValue: { qualityOptions: signal([]), extensionOptions: signal([]) } },
       ],
     });
-    TestBed.overrideComponent(SeriesDetails, { set: { providers: [{ provide: SeriesDetailsStore, useValue: store }] } });
+    TestBed.overrideComponent(SeriesDetails, {
+      set: { providers: [provideAuthSessionTesting(), { provide: SeriesDetailsStore, useValue: store }] },
+    });
     const fixture = TestBed.createComponent(SeriesDetails);
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelectorAll('h1')).toHaveLength(1);
     expect(element.textContent).toContain('Announced seasons: 3');
+    expect(element.querySelector('.series-details__summary .badge--movie')?.textContent).toContain('Seasons: 1 / 2');
+    expect(element.querySelector('.series-production-status')?.getAttribute('data-status')).toBe('in_production');
     expect(element.textContent).toContain('2020–present');
     expect(element.querySelector('tbody tr')?.textContent).toContain('Specials');
     expect(element.querySelector('.movie-hero__primary-actions')).not.toBeNull();

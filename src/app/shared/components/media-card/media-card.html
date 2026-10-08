@@ -9,7 +9,6 @@
     />
     <div class="media-card__topline">
       <div class="media-card__topline-start">
-        <msh-media-badge [tone]="media().type">{{ 'media.type.' + media().type | translate }}</msh-media-badge>
         @if (currentMedia.quality) {
           <msh-media-badge tone="quality">{{ currentMedia.quality }}</msh-media-badge>
         }
@@ -21,11 +20,13 @@
     <div class="media-card__overlay">
       <div class="media-card__overlay-meta">
         <span>
-          @if (media().type === 'series') {
-            {{ 'media.series' | translate }}
-          } @else if (currentMedia.durationMinutes !== null) {
-            {{ 'media.duration' | translate: durationParams() }}
-          }
+          <ng-content select="[card-overlay-metadata]">
+            @if (media().type === 'series') {
+              {{ 'media.series' | translate }}
+            } @else if (currentMedia.durationMinutes !== null) {
+              {{ 'media.duration' | translate: durationParams() }}
+            }
+          </ng-content>
         </span>
         <span>{{ media().quality }}</span>
       </div>

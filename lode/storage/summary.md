@@ -1,33 +1,29 @@
 # Browser Storage
 
-`BrowserStorage` is the single guarded wrapper around same-origin `localStorage`. Callers use `StorageKey` instead of string literals so persisted contracts remain discoverable and consistent. Storage access is best-effort: privacy or restricted contexts may reject access, in which case application state continues in memory for the current page.
+`BrowserStorage` is the guarded wrapper around same-origin `localStorage`. Callers use `StorageKey` instead of string literals. Storage access is best-effort; restricted contexts continue with in-memory state.
 
 ```typescript
-export enum StorageKey {
-  Language = 'language',
-  Token = 'token',
-}
-
-storage.set(StorageKey.Token, accessToken);
+storage.set(StorageKey.Language, 'en');
+// AuthSession removes the legacy token key; no new tokens are persisted here.
+storage.remove(StorageKey.Token);
 ```
 
 ```mermaid
 flowchart LR
-  Enum[StorageKey enum] --> Wrapper[BrowserStorage]
-  Auth[AuthSession] -->|token| Wrapper
-  I18n[languageInitializer] -->|language| Wrapper
+  I18n[languageInitializer] -->|language| Wrapper[BrowserStorage]
+  Auth[AuthSession] -->|remove legacy token| Wrapper
   Wrapper --> LocalStorage[(localStorage)]
-  LocalStorage -->|reload restore| Auth
   LocalStorage -->|preferred locale| I18n
+  Auth --> Memory[Access JWT in memory]
+  Server[Backend] --> Cookie[HttpOnly refresh cookie]
 ```
 
 Contracts:
 
-- The only current keys are exact values `token` and `language`.
-- Feature code never accesses `localStorage` directly; it calls `BrowserStorage.get`, `set`, or `remove` with `StorageKey`.
-- `BrowserStorage` resolves storage through `DOCUMENT.defaultView` and catches unavailable-storage errors, preserving compatibility with tests and non-browser rendering contexts.
-- The persisted JWT is sensitive to same-origin script execution. Backend validation remains authoritative, and an HttpOnly-cookie session is preferred if the backend later supports it.
-- Authentication removes the token on explicit sign-out, JWT expiry, invalid restoration, or an authenticated `401`.
+- `language` stores a supported locale. `token` exists only for migration cleanup.
+- Feature code calls `BrowserStorage.get`, `set`, or `remove` rather than accessing localStorage directly.
+- The wrapper resolves storage through `DOCUMENT.defaultView` and catches unavailable-storage errors.
+- Authentication restores through the backend refresh cookie. Access JWTs remain in memory; neither access nor refresh tokens are written to localStorage.
 - Internationalization prefers a supported stored language, otherwise selects a supported browser language or English, then persists the result.
 
 Related lodes: [authentication](../auth/summary.md), [internationalization](../i18n/summary.md), [practices](../practices.md).

@@ -1,0 +1,8 @@
+.series-production-status {
+  &[data-status='finished'] {
+    color: var(--color-badge-series-text);
+  }
+  &[data-status='in_production'] {
+    color: var(--color-badge-rating-text);
+  }
+}

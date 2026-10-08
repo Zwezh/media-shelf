@@ -70,11 +70,12 @@
             (editRequested)="edit($event.id)"
             (deleteRequested)="confirmDelete($event.id, $event.title)"
           >
+            <span card-overlay-metadata>{{
+              'series.seasonSummary' | translate: { available: card.title.availableSeasonCount, recorded: card.title.series.seasons.length }
+            }}</span>
             <div card-metadata class="series__card-metadata">
-              <span>{{ 'series.status.' + card.title.series.productionStatus | translate }}</span>
-              <span>{{
-                'series.seasonSummary'
-                  | translate: { available: card.title.availableSeasonCount, recorded: card.title.series.seasons.length }
+              <span class="series-production-status" [attr.data-status]="card.title.series.productionStatus">{{
+                'series.status.' + card.title.series.productionStatus | translate
               }}</span>
             </div>
           </msh-media-card>

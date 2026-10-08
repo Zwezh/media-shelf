@@ -20,6 +20,8 @@ describe('gallery routes', () => {
   it('assigns explicit add and edit modes to their lazy routes', () => {
     const children = GALLERY_ROUTES[0]?.children ?? [];
 
+    expect(children.find((route) => route.path === 'series/new')?.data?.['authRedirectTo']).toBe('/gallery/series');
+    expect(children.find((route) => route.path === 'movies/new')?.data?.['authRedirectTo']).toBe('/gallery/movies');
     expect(children.find((route) => route.path === 'series/new')?.canActivate).toContain(authenticatedGuard);
     expect(children.find((route) => route.path === 'series/:id/edit')?.canActivate).toContain(authenticatedGuard);
     expect(children.find((route) => route.path === 'movies/new')?.data?.['mode']).toBe('add');

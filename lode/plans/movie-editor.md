@@ -46,7 +46,7 @@ flowchart LR
 5. On add cancellation/discard, navigate back through browser history. On edit discard, return to `/gallery/movies/:id` with query parameters preserved.
 6. After save, navigate to the saved movie detail route. `POST /movies` and `PUT /movies` are expected to return the saved `MediaDto`; if the backend returns no body, its contract must be extended to return the generated/current ID.
 7. Breadcrumbs are `Gallery / Movies / Add media` for add and `Gallery / Movies / {name}` for edit. The edit label uses the Russian/display `MediaDto.name`, falls back to localized “Edit media” while loading, has `aria-current="page"`, and has no leading icon.
-8. Both editor routes require an active persisted JWT session. The shared authorization directive also disables Save and PoiskKino autofill if the token expires while the editor remains open.
+8. Both editor routes require an active memory JWT and refresh-cookie session. The shared authorization directive also disables Save and PoiskKino autofill if the token expires while the editor remains open.
 
 ## MediaShelf API contract
 

@@ -48,7 +48,44 @@ describe('authenticationInterceptor', () => {
       statusText: 'Unauthorized',
     });
 
+    const refresh = TestBed.inject(HttpTestingController).expectOne('http://localhost:4200/api/auth/refresh');
+    expect(refresh.request.withCredentials).toBe(true);
+    refresh.flush({}, { status: 401, statusText: 'Unauthorized' });
     await expect(result).rejects.toMatchObject({ status: 401 });
     expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(false);
+  });
+  it('shares one refresh for concurrent 401s and retries each request with the replacement token', () => {
+    const client = TestBed.inject(HttpClient);
+    const http = TestBed.inject(HttpTestingController);
+    const next = vi.fn();
+    client.get('http://localhost:4200/api/movies').subscribe(next);
+    client.get('http://localhost:4200/api/settings').subscribe(next);
+    http.expectOne('http://localhost:4200/api/movies').flush({}, { status: 401, statusText: 'Unauthorized' });
+    http.expectOne('http://localhost:4200/api/settings').flush({}, { status: 401, statusText: 'Unauthorized' });
+    const refresh = http.expectOne('http://localhost:4200/api/auth/refresh');
+    expect(refresh.request.headers.has('Authorization')).toBe(false);
+    expect(refresh.request.headers.get('X-MediaShelf-Request')).toBe('1');
+    const replacement = TEST_ACCESS_TOKEN.replace('signature', 'replacement');
+    refresh.flush({ access_token: replacement });
+    for (const path of ['movies', 'settings']) {
+      const retry = http.expectOne(`http://localhost:4200/api/${path}`);
+      expect(retry.request.headers.get('Authorization')).toBe(`Bearer ${replacement}`);
+      retry.flush({});
+    }
+    expect(next).toHaveBeenCalledTimes(2);
+    expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(true);
+    http.verify();
+  });
+  it('does not loop when the retried request is still unauthorized', () => {
+    const http = TestBed.inject(HttpTestingController);
+    const error = vi.fn();
+    TestBed.inject(HttpClient).get('http://localhost:4200/api/movies').subscribe({ error });
+    http.expectOne('http://localhost:4200/api/movies').flush({}, { status: 401, statusText: 'Unauthorized' });
+    http.expectOne('http://localhost:4200/api/auth/refresh').flush({ access_token: TEST_ACCESS_TOKEN });
+    http.expectOne('http://localhost:4200/api/movies').flush({}, { status: 401, statusText: 'Unauthorized' });
+    expect(error).toHaveBeenCalledOnce();
+    expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(false);
+    http.expectNone('http://localhost:4200/api/auth/refresh');
+    http.verify();
   });
 });

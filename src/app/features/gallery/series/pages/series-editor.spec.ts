@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { SettingsStore } from '@msh-core/settings/settings.store';
-import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
+import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { createSeriesEditorModel } from '../models/series-editor.model';
 import { SeriesEditorStore } from '../state/series-editor.store';
@@ -27,9 +27,11 @@ async function setup(mode: 'add' | 'edit' = 'add') {
     settings: { hasValue: signal(true), isLoading: signal(false), error: signal(undefined) },
   };
   TestBed.configureTestingModule({
-    providers: [provideRouter([]), ...provideI18nTesting(), { provide: SettingsStore, useValue: settings }],
+    providers: [provideAuthSessionTesting(), provideRouter([]), ...provideI18nTesting(), { provide: SettingsStore, useValue: settings }],
   });
-  TestBed.overrideComponent(SeriesEditorPage, { set: { providers: [{ provide: SeriesEditorStore, useValue: store }] } });
+  TestBed.overrideComponent(SeriesEditorPage, {
+    set: { providers: [provideAuthSessionTesting(), { provide: SeriesEditorStore, useValue: store }] },
+  });
   TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
   const fixture = TestBed.createComponent(SeriesEditorPage);
   await fixture.whenStable();

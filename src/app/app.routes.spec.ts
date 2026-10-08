@@ -1,3 +1,4 @@
+import { provideAuthSessionTesting } from '@msh/testing/auth-testing';
 import { provideHttpClient } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -59,6 +60,7 @@ describe('root routes', () => {
     getMovies = vi.fn(() => of({ currentPage: 0, media: [], totalCount: 0 }));
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         provideHttpClient(),
         provideRouter(routes),
         provideI18nTesting(),

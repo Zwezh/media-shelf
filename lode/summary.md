@@ -17,7 +17,7 @@ flowchart LR
   Tokens --> Global[src/styles.scss]
   Global --> Shell[Application shell]
   Shell --> Features[Lazy features]
-  Shell --> Auth[Persisted JWT session]
+  Shell --> Auth[Memory JWT and refresh-cookie session]
   Shell --> Search[Debounced catalog quick search]
   Auth --> API
   Features --> State[Route-scoped Signal Stores]

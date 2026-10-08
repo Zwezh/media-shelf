@@ -22,6 +22,8 @@ describe('AuthApi', () => {
     const request = TestBed.inject(HttpTestingController).expectOne('http://localhost:4200/api/auth');
 
     expect(request.request.method).toBe('POST');
+    expect(request.request.withCredentials).toBe(true);
+    expect(request.request.headers.get('X-MediaShelf-Request')).toBe('1');
     expect(request.request.body).toEqual({ secretKey: 'secret' });
     request.flush({ access_token: ' jwt ' });
 

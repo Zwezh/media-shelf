@@ -40,7 +40,9 @@
       "signInSuccessMessage": "Chronione działania w bibliotece są dostępne w tej sesji strony.",
       "signInSuccessTitle": "Zalogowano",
       "signOutSuccessMessage": "Token dostępu został usunięty.",
-      "signOutSuccessTitle": "Wylogowano"
+      "signOutSuccessTitle": "Wylogowano",
+      "signOutErrorTitle": "Wylogowanie nie powiodło się",
+      "signOutErrorMessage": "Nie udało się zakończyć sesji. Spróbuj ponownie."
     },
     "validation": {
       "secretKeyRequired": "Wprowadź główny klucz tajny."
@@ -470,7 +472,7 @@
     "unknownFormat": "Nieznany format",
     "search": "Wyszukiwanie: {{value}}",
     "clearFilters": "Wyczyść filtry",
-    "seasonSummary": "Dostępne: {{available}} · sezony w katalogu: {{recorded}}",
+    "seasonSummary": "Sezony: {{available}} / {{recorded}}",
     "announced": "Zapowiedziane sezony: {{count}}",
     "seasonTable": "Dostępność i formaty sezonów",
     "seasons": "Sezony",
