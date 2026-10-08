@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthSession } from '@msh-core/auth/auth-session';
-import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
+import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { MediaCard } from './media-card';
 import type { MediaCardModel } from './media-card.model';
@@ -24,7 +24,7 @@ describe('MediaCard', () => {
   beforeEach(resetTestAuthStorage);
 
   it('renders Stitch card metadata and emits typed view, edit, and delete actions', async () => {
-    TestBed.configureTestingModule({ providers: provideI18nTesting() });
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
     TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
     const fixture = TestBed.createComponent(MediaCard);
     fixture.componentRef.setInput('media', media);
@@ -39,6 +39,7 @@ describe('MediaCard', () => {
     const element = fixture.nativeElement as HTMLElement;
     const actions = element.querySelectorAll<HTMLButtonElement>('.media-card__action');
     expect(actions).toHaveLength(3);
+    expect(element.querySelector('msh-media-badge[tone="movie"]')).toBeNull();
     expect(element.querySelector('.media-card__heading')?.textContent).toContain('Dune: Part Two');
     expect(element.querySelector('.media-card__details')?.textContent).toContain('Science fiction, Drama');
     expect(element.querySelector('.media-card__overlay-meta')?.textContent).toContain('2h 46m');
@@ -53,7 +54,7 @@ describe('MediaCard', () => {
   });
 
   it('keeps edit and delete disabled while signed out', async () => {
-    TestBed.configureTestingModule({ providers: provideI18nTesting() });
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
     const fixture = TestBed.createComponent(MediaCard);
     fixture.componentRef.setInput('media', media);
     await fixture.whenStable();
@@ -67,7 +68,7 @@ describe('MediaCard', () => {
 
 describe('MediaCard nullable collection metadata', () => {
   it('keeps zero ratings and hides unknown fields and unrequested mutation actions', async () => {
-    TestBed.configureTestingModule({ providers: provideI18nTesting() });
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
     const fixture = TestBed.createComponent(MediaCard);
     fixture.componentRef.setInput('media', { ...media, type: 'series', rating: 0, ageRating: null, quality: null, durationMinutes: null });
     fixture.componentRef.setInput('actions', ['view']);
@@ -75,7 +76,7 @@ describe('MediaCard nullable collection metadata', () => {
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelectorAll('.media-card__action')).toHaveLength(1);
     expect(element.querySelector('msh-media-rating')?.textContent).toContain('0.0');
-    expect(element.querySelectorAll('msh-media-badge')).toHaveLength(1);
+    expect(element.querySelectorAll('msh-media-badge')).toHaveLength(0);
     fixture.componentRef.setInput('media', { ...media, rating: null });
     await fixture.whenStable();
     expect(element.querySelector('msh-media-rating')).toBeNull();

@@ -4,7 +4,7 @@ import { AuthSession } from '@msh-core/auth/auth-session';
 import type { SettingsDto } from '@msh-core/settings/settings.dto';
 import { SettingsStore } from '@msh-core/settings/settings.store';
 import { ToastStore } from '@msh-shared/services/toast-store';
-import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
+import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { of } from 'rxjs';
 import { Settings } from './settings';
@@ -24,7 +24,9 @@ describe('Settings', () => {
 
   it('shows API defaults but disables every editing control for an unauthenticated user', async () => {
     const store = createSettingsStoreStub();
-    TestBed.configureTestingModule({ providers: [...provideI18nTesting(), { provide: SettingsStore, useValue: store }] });
+    TestBed.configureTestingModule({
+      providers: [provideAuthSessionTesting(), ...provideI18nTesting(), { provide: SettingsStore, useValue: store }],
+    });
     const fixture = TestBed.createComponent(Settings);
     await fixture.whenStable();
     const root = fixture.nativeElement as HTMLElement;
@@ -45,7 +47,9 @@ describe('Settings', () => {
 
   it('adds, removes, refills, discards, and saves authenticated settings', async () => {
     const store = createSettingsStoreStub();
-    TestBed.configureTestingModule({ providers: [...provideI18nTesting(), { provide: SettingsStore, useValue: store }] });
+    TestBed.configureTestingModule({
+      providers: [provideAuthSessionTesting(), ...provideI18nTesting(), { provide: SettingsStore, useValue: store }],
+    });
     TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
     const fixture = TestBed.createComponent(Settings);
     await fixture.whenStable();
@@ -92,7 +96,9 @@ describe('Settings', () => {
     const loading = signal(true);
     const error = signal<unknown>(undefined);
     const store = createSettingsStoreStub({ error, loading });
-    TestBed.configureTestingModule({ providers: [...provideI18nTesting(), { provide: SettingsStore, useValue: store }] });
+    TestBed.configureTestingModule({
+      providers: [provideAuthSessionTesting(), ...provideI18nTesting(), { provide: SettingsStore, useValue: store }],
+    });
     const fixture = TestBed.createComponent(Settings);
     await fixture.whenStable();
     expect(TestBed.inject(ToastStore).toasts()).toEqual([]);

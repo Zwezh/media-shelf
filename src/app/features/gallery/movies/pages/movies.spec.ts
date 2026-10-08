@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
-import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
+import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import type { Media } from '../../models/media';
 import { MoviesStore } from '../state/movies.store';
 import { Movies } from './movies';
@@ -34,13 +34,14 @@ describe('Movies page', () => {
     const open = vi.fn(() => ({ closed: of(true) }));
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         ...provideI18nTesting(),
         { provide: ActivatedRoute, useValue: {} },
         { provide: FloatingPanel, useValue: { open } },
         { provide: Router, useValue: { navigate } },
       ],
     });
-    TestBed.overrideComponent(Movies, { set: { providers: [{ provide: MoviesStore, useValue: store }] } });
+    TestBed.overrideComponent(Movies, { set: { providers: [provideAuthSessionTesting(), { provide: MoviesStore, useValue: store }] } });
     TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
     const fixture = TestBed.createComponent(Movies);
     await fixture.whenStable();
@@ -61,13 +62,14 @@ describe('Movies page', () => {
     store.media.set([]);
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         ...provideI18nTesting(),
         { provide: ActivatedRoute, useValue: {} },
         { provide: FloatingPanel, useValue: { open: vi.fn() } },
         { provide: Router, useValue: { navigate: vi.fn() } },
       ],
     });
-    TestBed.overrideComponent(Movies, { set: { providers: [{ provide: MoviesStore, useValue: store }] } });
+    TestBed.overrideComponent(Movies, { set: { providers: [provideAuthSessionTesting(), { provide: MoviesStore, useValue: store }] } });
     const fixture = TestBed.createComponent(Movies);
     await fixture.whenStable();
 
@@ -80,13 +82,14 @@ describe('Movies page', () => {
     const store = createStore();
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         ...provideI18nTesting(),
         { provide: ActivatedRoute, useValue: {} },
         { provide: FloatingPanel, useValue: { open: vi.fn() } },
         { provide: Router, useValue: { navigate: vi.fn() } },
       ],
     });
-    TestBed.overrideComponent(Movies, { set: { providers: [{ provide: MoviesStore, useValue: store }] } });
+    TestBed.overrideComponent(Movies, { set: { providers: [provideAuthSessionTesting(), { provide: MoviesStore, useValue: store }] } });
     const fixture = TestBed.createComponent(Movies);
     await fixture.whenStable();
 

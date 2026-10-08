@@ -7,7 +7,7 @@ import { NavigationItem } from '@msh-core/navigation';
 import { IconRegistry } from '@msh-shared/components/icon/icon-registry';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
-import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
+import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { Header } from './header';
 
@@ -28,6 +28,7 @@ describe('Header', () => {
     await TestBed.configureTestingModule({
       imports: [Header],
       providers: [
+        provideAuthSessionTesting(),
         provideI18nTesting(),
         {
           provide: IconRegistry,
@@ -76,7 +77,7 @@ describe('Header', () => {
     expect(activeLink.getAttribute('aria-current')).toBe('page');
   });
 
-  it('opens sign in and swaps to sign out for an authenticated session', () => {
+  it('opens sign in and swaps to sign out for an authenticated session', async () => {
     const open = vi.spyOn(TestBed.inject(FloatingPanel), 'open').mockImplementation(() => new FloatingPanelRef<unknown>(() => undefined));
     const fixture = TestBed.createComponent(Header);
     fixture.componentRef.setInput('navigationItems', navigationItems);
@@ -92,6 +93,7 @@ describe('Header', () => {
     expect(authButton().textContent).toContain('Sign Out');
 
     authButton().click();
+    await fixture.whenStable();
     fixture.detectChanges();
     expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(false);
     expect(authButton().textContent).toContain('Sign In');

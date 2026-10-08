@@ -15,7 +15,7 @@
 - [routing/summary.md](routing/summary.md) - Root URL contract and lazy feature boundaries.
 - [i18n/summary.md](i18n/summary.md) - Runtime language initialization, translation resources, and key contracts.
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
-- [auth/summary.md](auth/summary.md) - Persisted JWT session, authorization dialog, interceptor, guarded routes, and protected-control contract.
+- [auth/summary.md](auth/summary.md) - Memory JWTs, rotating refresh cookies, authorization dialog, interceptor, guarded routes, and protected-control contract.
 - [storage/summary.md](storage/summary.md) - Guarded localStorage wrapper and centralized token/language key contract.
 - [settings/summary.md](settings/summary.md) - Validated app-wide settings resource, backend-owned catalogs, defaults, and Gallery consumers.
 - [gallery/kinopoisk-autofill.md](gallery/kinopoisk-autofill.md) - Authenticated backend autofill, server-only provider key, normalized contract, limits and error handling.

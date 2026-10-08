@@ -112,6 +112,17 @@
     }
   }
 
+  &--series &__overlay-meta {
+    flex-wrap: wrap;
+
+    > span {
+      max-width: 100%;
+      overflow: visible;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+  }
+
   &__actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

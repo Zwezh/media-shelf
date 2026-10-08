@@ -22,14 +22,14 @@ export const GALLERY_ROUTES: Routes = [
         path: 'movies/new',
         canActivate: [authenticatedGuard],
         title: 'routes.movieAddTitle',
-        data: { mode: 'add' },
+        data: { mode: 'add', authRedirectTo: '/gallery/movies' },
         loadComponent: () => import('./movie-editor/pages/movie-editor').then((module) => module.MovieEditorPage),
       },
       {
         path: 'movies/:id/edit',
         canActivate: [authenticatedGuard],
         title: 'routes.movieEditTitle',
-        data: { mode: 'edit' },
+        data: { mode: 'edit', authRedirectTo: '/gallery/movies' },
         loadComponent: () => import('./movie-editor/pages/movie-editor').then((module) => module.MovieEditorPage),
       },
       {
@@ -47,14 +47,14 @@ export const GALLERY_ROUTES: Routes = [
         path: 'series/new',
         canActivate: [authenticatedGuard],
         title: 'seriesEditor.addTitle',
-        data: { mode: 'add' },
+        data: { mode: 'add', authRedirectTo: '/gallery/series' },
         loadComponent: () => import('./series/pages/series-editor').then((module) => module.SeriesEditorPage),
       },
       {
         path: 'series/:id/edit',
         canActivate: [authenticatedGuard],
         title: 'seriesEditor.editTitle',
-        data: { mode: 'edit' },
+        data: { mode: 'edit', authRedirectTo: '/gallery/series' },
         loadComponent: () => import('./series/pages/series-editor').then((module) => module.SeriesEditorPage),
       },
       {

@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AuthSession } from '@msh-core/auth/auth-session';
-import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
+import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { RequiresAuth } from './requires-auth';
 
 @Component({
@@ -16,6 +16,7 @@ describe('RequiresAuth', () => {
   beforeEach(resetTestAuthStorage);
 
   it('disables the host while signed out or busy', () => {
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting()] });
     const fixture = TestBed.createComponent(TestHost);
     const button = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
     fixture.detectChanges();

@@ -40,7 +40,9 @@
       "signInSuccessMessage": "Защищённые действия с медиатекой доступны в текущей сессии страницы.",
       "signInSuccessTitle": "Вход выполнен",
       "signOutSuccessMessage": "Токен доступа удалён.",
-      "signOutSuccessTitle": "Вы вышли из системы"
+      "signOutSuccessTitle": "Вы вышли из системы",
+      "signOutErrorTitle": "Не удалось выйти",
+      "signOutErrorMessage": "Не удалось завершить сеанс. Попробуйте ещё раз."
     },
     "validation": {
       "secretKeyRequired": "Введите главный секретный ключ."
@@ -470,7 +472,7 @@
     "unknownFormat": "Неизвестный формат",
     "search": "Поиск: {{value}}",
     "clearFilters": "Сбросить фильтры",
-    "seasonSummary": "Доступно: {{available}} · сезонов в каталоге: {{recorded}}",
+    "seasonSummary": "Сезоны: {{available}} / {{recorded}}",
     "announced": "Заявлено сезонов: {{count}}",
     "seasonTable": "Доступность и форматы сезонов",
     "seasons": "Сезоны",

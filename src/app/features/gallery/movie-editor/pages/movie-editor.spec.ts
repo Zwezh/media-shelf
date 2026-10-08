@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { SettingsStore } from '@msh-core/settings/settings.store';
-import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
+import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
 import { createEmptyMovieEditorModel, type MovieEditorModel } from '../models/movie-editor.model';
 import { MovieEditorStore } from '../state/movie-editor.store';
@@ -16,6 +16,7 @@ describe('MovieEditorPage', () => {
     const store = createStore(validModel());
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         ...provideI18nTesting(),
         provideRouter([]),
         {
@@ -24,7 +25,9 @@ describe('MovieEditorPage', () => {
         },
       ],
     });
-    TestBed.overrideComponent(MovieEditorPage, { set: { providers: [{ provide: MovieEditorStore, useValue: store }] } });
+    TestBed.overrideComponent(MovieEditorPage, {
+      set: { providers: [provideAuthSessionTesting(), { provide: MovieEditorStore, useValue: store }] },
+    });
     TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
     const fixture = TestBed.createComponent(MovieEditorPage);
     await fixture.whenStable();
@@ -66,6 +69,7 @@ describe('MovieEditorPage', () => {
     const store = createStore();
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         ...provideI18nTesting(),
         provideRouter([]),
         {
@@ -74,7 +78,9 @@ describe('MovieEditorPage', () => {
         },
       ],
     });
-    TestBed.overrideComponent(MovieEditorPage, { set: { providers: [{ provide: MovieEditorStore, useValue: store }] } });
+    TestBed.overrideComponent(MovieEditorPage, {
+      set: { providers: [provideAuthSessionTesting(), { provide: MovieEditorStore, useValue: store }] },
+    });
     TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
     const fixture = TestBed.createComponent(MovieEditorPage);
     await fixture.whenStable();
@@ -89,9 +95,16 @@ describe('MovieEditorPage', () => {
     const settingsLoaded = signal(false);
     const settingsStore = createSettingsStoreStub(settingsLoaded);
     TestBed.configureTestingModule({
-      providers: [...provideI18nTesting(), provideRouter([]), { provide: SettingsStore, useValue: settingsStore }],
+      providers: [
+        provideAuthSessionTesting(),
+        ...provideI18nTesting(),
+        provideRouter([]),
+        { provide: SettingsStore, useValue: settingsStore },
+      ],
     });
-    TestBed.overrideComponent(MovieEditorPage, { set: { providers: [{ provide: MovieEditorStore, useValue: store }] } });
+    TestBed.overrideComponent(MovieEditorPage, {
+      set: { providers: [provideAuthSessionTesting(), { provide: MovieEditorStore, useValue: store }] },
+    });
     const fixture = TestBed.createComponent(MovieEditorPage);
     await fixture.whenStable();
 
@@ -114,12 +127,15 @@ describe('MovieEditorPage', () => {
     const settingsLoaded = signal(false);
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         ...provideI18nTesting(),
         provideRouter([]),
         { provide: SettingsStore, useValue: createSettingsStoreStub(settingsLoaded) },
       ],
     });
-    TestBed.overrideComponent(MovieEditorPage, { set: { providers: [{ provide: MovieEditorStore, useValue: store }] } });
+    TestBed.overrideComponent(MovieEditorPage, {
+      set: { providers: [provideAuthSessionTesting(), { provide: MovieEditorStore, useValue: store }] },
+    });
     const fixture = TestBed.createComponent(MovieEditorPage);
     await fixture.whenStable();
 
@@ -133,9 +149,16 @@ describe('MovieEditorPage', () => {
   it('keeps saved edit values available when settings no longer contain them', async () => {
     const store = createStore({ ...validModel(), extension: ' VOLUME 1 (2007)', quality: 'Legacy Remux' }, 'edit');
     TestBed.configureTestingModule({
-      providers: [...provideI18nTesting(), provideRouter([]), { provide: SettingsStore, useValue: createSettingsStoreStub() }],
+      providers: [
+        provideAuthSessionTesting(),
+        ...provideI18nTesting(),
+        provideRouter([]),
+        { provide: SettingsStore, useValue: createSettingsStoreStub() },
+      ],
     });
-    TestBed.overrideComponent(MovieEditorPage, { set: { providers: [{ provide: MovieEditorStore, useValue: store }] } });
+    TestBed.overrideComponent(MovieEditorPage, {
+      set: { providers: [provideAuthSessionTesting(), { provide: MovieEditorStore, useValue: store }] },
+    });
     const fixture = TestBed.createComponent(MovieEditorPage);
     await fixture.whenStable();
 

@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, translate } from '@ngx-translate/core';
 import { SettingsStore } from '@msh-core/settings/settings.store';
 import { DetailCard } from '@msh-shared/components/detail-card/detail-card';
+import { MediaBadge } from '@msh-shared/components/media-badge/media-badge';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
 import { MovieDetailsHero } from '../../catalog/components/movie-details-hero/movie-details-hero';
 import { ProductionAndCast } from '../../catalog/components/production-and-cast/production-and-cast';
@@ -19,6 +20,7 @@ import { SeriesDetailsStore } from '../state/series-details.store';
   imports: [
     DatePipe,
     DetailCard,
+    MediaBadge,
     MovieDetailsHero,
     PageStatus,
     ProductionAndCast,

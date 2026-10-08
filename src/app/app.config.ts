@@ -1,5 +1,8 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { AuthSession } from '@msh-core/auth/auth-session';
+import { authenticatedRouteInitializer } from '@msh-core/auth/authenticated-route-initializer';
 import { authenticationInterceptor } from '@msh-core/auth/authentication-interceptor';
 import { provideEnvironment } from '@msh-core/config/environment.token';
 import { provideRouter, TitleStrategy, withViewTransitions } from '@angular/router';
@@ -31,6 +34,8 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json',
       }),
     }),
+    provideAppInitializer(() => firstValueFrom(inject(AuthSession).restore())),
+    provideAppInitializer(authenticatedRouteInitializer),
     provideAppInitializer(themeInitializer),
     provideAppInitializer(languageInitializer),
     provideRouter(routes, withViewTransitions()),

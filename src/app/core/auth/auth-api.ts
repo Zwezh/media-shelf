@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { map, type Observable } from 'rxjs';
+import { map, timeout, type Observable } from 'rxjs';
 import { ENVIRONMENT } from '@msh-core/config/environment.token';
 
 @Service()
@@ -9,7 +9,19 @@ export class AuthApi {
   private readonly http = inject(HttpClient);
 
   signIn(secretKey: string): Observable<string> {
-    return this.http.post<unknown>(this.authUrl(), { secretKey: secretKey.trim() }).pipe(map(parseAccessToken));
+    return this.http
+      .post<unknown>(this.authUrl(), { secretKey: secretKey.trim() }, this.options)
+      .pipe(timeout(15_000), map(parseAccessToken));
+  }
+
+  private readonly options = { withCredentials: true, headers: { 'X-MediaShelf-Request': '1' } };
+
+  refresh(): Observable<string> {
+    return this.http.post<unknown>(`${this.authUrl()}/refresh`, {}, this.options).pipe(timeout(15_000), map(parseAccessToken));
+  }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.authUrl()}/logout`, {}, this.options);
   }
 
   private authUrl(): string {

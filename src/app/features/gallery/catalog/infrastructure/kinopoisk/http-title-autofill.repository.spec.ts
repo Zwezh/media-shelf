@@ -134,6 +134,7 @@ describe('Title autofill backend contract', () => {
     TestBed.inject(HttpTestingController)
       .expectOne('/api/kinopoisk/titles/301/autofill')
       .flush({}, { status: 401, statusText: 'Unauthorized' });
+    TestBed.inject(HttpTestingController).expectOne('/api/auth/refresh').flush({}, { status: 401, statusText: 'Unauthorized' });
     expect(error).toHaveBeenCalledWith(expect.objectContaining({ kind: 'unauthorized' }));
     expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(false);
   });

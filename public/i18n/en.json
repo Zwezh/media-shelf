@@ -40,7 +40,9 @@
       "signInSuccessMessage": "Protected library actions are now available for this page session.",
       "signInSuccessTitle": "Signed in",
       "signOutSuccessMessage": "The access token has been cleared.",
-      "signOutSuccessTitle": "Signed out"
+      "signOutSuccessTitle": "Signed out",
+      "signOutErrorTitle": "Sign out failed",
+      "signOutErrorMessage": "Could not end the server session. Please try again."
     },
     "validation": {
       "secretKeyRequired": "Enter the master secret key."
@@ -470,7 +472,7 @@
     "unknownFormat": "Unknown format",
     "search": "Search: {{value}}",
     "clearFilters": "Clear filters",
-    "seasonSummary": "Available: {{available}} · recorded seasons: {{recorded}}",
+    "seasonSummary": "Seasons: {{available}} / {{recorded}}",
     "announced": "Announced seasons: {{count}}",
     "seasonTable": "Season availability and formats",
     "seasons": "Seasons",

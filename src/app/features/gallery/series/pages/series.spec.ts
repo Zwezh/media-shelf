@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthSession } from '@msh-core/auth/auth-session';
-import { resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
+import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
 import { Subject } from 'rxjs';
 import { SettingsStore } from '@msh-core/settings/settings.store';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
@@ -40,6 +40,7 @@ describe('Series page', () => {
     const navigate = vi.fn(() => Promise.resolve(true));
     TestBed.configureTestingModule({
       providers: [
+        provideAuthSessionTesting(),
         ...provideI18nTesting(),
         { provide: ActivatedRoute, useValue: {} },
         { provide: Router, useValue: { navigate } },
@@ -47,12 +48,14 @@ describe('Series page', () => {
         { provide: SettingsStore, useValue: { qualityOptions: signal([]) } },
       ],
     });
-    TestBed.overrideComponent(Series, { set: { providers: [{ provide: SeriesStore, useValue: store }] } });
+    TestBed.overrideComponent(Series, { set: { providers: [provideAuthSessionTesting(), { provide: SeriesStore, useValue: store }] } });
     const fixture = TestBed.createComponent(Series);
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('[card-metadata]')?.textContent).toContain('In production');
-    expect(element.querySelector('[card-metadata]')?.textContent).toContain('Available: 1 · recorded seasons: 2');
+    expect(element.querySelector('.media-card__overlay-meta')?.textContent).toContain('Seasons: 1 / 2');
+    expect(element.querySelector('[card-metadata]')?.textContent).not.toContain('Seasons:');
+    expect(element.querySelector('.series-production-status')?.getAttribute('data-status')).toBe('in_production');
     const actions = element.querySelectorAll<HTMLButtonElement>('.media-card__action');
     expect(actions).toHaveLength(3);
     const addButton = element.querySelector<HTMLButtonElement>('.movies__add-button')!;
