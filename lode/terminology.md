@@ -22,7 +22,7 @@
 - Wishlist promotion - Atomic POST to `/wishlist/:id/promote` moving membership to the library with a validated added date; conflicts and incomplete movie metadata remain backend-owned.
 - Media model - The immutable card-ready projection produced by `toMedia`, including formatted year, duration, and poster fallback.
 - Series viewing - Public list/details views backed by existing Series queries; production status, release ranges and backend availability counts remain distinct from recorded season data.
-- Catalog params - The Series/Wishlist list contract, defaulting to page zero, 20 records and name ascending; quality/extension sorting is unsupported.
+- Catalog params - The Series/Wishlist list contract, defaulting to page zero, 30 records and added date descending; quality/extension sorting is unsupported.
 - Movies params - The URL-backed movie request contract containing a zero-based API page index, required sorting values, page size, and optional filters.
 - Quick search - The Gallery-owned header search that debounces preview requests to `/movies?search=...`, links preview rows to details, and applies successful non-empty searches to the URL-backed Movies list on Enter.
 - Movies filters - The optional URL-backed `MoviesParams` subset for genres, years, minimum rating, age ratings, qualities, actors, and directors.

@@ -11,7 +11,12 @@ import { SeriesDetails } from './series-details';
 
 describe('Series details page', () => {
   it('renders supplied season data and announced counts with authenticated mutation controls and no invented metadata', async () => {
-    const store = { isDeleting: signal(false), title: signal(toTitle(seriesDto)), status: signal('loaded'), retry: vi.fn() };
+    const store = {
+      isDeleting: signal(false),
+      title: signal({ ...toTitle(seriesDto), similarMovies: ['Related Series'] }),
+      status: signal('loaded'),
+      retry: vi.fn(),
+    };
     TestBed.configureTestingModule({
       providers: [
         provideAuthSessionTesting(),
@@ -28,6 +33,7 @@ describe('Series details page', () => {
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelectorAll('h1')).toHaveLength(1);
     expect(element.textContent).toContain('Announced seasons: 3');
+    expect(element.querySelector('#similar-movies-title')?.textContent).toBe('Similar titles');
     expect(element.querySelector('.series-details__summary .badge--movie')?.textContent).toContain('Seasons: 1 / 2');
     expect(element.querySelector('.series-production-status')?.getAttribute('data-status')).toBe('in_production');
     expect(element.textContent).toContain('2020–present');

@@ -73,7 +73,9 @@
     <div>
       <div class="media-card__heading">
         <h2 class="text-headline-sm">{{ displayTitle() }}</h2>
-        <span class="text-label-sm">{{ media().year }}</span>
+        @if (currentMedia.type === 'movie') {
+          <span class="text-label-sm">{{ currentMedia.year }}</span>
+        }
       </div>
       <p class="text-body-sm">{{ genresLabel() }}</p>
     </div>

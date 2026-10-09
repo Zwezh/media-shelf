@@ -25,7 +25,7 @@ List/detail layout SCSS is shared through `catalog/components/collection-list.sc
 
 ## URL and state contracts
 
-Catalog defaults are page zero, 20 records, added date descending. Sorting accepts exactly `CATALOG_SORTING_KEYS`: `addedDate`, `ageRating`, `enName`, `kpId`, `movieLength`, `name`, `rating`, `year`. Quality/extension sorting is unsupported. Movies retains its separate supported keys through the typed `readMoviesParams` entrypoint, with the same default sorting.
+Catalog defaults are page zero, 30 records, added date descending. Sorting accepts exactly `CATALOG_SORTING_KEYS`: `addedDate`, `ageRating`, `enName`, `kpId`, `movieLength`, `name`, `rating`, `year`. Quality/extension sorting is unsupported. Movies retains its separate supported keys through the typed `readMoviesParams` entrypoint, with the same default sorting.
 
 ```typescript
 export function readCatalogParams(params: ParamMap): CatalogParams {
@@ -41,7 +41,7 @@ applyFilters(filters: CollectionFilters): void {
 - URL owns filters, sorting, search, zero-based page index and page size. Route emissions are deduplicated after normalization. Page commands translate the one-based pager index once.
 - Shared filters support genres, bounded year range, minimum rating, age, quality values, actors and directors. Production/availability filtering has no backend parameter contract and is not exposed.
 - Filter and sorting changes reset page zero. Other changes preserve search. Oversized page indexes are corrected through replacement navigation to the last valid server page.
-- The Series toolbar has no page-size selector or page-size change command. Pagination uses the existing request page-size contract (20 by default).
+- The Series toolbar has no page-size selector or page-size change command. Pagination uses the existing request page-size contract (30 by default, shared with Movies through `DEFAULT_PAGE_SIZE`).
 - Series and Movies default to added-date sorting in descending order, including sorting reset. Series supplies its supported keys and reset defaults to the shared sorting controls. Filter UI uses typed Reactive Forms; its signal projection derives from form value changes, and its year bounds match the URL parser.
 - Each Series store has one `idle | loading | loaded | error` status. The store owns source data; cards and format labels are computed, never stored as synchronized copies.
 - Replaceable reads use `rxMethod`/`switchMap`. Changing detail ID clears old content. Failed reads render a retryable error; an empty collection differs from filtered no matches. Routine successful reads are silent.
@@ -96,3 +96,5 @@ Focused Vitest coverage is colocated with Series stores/pages/seasons, display p
 Quality gates are `npm run check`, strict application/spec TypeScript checks and `npm run build`. Apply the [minimal-change review](../minimal-change.md) to the complete diff, remove obsolete implementations and rerun affected checks after simplification. Preserve unrelated staged work.
 
 Related lodes: [Series foundations](../gallery/series-wishlist.md), [Gallery architecture](../gallery/business-logic-architecture.md), [media gallery](../ui/media-gallery.md), [movie details](movie-details.md), [settings](../settings/summary.md), [routing](../routing/summary.md), [minimal-change practice](../minimal-change.md).
+
+Series list cards place the year range alongside production status below the genres, while Movie cards keep the year in their title row. Related Series headings reuse the existing `movieDetails.additionalInformation.similarTitles` translation.
