@@ -1,3 +1,4 @@
+import { DEFAULT_PAGE_SIZE } from '@msh-core/config/media';
 import { GalleryFeedback } from '../../catalog/ui/gallery-feedback';
 import { DeleteSeriesUseCase } from '../application/delete-series.use-case';
 import { TestBed } from '@angular/core/testing';
@@ -39,6 +40,7 @@ afterEach(() => TestBed.resetTestingModule());
 describe('Series URL and store', () => {
   it('uses Catalog defaults and rejects unsupported quality sorting without losing filters', () => {
     expect(readCatalogParams(convertToParamMap({}))).toEqual(DEFAULT_CATALOG_PARAMS);
+    expect(readCatalogParams(convertToParamMap({})).pageSize).toBe(30);
     expect(readCatalogParams(convertToParamMap({}))).toMatchObject({
       key: DEFAULT_MOVIES_PARAMS.key,
       direction: DEFAULT_MOVIES_PARAMS.direction,
@@ -109,7 +111,7 @@ describe('Series URL and store', () => {
     );
     expect(store.status()).toBe('error');
     expect(store.titles()).toEqual([]);
-    execute.mockReturnValueOnce(of({ ...page, totalCount: 21 }));
+    execute.mockReturnValueOnce(of({ ...page, totalCount: DEFAULT_PAGE_SIZE + 1 }));
     store.retry();
     expect(navigate).toHaveBeenLastCalledWith(
       [],
@@ -134,14 +136,14 @@ describe('Series list deletion', () => {
     expect(store.isDeleting()).toBe(false);
   });
   it('retains list data on failure and navigates the canonical URL when the last row of a later page is deleted', () => {
-    const { store, navigate } = setup(of({ ...page, totalCount: 21 }), { currentPage: '1' });
+    const { store, navigate } = setup(of({ ...page, totalCount: DEFAULT_PAGE_SIZE + 1 }), { currentPage: '1' });
     const deletion = vi
       .spyOn(TestBed.inject(DeleteSeriesUseCase), 'execute')
       .mockReturnValueOnce(throwError(() => new Error('offline')))
       .mockReturnValueOnce(of(undefined));
     store.deleteSeries(title.id);
     expect(store.titles()).toHaveLength(1);
-    expect(store.totalCount()).toBe(21);
+    expect(store.totalCount()).toBe(DEFAULT_PAGE_SIZE + 1);
     expect(store.isDeleting()).toBe(false);
     store.deleteSeries(title.id);
     expect(deletion).toHaveBeenCalledTimes(2);

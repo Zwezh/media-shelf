@@ -92,3 +92,5 @@ Invariants:
 - All user-facing controls have accessible names and visible focus treatment.
 
 Related lodes: [authentication](../auth/summary.md), [settings resource](../settings/summary.md), [UI summary](summary.md), [design tokens](design-tokens.md), [floating panels](floating-panels.md), [quick search](quick-search.md), [routing](../routing/summary.md), [practices](../practices.md).
+
+Movies and Series collection pages grow through the shared main/Gallery flex layout, keeping pagination at the bottom above the footer on short pages. Full grids expand the document normally without a fixed-position pager.

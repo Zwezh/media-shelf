@@ -53,6 +53,8 @@ describe('Series page', () => {
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('[card-metadata]')?.textContent).toContain('In production');
+    expect(element.querySelector('[card-metadata]')?.textContent).toContain('2020–present');
+    expect(element.querySelector('.media-card__heading .text-label-sm')).toBeNull();
     expect(element.querySelector('.media-card__overlay-meta')?.textContent).toContain('Seasons: 1 / 2');
     expect(element.querySelector('[card-metadata]')?.textContent).not.toContain('Seasons:');
     expect(element.querySelector('.series-production-status')?.getAttribute('data-status')).toBe('in_production');

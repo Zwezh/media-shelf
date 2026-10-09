@@ -1,7 +1,9 @@
 @use 'abstracts/breakpoints' as breakpoint;
 
 :host {
-  display: block;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   min-width: 0;
 }
 

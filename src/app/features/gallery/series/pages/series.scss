@@ -10,7 +10,10 @@
     margin-top: var(--space-base);
   }
   &__card-metadata {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
     gap: var(--space-xs);
     color: var(--color-text-secondary);
     font: var(--text-label-sm);
