@@ -48,6 +48,8 @@ describe('MovieDetailsHero', () => {
     expect(rating?.rel).toContain('noreferrer');
     expect(rating?.getAttribute('aria-label')).toContain('new tab');
     expect(element.textContent).not.toContain('IMDb');
+    expect(element.querySelector('.badge--quality')?.textContent).toBe('4K');
+    expect(element.querySelector('.movie-hero__poster-quality')?.textContent).toBe('4K');
 
     const buttons = [...element.querySelectorAll<HTMLButtonElement>('button')];
     expect(buttons.filter((button) => button.disabled)).toHaveLength(2);
@@ -64,5 +66,19 @@ describe('MovieDetailsHero', () => {
 
     const buttons = [...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button')];
     expect(buttons.every((button) => button.disabled)).toBe(true);
+  });
+});
+
+describe('Wishlist details hero presentation', () => {
+  it('hides poster and metadata quality even if the shared model contains it', async () => {
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
+    const fixture = TestBed.createComponent(MovieDetailsHero);
+    fixture.componentRef.setInput('movie', movie);
+    fixture.componentRef.setInput('showQuality', false);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.badge--quality')).toBeNull();
+    expect(element.querySelector('.movie-hero__poster-quality')).toBeNull();
+    expect(element.textContent).not.toContain('4K');
   });
 });

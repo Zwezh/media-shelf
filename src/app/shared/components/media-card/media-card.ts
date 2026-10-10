@@ -15,10 +15,15 @@ import type { MediaCardModel } from './media-card.model';
   templateUrl: './media-card.html',
 })
 export class MediaCard {
+  readonly showTypeBadge = input(false);
+  readonly wrapBadges = input(false);
+  readonly showQuality = input(true);
+  readonly refreshDisabled = input(false);
   readonly actionsDisabled = input(false);
-  readonly actions = input<readonly ('view' | 'edit' | 'delete')[]>(['view', 'edit', 'delete']);
+  readonly actions = input<readonly ('view' | 'edit' | 'delete' | 'refresh')[]>(['view', 'edit', 'delete']);
   readonly media = input.required<MediaCardModel>();
   readonly deleteRequested = output<MediaCardModel>();
+  readonly refreshRequested = output<MediaCardModel>();
   readonly editRequested = output<MediaCardModel>();
   readonly viewRequested = output<MediaCardModel>();
   private readonly untitled = translate('media.untitled');

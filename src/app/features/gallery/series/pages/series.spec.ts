@@ -45,7 +45,7 @@ describe('Series page', () => {
         { provide: ActivatedRoute, useValue: {} },
         { provide: Router, useValue: { navigate } },
         { provide: FloatingPanel, useValue: { open } },
-        { provide: SettingsStore, useValue: { qualityOptions: signal([]) } },
+        { provide: SettingsStore, useValue: { qualityOptions: signal([{ id: 'quality-1', title: '4K', value: '2160p' }]) } },
       ],
     });
     TestBed.overrideComponent(Series, { set: { providers: [provideAuthSessionTesting(), { provide: SeriesStore, useValue: store }] } });
@@ -56,6 +56,8 @@ describe('Series page', () => {
     expect(element.querySelector('[card-metadata]')?.textContent).toContain('2020–present');
     expect(element.querySelector('.media-card__heading .text-label-sm')).toBeNull();
     expect(element.querySelector('.media-card__overlay-meta')?.textContent).toContain('Seasons: 1 / 2');
+    expect(element.querySelector('.badge--quality')?.textContent).toBe('4K');
+    expect(element.querySelector('.badge--series')).toBeNull();
     expect(element.querySelector('[card-metadata]')?.textContent).not.toContain('Seasons:');
     expect(element.querySelector('.series-production-status')?.getAttribute('data-status')).toBe('in_production');
     const actions = element.querySelectorAll<HTMLButtonElement>('.media-card__action');

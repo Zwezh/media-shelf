@@ -10,7 +10,9 @@ export const GALLERY_ROUTES: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'movies',
+        title: 'gallery.allItems',
+        data: { navigation: { labelKey: 'gallery.allItems', order: 0 } satisfies NavigationMetadata },
+        loadComponent: () => import('./catalog/pages/gallery-list').then((module) => module.GalleryList),
       },
       {
         path: 'movies',
@@ -68,14 +70,20 @@ export const GALLERY_ROUTES: Routes = [
         data: { navigation: { labelKey: 'navigation.wishlist', order: 3 } satisfies NavigationMetadata },
         loadComponent: () => import('./wishlist/pages/wishlist').then((module) => module.Wishlist),
       },
+      {
+        path: 'wishlist/:id',
+        title: 'wishlist.details',
+        loadComponent: () => import('./wishlist/pages/wishlist-details').then((module) => module.WishlistDetails),
+      },
     ],
   },
 ];
 
 export const GALLERY_NAVIGATION_ITEMS =
   GALLERY_ROUTES[0].children
-    ?.filter((route) => route.path && route.data?.['navigation'])
+    ?.filter((route) => route.data?.['navigation'])
     .map((route) => ({
       labelKey: (route.data?.['navigation'] as NavigationMetadata).labelKey,
-      path: `/gallery/${route.path}`,
+      path: route.path ? `/gallery/${route.path}` : '/gallery',
+      exact: route.path === '',
     })) ?? [];

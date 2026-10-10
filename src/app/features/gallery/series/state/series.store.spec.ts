@@ -11,7 +11,7 @@ import { DEFAULT_CATALOG_PARAMS } from '../../catalog/models/catalog-params';
 import { toTitle } from '../../catalog/utils/title.converter';
 import { seriesDto } from '../../catalog/testing/title.fixture';
 import { GetSeriesQuery } from '../application/get-series.query';
-import { readCatalogParams, SeriesRouteState } from './series-route-state';
+import { readCatalogParams, CatalogRouteState } from '../../catalog/state/catalog-route-state';
 import { SeriesStore } from './series.store';
 
 const title = toTitle(seriesDto);
@@ -26,7 +26,7 @@ function setup(response: Observable<CollectionPage<SeriesTitle>> = of(page), par
       { provide: DeleteSeriesUseCase, useValue: { execute: vi.fn(() => of(undefined)) } },
       { provide: GalleryFeedback, useValue: { success: vi.fn(), error: vi.fn() } },
       SeriesStore,
-      SeriesRouteState,
+      CatalogRouteState,
       { provide: GetSeriesQuery, useValue: { execute } },
       { provide: ActivatedRoute, useValue: { queryParamMap: route } },
       { provide: Router, useValue: { navigate } },

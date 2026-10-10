@@ -2,9 +2,9 @@ import { computed, inject, InjectionToken } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, map, of, pipe, switchMap, tap, timer } from 'rxjs';
-import { type Media } from '../models/media';
-import { GetMoviesQuery } from '../movies/application/get-movies.query';
-import { DEFAULT_MOVIES_PARAMS } from '../utils/movies-params';
+import type { GalleryItem } from '../catalog/models/gallery-item';
+import { GetGalleryQuery } from '../catalog/application/get-gallery.query';
+import { DEFAULT_CATALOG_PARAMS } from '../catalog/models/catalog-params';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_RESULT_LIMIT = 6;
@@ -17,7 +17,7 @@ type QuickSearchStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
 type QuickSearchState = {
   readonly isOpen: boolean;
-  readonly media: readonly Media[];
+  readonly media: readonly GalleryItem[];
   readonly query: string;
   readonly status: QuickSearchStatus;
 };
@@ -32,11 +32,11 @@ const initialState: QuickSearchState = {
 export const QuickSearchStore = signalStore(
   withState(initialState),
   withComputed(({ media, query, status }) => ({
-    canApply: computed(() => status() === 'loaded' && media().length > 0 && query().trim().length > 0),
+    canApply: computed(() => query().trim().length > 0),
     hasNoResults: computed(() => status() === 'loaded' && media().length === 0),
     isLoading: computed(() => status() === 'loading'),
   })),
-  withMethods((store, getMovies = inject(GetMoviesQuery), debounceMs = inject(QUICK_SEARCH_DEBOUNCE)) => {
+  withMethods((store, getGallery = inject(GetGalleryQuery), debounceMs = inject(QUICK_SEARCH_DEBOUNCE)) => {
     const search = rxMethod<string>(
       pipe(
         map((query) => ({ query, normalizedQuery: query.trim() })),
@@ -50,9 +50,9 @@ export const QuickSearchStore = signalStore(
 
           return timer(debounceMs).pipe(
             switchMap(() =>
-              getMovies
+              getGallery
                 .execute({
-                  ...DEFAULT_MOVIES_PARAMS,
+                  ...DEFAULT_CATALOG_PARAMS,
                   pageSize: SEARCH_RESULT_LIMIT,
                   search: normalizedQuery,
                 })

@@ -1,15 +1,15 @@
 # Series and Wishlist Foundations
 
-Series and Wishlist have callable application and HTTP layers. Wishlist remains a placeholder. Series has public lazy list/details routes, component-scoped stores and computed nullable display projections; see [Series viewing](../plans/series-viewing.md). Series editors/mutations and Wishlist presentation are not connected. Movies and Quick Search keep their legacy `/movies` flow. Shared normalized title autofill is callable through `AutofillTitleUseCase` and preserves collection/season fields when merging provider metadata; see [title autofill](title-autofill.md).
+Series and Wishlist have callable application and HTTP layers. Wishlist has public mixed-title list/details views; see [Wishlist viewing](../plans/wishlist-viewing.md). Series has public lazy list/details routes, component-scoped stores and computed nullable display projections; see [Series viewing](../plans/series-viewing.md). Series editors/mutations and Wishlist provider import/refresh/delete are connected. Details hand off to a library editor by source ID. Movies and Quick Search keep their legacy `/movies` flow. Shared normalized title autofill is callable through `AutofillTitleUseCase` and preserves collection/season fields when merging provider metadata; see [title autofill](title-autofill.md).
 
 ## Ownership and dependency contract
 
-Each collection has its own repository token, HTTP client, repository implementation, and focused application operations. `app.config.ts` binds `SERIES_REPOSITORY` to `HttpSeriesRepository` and `WISHLIST_REPOSITORY` to `HttpWishlistRepository`. Services are root-provided and stateless; Series presentation state remains component-scoped; Wishlist presentation is pending.
+Each collection has its own repository token, HTTP client, repository implementation, and focused application operations. `app.config.ts` binds `SERIES_REPOSITORY` to `HttpSeriesRepository` and `WISHLIST_REPOSITORY` to `HttpWishlistRepository`. Services are root-provided and stateless; Series presentation state remains component-scoped; Wishlist presentation state is component-scoped.
 
 ```mermaid
 flowchart LR
-  Future[Future pages and scoped Signal Stores] --> Series[Series queries and use cases]
-  Future --> Wishlist[Wishlist queries and use cases]
+  Pages[Pages and scoped Signal Stores] --> Series[Series queries and use cases]
+  Pages --> Wishlist[Wishlist queries and use cases]
   Series --> SR[SERIES_REPOSITORY]
   Wishlist --> WR[WISHLIST_REPOSITORY]
   SR --> SH[HttpSeriesRepository]
@@ -20,7 +20,8 @@ flowchart LR
   WH --> WC[WishlistApiClient]
   SC --> SE[/series]
   WC --> WE[/wishlist]
-  WC --> Promotion[POST wishlist ID promote]
+  WC --> Provider[Provider import and refresh]
+  Editors[Movie and Series new editors] --> Save[Library create with wishlistId]
 ```
 
 | Concern | Location |
@@ -30,7 +31,7 @@ flowchart LR
 | DTO/domain read and write conversion | `catalog/utils/title.converter.ts` |
 | Series repository contract, list/detail queries, save/delete use cases | `series/application/` |
 | Series HTTP requests and error normalization | `series/infrastructure/` |
-| Wishlist repository contract, list/detail queries, save/delete/promote use cases | `wishlist/application/` |
+| Wishlist repository contract, list/detail queries, provider create/refresh/delete use cases | `wishlist/application/` |
 | Wishlist HTTP requests and error normalization | `wishlist/infrastructure/` |
 | Shared metadata transport fields and generic collection contracts | `models/media-metadata.dto.ts`, `models/collection-page.ts`, `models/collection-params.ts` |
 | Shared metadata parsing and HTTP query serialization | `data-access/` |
@@ -41,23 +42,23 @@ Pages and stores consume domain types and application operations. They must not 
 
 Both collections expose public `GET /<collection>` and `GET /<collection>/:id`. Mutations require the existing JWT interceptor and backend authorization:
 
-- `POST /<collection>` creates a complete title draft.
-- `PUT /<collection>/:id` replaces the complete draft. This differs from legacy Movies, whose PUT uses the collection URL and an ID in its body.
-- `DELETE /<collection>/:id` removes collection membership. The repository discards the returned title and exposes `Observable<void>`; no client-side entity deletion is assumed.
-- `POST /wishlist/:id/promote` sends exactly `{ addedDate }` and returns the normalized title in library membership. Movies promoted from Wishlist still return `TitleDto`, not `MediaDto`.
+- `POST /series` creates a library Series; `PUT /series/:id` replaces its draft.
+- `DELETE /<collection>/:id` removes membership. Repositories expose `Observable<void>` and stores remove content only after server success.
+- `POST /wishlist/from-kinopoisk` sends `{kpId}` and returns `{id}`. A focused repository parser validates the response ID.
+- `POST /wishlist/:id/refresh` sends `{kpId}` and returns a normalized Title of either kind.
+- Generic Wishlist POST/PUT and date-only promote routes are removed.
+- Movie/Series create accepts optional `wishlistId`. The backend also checks ordinary creates by canonical kpId, reuses the Wishlist title ID and changes membership in one transaction. Validation/conflict failures leave Wishlist intact. Frontend code never follows library create with a separate delete request.
 
-Clients trim the API base URL's trailing slash and encode item IDs. HTTP responses are `unknown`; repositories validate and convert them before returning domain models. All failures, including malformed successful responses, become `AppError` via the existing error taxonomy.
+Clients encode IDs and validate unknown responses; failures become AppError. Provider-owned refresh fields replace stored metadata, while local formats/availability, added date and omitted seasons are retained. Stale refresh work returns conflict; deleted/transferred titles cannot be recreated by refresh.
 
 ```typescript
-const seriesQuery = inject(GetSeriesQuery);
-const promotion = inject(PromoteWishlistUseCase);
-
-seriesQuery.execute({ ...DEFAULT_CATALOG_PARAMS, search: 'Example' });
-promotion.execute('wishlist-title-id', '2026-10-05');
-// Callers subscribe and own cancellation, feedback, and navigation.
+const create = inject(CreateWishlistFromKinopoiskUseCase);
+const refresh = inject(RefreshWishlistUseCase);
+create.execute('915196'); // Observable<string>: internal created title ID
+refresh.execute(title.id, title.kpId!); // Observable<Title>
+// Presentation owns subscriptions, cancellation, toasts and navigation.
 ```
 
-Promotion is one atomic backend operation. Do not emulate it using library create followed by wishlist delete. The backend validates movie metadata and at least one format, prevents library/provider-ID conflicts, and rolls back failures. A future store must leave the row intact on validation/conflict errors and remove it only after success. UI authorization and confirmation belong to the future presentation layer.
 
 ## Title data and nullability
 
@@ -89,16 +90,15 @@ save.execute(command);
 
 Normalized collections use zero-based numeric page indexes and numeric counts. `CatalogParams` supports backend repository sorting keys only: `addedDate`, `ageRating`, `enName`, `kpId`, `movieLength`, `name`, `rating`, `year`. Quality filtering uses catalog **values** and includes available season formats; quality/extension sorting is unsupported. Defaults are page zero, 20 items, name ascending. HTTP serialization reuses only collection-neutral logic; movie routing/normalization remains independent.
 
-## Future presentation work
+## Presentation and verification
 
-- Replace Wishlist placeholder with a component-scoped Signal Store calling `GetWishlistQuery`.
-- Add collection-specific URL adapters and cancellation of stale reads, following Movies' canonical-URL flow.
-- Build add/edit forms around domain drafts, format IDs, season availability, and complete PUT replacement. Connect `AutofillTitleUseCase` to a store with a single-operation invariant and a latest-draft reader.
-- Add signed-in guards/protected controls and confirmed delete/promotion actions; handle validation/conflict responses without optimistic row removal.
-- After promotion, navigate using the returned kind to movie or series details and refresh affected lists when they are next loaded.
-- Keep Quick Search movie-backed until a deliberate cross-collection search contract exists.
-- Verify new UI with keyboard/focus checks and AXE; this foundation changes no DOM.
+Wishlist list/details use scoped SignalStores and CatalogRouteState. Card refresh updates the row and re-reads current sort/filter/page state; pending item IDs prevent duplicate mutations. Errors retain existing content. Details discard late responses when their requested ID changes.
 
-Contract verification lives in `catalog/data-access/*.spec.ts`, `catalog/utils/title.converter.spec.ts`, and `core/settings/settings.parser.spec.ts`. HTTP tests cover paths/payloads, incomplete titles, both promotion kinds, strict Series kind parsing, error normalization, and full-replacement saves. These use Angular HTTP mocks; they do not establish live backend connectivity.
+Add to library uses `/gallery/movies/new?wishlistId=:id` or `/gallery/series/new?wishlistId=:id`. Editor stores load GetWishlistTitleQuery, verify kind and map nullable data without inventing required values. The source ID survives reload; changing it cancels older work. Normal editor save sends wishlistId. Quick Search remains movie-backed.
+
+Controls require sign-in; delete uses the shared confirmation dialog. The one-field provider dialog uses a typed Reactive Form, focuses its input, preserves failed input and returns the created ID. Successful creation navigates to Wishlist details, which reads committed primary data by ID.
+
+Contract/store tests cover provider paths/payloads, malformed responses, pending protection, failed writes, source handoff and stale reads. Mocked browser checks cover both library editor saves, responsive light/dark views, keyboard focus and full default AXE rules. Isolated backend tests establish transaction rollback and concurrency behavior.
+
 
 Related lodes: [Gallery architecture](business-logic-architecture.md), [settings](../settings/summary.md), [routing](../routing/summary.md), [media gallery](../ui/media-gallery.md), [movie editor](../plans/movie-editor.md), [project summary](../summary.md).

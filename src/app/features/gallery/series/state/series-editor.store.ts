@@ -1,3 +1,4 @@
+import { GetWishlistTitleQuery } from '../../wishlist/application/get-wishlist-title.query';
 import { computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
@@ -15,6 +16,7 @@ import { toSeriesDraft, toSeriesEditor } from '../utils/series-editor.converter'
 
 type EditorState = {
   readonly mode: 'add' | 'edit';
+  readonly wishlistId: string;
   readonly id: string;
   readonly seed: SeriesEditorModel;
   readonly hasLoadError: boolean;
@@ -24,6 +26,7 @@ export const SeriesEditorStore = signalStore(
   withState<EditorState>({
     mode: 'add',
     id: '',
+    wishlistId: '',
     seed: createSeriesEditorModel(),
     hasLoadError: false,
     operation: 'idle',
@@ -33,6 +36,7 @@ export const SeriesEditorStore = signalStore(
     (
       store,
       query = inject(GetSeriesTitleQuery),
+      wishlistQuery = inject(GetWishlistTitleQuery),
       settings = inject(SettingsStore),
       saveSeries = inject(SaveSeriesUseCase),
       autofillTitle = inject(AutofillTitleUseCase),
@@ -57,27 +61,61 @@ export const SeriesEditorStore = signalStore(
           ),
         ),
       );
+      const loadWishlist = rxMethod<string>(
+        pipe(
+          tap((wishlistId) => {
+            routeChanged.next();
+            patchState(store, { wishlistId, operation: 'loading', hasLoadError: false });
+          }),
+          switchMap((id) => {
+            if (!id) {
+              patchState(store, { wishlistId: '', seed: createSeriesEditorModel(), operation: 'idle' });
+              return EMPTY;
+            }
+            return wishlistQuery.execute(id).pipe(
+              tap((title) => {
+                if (title.kind !== 'series') throw new AppError('validation', 'Wrong wishlist kind');
+                patchState(store, {
+                  seed: { ...toSeriesEditor(title), addedDate: new Date().toISOString().slice(0, 10) },
+                  operation: 'idle',
+                });
+              }),
+              catchError(() => {
+                patchState(store, { operation: 'idle', hasLoadError: true });
+                feedback.error('wishlist.details', 'wishlist.editorError');
+                return EMPTY;
+              }),
+            );
+          }),
+        ),
+      );
       const save = rxMethod<SeriesDraft>(
         pipe(
           filter(() => !store.isBusy() && !store.hasLoadError()),
           tap(() => patchState(store, { operation: 'saving' })),
           switchMap((draft) =>
-            saveSeries.execute(store.mode() === 'add' ? { mode: 'add', draft } : { mode: 'edit', id: store.id(), draft }).pipe(
-              takeUntil(routeChanged),
-              tap((title) => {
-                patchState(store, { operation: 'idle' });
-                feedback.success('seriesEditor.title', 'seriesEditor.saved');
-                void router.navigate(['/gallery/series', title.id], { queryParamsHandling: 'preserve' });
-              }),
-              catchError((error: unknown) => {
-                patchState(store, { operation: 'idle' });
-                feedback.error(
-                  'seriesEditor.title',
-                  error instanceof AppError && error.kind === 'conflict' ? 'seriesEditor.conflict' : 'seriesEditor.saveError',
-                );
-                return EMPTY;
-              }),
-            ),
+            saveSeries
+              .execute(
+                store.mode() === 'add'
+                  ? { mode: 'add', draft, ...(store.wishlistId() ? { wishlistId: store.wishlistId() } : {}) }
+                  : { mode: 'edit', id: store.id(), draft },
+              )
+              .pipe(
+                takeUntil(routeChanged),
+                tap((title) => {
+                  patchState(store, { operation: 'idle' });
+                  feedback.success('seriesEditor.title', 'seriesEditor.saved');
+                  void router.navigate(['/gallery/series', title.id], { queryParamsHandling: 'preserve' });
+                }),
+                catchError((error: unknown) => {
+                  patchState(store, { operation: 'idle' });
+                  feedback.error(
+                    'seriesEditor.title',
+                    error instanceof AppError && error.kind === 'conflict' ? 'seriesEditor.conflict' : 'seriesEditor.saveError',
+                  );
+                  return EMPTY;
+                }),
+              ),
           ),
         ),
       );
@@ -119,10 +157,12 @@ export const SeriesEditorStore = signalStore(
       );
       return {
         load,
+        loadWishlist,
         save,
         autofill,
         retry(): void {
-          if (store.id()) load(store.id());
+          if (store.wishlistId()) loadWishlist(store.wishlistId());
+          else if (store.id()) load(store.id());
         },
         discard(): void {
           if (!store.isBusy())
@@ -140,6 +180,14 @@ export const SeriesEditorStore = signalStore(
     onInit(): void {
       const mode = route.snapshot.data['mode'] === 'edit' ? 'edit' : 'add';
       store.initialize(mode);
+      if (mode === 'add') {
+        store.loadWishlist(
+          route.queryParamMap.pipe(
+            map((params) => params.get('wishlistId') ?? ''),
+            distinctUntilChanged(),
+          ),
+        );
+      }
       if (mode === 'edit')
         store.load(
           route.paramMap.pipe(

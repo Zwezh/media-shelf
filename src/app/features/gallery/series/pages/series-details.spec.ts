@@ -22,7 +22,10 @@ describe('Series details page', () => {
         provideAuthSessionTesting(),
         provideRouter([]),
         ...provideI18nTesting(),
-        { provide: SettingsStore, useValue: { qualityOptions: signal([]), extensionOptions: signal([]) } },
+        {
+          provide: SettingsStore,
+          useValue: { qualityOptions: signal([{ id: 'quality-1', title: '4K', value: '2160p' }]), extensionOptions: signal([]) },
+        },
       ],
     });
     TestBed.overrideComponent(SeriesDetails, {
@@ -32,6 +35,8 @@ describe('Series details page', () => {
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelectorAll('h1')).toHaveLength(1);
+    expect(element.querySelector('.badge--quality')?.textContent).toBe('4K');
+    expect(element.querySelector('#series-information-title')).not.toBeNull();
     expect(element.textContent).toContain('Announced seasons: 3');
     expect(element.querySelector('#similar-movies-title')?.textContent).toBe('Similar titles');
     expect(element.querySelector('.series-details__summary .badge--movie')?.textContent).toContain('Seasons: 1 / 2');

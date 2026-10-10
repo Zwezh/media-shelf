@@ -15,7 +15,7 @@ import {
 import { GalleryFeedback } from '../../catalog/ui/gallery-feedback';
 import { DeleteSeriesUseCase } from '../application/delete-series.use-case';
 import { GetSeriesQuery } from '../application/get-series.query';
-import { SeriesRouteState } from './series-route-state';
+import { CatalogRouteState } from '../../catalog/state/catalog-route-state';
 
 type SeriesState = {
   readonly deletingId: string | null;
@@ -38,7 +38,7 @@ export const SeriesStore = signalStore(
     (
       store,
       query = inject(GetSeriesQuery),
-      route = inject(SeriesRouteState),
+      route = inject(CatalogRouteState),
       deletion = inject(DeleteSeriesUseCase),
       feedback = inject(GalleryFeedback),
     ) => {
@@ -123,7 +123,7 @@ export const SeriesStore = signalStore(
       };
     },
   ),
-  withHooks((store, route = inject(SeriesRouteState)) => ({
+  withHooks((store, route = inject(CatalogRouteState)) => ({
     onInit(): void {
       store.load(route.query);
     },

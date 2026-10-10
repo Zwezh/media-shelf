@@ -14,6 +14,7 @@ import type { TitleDetailsView } from '../../models/title-details-view';
   templateUrl: './movie-details-hero.html',
 })
 export class MovieDetailsHero {
+  readonly showQuality = input(true);
   readonly movie = input.required<TitleDetailsView>();
   readonly isDeleting = input(false);
   readonly actions = input<readonly ('edit' | 'delete' | 'auxiliary')[]>(['edit', 'delete', 'auxiliary']);

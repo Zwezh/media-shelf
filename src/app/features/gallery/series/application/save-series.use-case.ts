@@ -9,6 +9,8 @@ export class SaveSeriesUseCase {
   private readonly repository = inject(SERIES_REPOSITORY);
 
   execute(command: SaveTitleCommand<SeriesDraft>): Observable<SeriesTitle> {
-    return command.mode === 'add' ? this.repository.create(command.draft) : this.repository.update(command.id, command.draft);
+    return command.mode === 'add'
+      ? this.repository.create(command.draft, command.wishlistId)
+      : this.repository.update(command.id, command.draft);
   }
 }

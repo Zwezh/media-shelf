@@ -54,7 +54,14 @@
     "version": "v{{version}}"
   },
   "gallery": {
-    "navigation": "Gallery navigation"
+    "navigation": "Gallery navigation",
+    "allItems": "All items",
+    "loading": "Loading gallery…",
+    "loadError": "Could not load the gallery.",
+    "noMatches": "No items match your search or filters.",
+    "empty": "Your gallery is empty.",
+    "deleted": "Item deleted.",
+    "mutationError": "Could not delete this item."
   },
   "header": {
     "home": "MediaShelf home",
@@ -532,5 +539,29 @@
     "saveError": "Could not save the series. Your changes are retained.",
     "autofilled": "Metadata updated.",
     "autofillError": "Could not update metadata. Your changes are retained."
+  },
+  "wishlist": {
+    "loading": "Loading wishlist…",
+    "loadError": "Wishlist could not be loaded. Try again.",
+    "empty": "No titles in the wishlist yet.",
+    "noMatches": "No wishlist titles match these filters.",
+    "details": "Wishlist title details",
+    "back": "Back to wishlist",
+    "add": "Add to wishlist",
+    "adding": "Adding…",
+    "refresh": "Refresh metadata",
+    "addToLibrary": "Add to library",
+    "invalidId": "Enter a valid positive Kinopoisk ID.",
+    "added": "Added to wishlist.",
+    "refreshed": "Metadata refreshed.",
+    "deleted": "Removed from wishlist.",
+    "conflict": "The item already exists or changed. Reload and try again.",
+    "mutationError": "The operation failed. Existing data has been kept. Please try again.",
+    "editorError": "Could not load the wishlist item for this editor.",
+    "delete": {
+      "title": "Remove from wishlist",
+      "confirm": "Remove from wishlist",
+      "message": "Remove “{{title}}” from your wishlist?"
+    }
   }
 }

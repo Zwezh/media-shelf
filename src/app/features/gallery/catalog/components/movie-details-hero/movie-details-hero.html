@@ -15,7 +15,7 @@
           fetchpriority="high"
           (error)="usePosterPlaceholder($event)"
         />
-        @if (currentMovie.quality) {
+        @if (showQuality() && currentMovie.quality) {
           <span class="movie-hero__poster-quality">{{ currentMovie.quality }}</span>
         }
       </div>
@@ -45,7 +45,7 @@
     <div class="movie-hero__overview">
       <div class="movie-hero__badges">
         <msh-media-badge [tone]="currentMovie.type">{{ 'media.type.' + currentMovie.type | translate }}</msh-media-badge>
-        @if (currentMovie.quality) {
+        @if (showQuality() && currentMovie.quality) {
           <msh-media-badge tone="quality">{{ currentMovie.quality }}</msh-media-badge>
         }
         @if (currentMovie.rating !== null) {

@@ -1,3 +1,5 @@
+import { GALLERY_REPOSITORY } from './features/gallery/catalog/application/gallery.repository';
+import { HttpGalleryRepository } from './features/gallery/catalog/infrastructure/http-gallery.repository';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
@@ -42,6 +44,7 @@ export const appConfig: ApplicationConfig = {
     { provide: TITLE_AUTOFILL_REPOSITORY, useExisting: HttpTitleAutofillRepository },
     { provide: SERIES_REPOSITORY, useExisting: HttpSeriesRepository },
     { provide: WISHLIST_REPOSITORY, useExisting: HttpWishlistRepository },
+    { provide: GALLERY_REPOSITORY, useExisting: HttpGalleryRepository },
     { provide: MOVIES_REPOSITORY, useExisting: HttpMoviesRepository },
     { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
   ],

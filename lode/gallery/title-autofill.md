@@ -1,6 +1,6 @@
 # Normalized Title Autofill
 
-The Catalog slice provides one Kinopoisk transport for Movie, Series and future Wishlist drafts. Movie-editor text conversion remains in its own use case; all editors share `TitleAutofill`, its parser and `/kinopoisk/titles/:id/autofill`.
+The Catalog slice provides one Kinopoisk transport for Movie and Series editor drafts. Wishlist imports and refreshes metadata through its backend endpoints. Movie-editor text conversion remains in its own use case; all editors share `TitleAutofill`, its parser and `/kinopoisk/titles/:id/autofill`.
 
 ## Data flow
 
@@ -38,13 +38,13 @@ autofill.execute('301', () => currentDraft()).subscribe((draft) => {
 ## Contracts and ownership
 
 - `catalog/application/title-autofill.repository.ts` exposes `TITLE_AUTOFILL_REPOSITORY`; `app.config.ts` binds it to `HttpTitleAutofillRepository`.
-- `catalog/application/autofill-title.use-case.ts` reads the current draft only when metadata arrives. Its overload preserves a Series-only return type for Series editors; Wishlist consumes the title union.
+- `catalog/application/autofill-title.use-case.ts` reads the current draft only when metadata arrives. Its overload preserves a Series-only return type for Series editors; The shared contract supports the title union.
 - `catalog/infrastructure/kinopoisk/` owns the backend client and HTTP repository. The existing auth interceptor attaches only the user's MediaShelf JWT. Provider credentials and HTTP remain exclusively backend-owned.
 - `catalog/models/title-autofill.dto.ts` defines the backend metadata contract. It is separate from full persisted `TitleDto`: no server entity ID, membership date, formats, or derived available count appears.
 - `catalog/models/title-autofill.ts` defines the domain projection, reusing draft fields with `Omit`; domain names are `title`, `originalTitle`, `directors`, and `durationMinutes`.
 - `catalog/data-access/title-autofill.parser.ts` validates unknown JSON and converts transport names. It rejects mismatched kinds/subtypes, IDs, invalid numeric/date fields, duplicate season numbers, and unsupported year values. Repository validation also rejects a returned provider ID differing from the request.
 - Shared `AutofillMetadata` and `parseAutofillMetadata` own the text/array subset reused by Movie and Title autofill. Legacy numeric semantics remain distinct: optional numbers and numeric ID for Movies, explicit nullable numbers and string ID for Titles.
-- Future pages/stores use these application/domain types. The Series editor consumes this foundation; Wishlist presentation remains pending.
+- Editor stores consume these application/domain types. Wishlist creation and refresh fetch the same provider metadata on the backend and apply a separate replacement policy; they do not send an editor draft.
 
 ## Backend mapping
 
@@ -52,7 +52,7 @@ Backend source is the sibling `cinema-catalogue-be/src/modules/kinopoisk/` modul
 
 Provider fields are verified against the [official OpenAPI schema](https://api.poiskkino.dev/documentation-json). `isSeries` takes priority; otherwise `tv-series`, `animated-series`, and `tv-show` identify Series, while `movie` and `cartoon` identify Movies. Missing or ambiguous type remains `kind: null`; the frontend retains the draft's kind. Explicit mismatches become an application validation error and do not apply a draft.
 
-`releaseYears` supplies the series start/end range with `year` as start fallback. The provider uses `releaseYears.end: 0` for an unknown end; backend parsing normalizes that sentinel to null before year/range validation. Zero start/scalar years, negative ends, string years and reversed known ranges remain invalid. An open-ended release range with a known start and absent production status maps to `in_production` (including the provider zero-end sentinel). This is an inference from the release range; missing range data alone stays `unknown`, and explicit statuses take precedence. Active provider release statuses (`filming`, `pre-production`, `announced`, `post-production`) map to `in_production`; `completed` maps to `finished`; an absent status plus a bounded end range also indicates `finished`. Other statuses map to `unknown`. End year is emitted only for a finished series with a known start. Series duration uses positive `seriesLength` with movie duration as fallback. A valid `premiere.world` date supplies date-only `releaseDate`; missing/invalid date strings become null.
+`releaseYears` supplies the series start/end range with `year` as start fallback. The provider uses zero for either `releaseYears.start` or `releaseYears.end` when a boundary is unknown; backend parsing normalizes those sentinels to null before year/range validation. Zero scalar years, negative boundaries, string years and reversed known ranges remain invalid. When both boundaries and the scalar year are unknown, autofill returns nullable years without inventing dates or production status. An open-ended release range with a known start and absent production status maps to `in_production` (including the provider zero-end sentinel). This is an inference from the release range; missing range data alone stays `unknown`, and explicit statuses take precedence. Active provider release statuses (`filming`, `pre-production`, `announced`, `post-production`) map to `in_production`; `completed` maps to `finished`; an absent status plus a bounded end range also indicates `finished`. Other statuses map to `unknown`. End year is emitted only for a finished series with a known start. Series duration uses positive `seriesLength` with movie duration as fallback. A valid `premiere.world` date supplies date-only `releaseDate`; missing/invalid date strings become null.
 
 `seasonsInfo` supplies undated known season numbers; `/v1.5/season` enriches the union with season numbers and air dates. Valid air dates fill the existing nullable `releaseYear` (exact dates are not persisted in the current season schema). Season zero is supported. Missing dates remain null; local availability, format IDs and announced totals are never inferred. Results are sorted by season number.
 

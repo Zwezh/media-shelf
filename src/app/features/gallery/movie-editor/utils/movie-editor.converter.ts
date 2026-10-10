@@ -1,8 +1,32 @@
+import type { MovieTitle } from '../../catalog/models/title';
 import { type MediaDto } from '../../models/media.dto';
 import { AppError } from '@msh-core/http/app-error';
 import type { TitleAutofill } from '../../catalog/models/title-autofill';
 import { createEmptyMovieEditorModel, type MovieEditorModel } from '../models/movie-editor.model';
 
+export function wishlistMovieEditor(title: MovieTitle): MovieEditorModel {
+  return {
+    ...createEmptyMovieEditorModel(),
+    name: title.title,
+    enName: title.originalTitle,
+    description: title.description,
+    kpId: title.kpId ?? '',
+    addedDate: new Date().toISOString().slice(0, 10),
+    year: Array.isArray(title.year) ? title.year.filter((year) => year !== null).join(', ') : (title.year?.toString() ?? ''),
+    movieLength: title.durationMinutes?.toString() ?? '',
+    rating: title.rating?.toString() ?? '',
+    ageRating: title.ageRating?.toString() ?? '',
+    genres: [...title.genres],
+    actors: title.actors.join(', '),
+    directors: title.directors.join(', '),
+    countries: title.countries.join(', '),
+    posterUrl: title.posterUrl,
+    compactPosterUrl: title.compactPosterUrl,
+    backdropUrl: title.backdropUrl,
+    sequelsAndPrequels: title.sequelsAndPrequels.join(', '),
+    similarMovies: title.similarMovies.join(', '),
+  };
+}
 export function toMovieEditorModel(movie: MediaDto): MovieEditorModel {
   return {
     addedDate: movie.addedDate?.slice(0, 10) ?? '',

@@ -1,9 +1,11 @@
+import { GetWishlistTitleQuery } from '../../wishlist/application/get-wishlist-title.query';
+import { wishlistMovieEditor } from '../utils/movie-editor.converter';
 import { Location } from '@angular/common';
 import { computed, inject, type Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, switchMap, tap } from 'rxjs';
+import { catchError, distinctUntilChanged, EMPTY, filter, map, pipe, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { AppError } from '@msh-core/http/app-error';
 import { AutofillMovieUseCase } from '../../movies/application/autofill-movie.use-case';
 import { LoadMovieEditorQuery } from '../../movies/application/load-movie-editor.query';
@@ -19,6 +21,7 @@ type AutofillCommand = {
 type MovieEditorState = {
   readonly hasLoadError: boolean;
   readonly mode: MovieEditorMode;
+  readonly wishlistId: string;
   readonly movieId: string;
   readonly operation: EditorOperation;
   readonly seed: MovieEditorModel;
@@ -30,6 +33,7 @@ const initialState: MovieEditorState = {
   hasLoadError: false,
   mode: 'add',
   movieId: '',
+  wishlistId: '',
   operation: 'idle',
   seed: createEmptyMovieEditorModel(),
 };
@@ -52,7 +56,9 @@ export const MovieEditorStore = signalStore(
       location = inject(Location),
       router = inject(Router),
       saveMovie = inject(SaveMovieUseCase),
+      wishlistQuery = inject(GetWishlistTitleQuery),
     ) => {
+      const routeChanged = new Subject<void>();
       const loadMovie = rxMethod<string>(
         pipe(
           filter(() => store.operation() === 'idle'),
@@ -70,12 +76,38 @@ export const MovieEditorStore = signalStore(
         ),
       );
 
+      const loadWishlist = rxMethod<string>(
+        pipe(
+          tap((wishlistId) => {
+            routeChanged.next();
+            patchState(store, { wishlistId, operation: 'loading', hasLoadError: false });
+          }),
+          switchMap((id) => {
+            if (!id) {
+              patchState(store, { wishlistId: '', seed: createEmptyMovieEditorModel(), operation: 'idle' });
+              return EMPTY;
+            }
+            return wishlistQuery.execute(id).pipe(
+              tap((title) => {
+                if (title.kind !== 'movie') throw new AppError('validation', 'Wrong wishlist kind');
+                patchState(store, { seed: wishlistMovieEditor(title), operation: 'idle' });
+              }),
+              catchError(() => {
+                patchState(store, { operation: 'idle', hasLoadError: true });
+                feedback.error('wishlist.details', 'wishlist.editorError');
+                return EMPTY;
+              }),
+            );
+          }),
+        ),
+      );
       const autofill = rxMethod<AutofillCommand>(
         pipe(
           filter(() => store.operation() === 'idle'),
           tap(() => patchState(store, { operation: 'autofilling' })),
           switchMap(({ currentModel, id }) =>
             autofillMovie.execute(id, currentModel).pipe(
+              takeUntil(routeChanged),
               tap((seed) => {
                 patchState(store, { operation: 'idle', seed });
                 feedback.success('movieEditor.toasts.autofillSuccessTitle', 'movieEditor.toasts.autofillSuccessMessage');
@@ -92,10 +124,11 @@ export const MovieEditorStore = signalStore(
 
       const save = rxMethod<MovieEditorModel>(
         pipe(
-          filter(() => store.operation() === 'idle'),
+          filter(() => store.operation() === 'idle' && !store.hasLoadError()),
           tap(() => patchState(store, { operation: 'saving' })),
           switchMap((movie) =>
-            saveMovie.execute(store.mode(), movie).pipe(
+            (store.wishlistId() ? saveMovie.execute(store.mode(), movie, store.wishlistId()) : saveMovie.execute(store.mode(), movie)).pipe(
+              takeUntil(routeChanged),
               tap((savedMovie) => {
                 patchState(store, { operation: 'idle' });
                 feedback.success('movieEditor.toasts.saveSuccessTitle', 'movieEditor.toasts.saveSuccessMessage');
@@ -128,8 +161,10 @@ export const MovieEditorStore = signalStore(
           void router.navigate(['/gallery/movies', store.movieId()], { queryParamsHandling: 'preserve' });
         },
         loadMovie,
+        loadWishlist,
         retry(): void {
-          if (store.movieId()) loadMovie(store.movieId());
+          if (store.wishlistId()) loadWishlist(store.wishlistId());
+          else if (store.movieId()) loadMovie(store.movieId());
         },
         save,
         setMode(mode: MovieEditorMode): void {
@@ -143,6 +178,14 @@ export const MovieEditorStore = signalStore(
     onInit(): void {
       const mode = route.snapshot.data['mode'] === 'edit' ? 'edit' : 'add';
       store.setMode(mode);
+      if (mode === 'add') {
+        store.loadWishlist(
+          route.queryParamMap.pipe(
+            map((params) => params.get('wishlistId') ?? ''),
+            distinctUntilChanged(),
+          ),
+        );
+      }
       if (mode === 'edit') {
         store.loadMovie(
           route.paramMap.pipe(

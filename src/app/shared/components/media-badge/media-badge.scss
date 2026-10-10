@@ -30,6 +30,12 @@
     border-color: var(--color-badge-series-border);
   }
 
+  &--wishlist {
+    color: var(--color-badge-wish-text);
+    background: var(--color-badge-wish-bg);
+    border-color: var(--color-badge-wish-border);
+  }
+
   &--quality {
     color: var(--color-badge-quality-text);
     background: var(--color-badge-quality-bg);

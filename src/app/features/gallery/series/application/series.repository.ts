@@ -7,7 +7,7 @@ import type { CollectionPage } from '../../models/collection-page';
 export interface SeriesRepository {
   find(query: CatalogParams): Observable<CollectionPage<SeriesTitle>>;
   findById(id: string): Observable<SeriesTitle>;
-  create(draft: SeriesDraft): Observable<SeriesTitle>;
+  create(draft: SeriesDraft, wishlistId?: string): Observable<SeriesTitle>;
   update(id: string, draft: SeriesDraft): Observable<SeriesTitle>;
   delete(id: string): Observable<void>;
 }

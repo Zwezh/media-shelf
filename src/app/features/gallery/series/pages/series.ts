@@ -2,8 +2,8 @@ import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyR
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, translate } from '@ngx-translate/core';
-import { AuthSession } from '@msh-core/auth/auth-session';
 import { SettingsStore } from '@msh-core/settings/settings.store';
+import { AuthSession } from '@msh-core/auth/auth-session';
 import { EmptyState } from '@msh-shared/components/empty-state/empty-state';
 import { Icon } from '@msh-shared/components/icon/icon';
 import { MediaCard } from '@msh-shared/components/media-card/media-card';
@@ -20,22 +20,22 @@ import { CATALOG_SORTING_KEYS, DEFAULT_CATALOG_PARAMS } from '../../catalog/mode
 import { seriesYears, toSeriesCard } from '../../catalog/utils/title-display';
 import type { CollectionFilters } from '../../models/collection-filters';
 import { toCollectionFilterChips } from '../../utils/collection-filter-chips';
-import { SeriesRouteState } from '../state/series-route-state';
+import { CatalogRouteState } from '../../catalog/state/catalog-route-state';
 import { SeriesStore } from '../state/series.store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'msh-series',
   imports: [EmptyState, Icon, MediaCard, MoviesSortSelect, PageHeader, PageStatus, Pagination, RequiresAuth, TranslatePipe],
-  providers: [SeriesRouteState, SeriesStore],
+  providers: [CatalogRouteState, SeriesStore],
   templateUrl: './series.html',
   styleUrl: './series.scss',
 })
 export class Series {
   private readonly content = viewChild<ElementRef<HTMLElement>>('content');
   protected readonly authSession = inject(AuthSession);
-  protected readonly store = inject(SeriesStore);
   private readonly settings = inject(SettingsStore);
+  protected readonly store = inject(SeriesStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly deletion = inject(DeletionConfirmation);

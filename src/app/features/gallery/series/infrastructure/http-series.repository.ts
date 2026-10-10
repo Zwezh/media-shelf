@@ -22,8 +22,8 @@ export class HttpSeriesRepository implements SeriesRepository {
   findById(id: string): Observable<SeriesTitle> {
     return this.read(this.api.findById(id));
   }
-  create(draft: SeriesDraft): Observable<SeriesTitle> {
-    return this.read(this.api.create(toTitleWriteDto(draft)));
+  create(draft: SeriesDraft, wishlistId?: string): Observable<SeriesTitle> {
+    return this.read(this.api.create(toTitleWriteDto(draft), wishlistId));
   }
   update(id: string, draft: SeriesDraft): Observable<SeriesTitle> {
     return this.read(this.api.update(id, toTitleWriteDto(draft)));

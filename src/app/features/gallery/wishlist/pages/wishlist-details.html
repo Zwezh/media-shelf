@@ -1,0 +1,75 @@
+<article class="movie-details" #content>
+  <nav class="movie-details__breadcrumbs" [attr.aria-label]="'movieDetails.breadcrumbs.label' | translate">
+    <ol>
+      <li>
+        <a routerLink="/gallery" queryParamsHandling="preserve">{{ 'navigation.gallery' | translate }}</a>
+      </li>
+      <li aria-hidden="true">/</li>
+      <li>
+        <a routerLink="/gallery/wishlist" queryParamsHandling="preserve">{{ 'navigation.wishlist' | translate }}</a>
+      </li>
+      <li aria-hidden="true">/</li>
+      <li aria-current="page">{{ store.title()?.title || ('wishlist.details' | translate) }}</li>
+    </ol>
+  </nav>
+  @if (store.status() === 'loading' || store.status() === 'idle') {
+    <div class="movie-details__status">
+      <h1 class="movie-details__visually-hidden">{{ 'wishlist.details' | translate }}</h1>
+      <msh-page-status messageKey="wishlist.loading" />
+    </div>
+  } @else if (store.status() === 'error') {
+    <div class="movie-details__status">
+      <h1 class="movie-details__visually-hidden">{{ 'wishlist.details' | translate }}</h1>
+      <msh-page-status kind="error" messageKey="wishlist.loadError" />
+      <div class="movie-details__error-actions">
+        <button class="btn btn-primary" type="button" (click)="store.retry()">{{ 'movies.retry' | translate }}</button>
+        <a class="btn btn-secondary" routerLink="/gallery/wishlist" queryParamsHandling="preserve">{{ 'wishlist.back' | translate }}</a>
+      </div>
+    </div>
+  } @else if (store.title(); as title) {
+    @if (details(); as view) {
+      <msh-movie-details-hero [movie]="view" [showQuality]="false" [actions]="[]">
+        @if (title.kind === 'series') {
+          <div hero-metadata class="series-details__summary">
+            <span class="series-production-status" [attr.data-status]="title.series.productionStatus">{{
+              'series.status.' + title.series.productionStatus | translate
+            }}</span>
+          </div>
+        }
+      </msh-movie-details-hero>
+      <div
+        class="wishlist-details__actions"
+        role="group"
+        [attr.aria-label]="'wishlist.details' | translate"
+        [attr.aria-busy]="store.pending()"
+      >
+        <button
+          #refreshButton
+          class="btn btn-secondary"
+          type="button"
+          [mshRequiresAuth]="store.pending() || !title.kpId"
+          (click)="refresh(refreshButton)"
+        >
+          {{ 'wishlist.refresh' | translate }}
+        </button>
+        <button class="btn btn-primary" type="button" [mshRequiresAuth]="store.pending()" (click)="addToLibrary()">
+          {{ 'wishlist.addToLibrary' | translate }}
+        </button>
+        <button class="btn btn-danger" type="button" [mshRequiresAuth]="store.pending()" (click)="confirmDelete()">
+          {{ 'wishlist.delete.confirm' | translate }}
+        </button>
+      </div>
+      <div class="movie-details__content">
+        <div class="movie-details__cards">
+          <msh-production-and-cast [movie]="view" />
+        </div>
+        <msh-related-movie-lists
+          [similarTitleKey]="
+            title.kind === 'series' ? 'movieDetails.additionalInformation.similarTitles' : 'movieDetails.related.similarMovies'
+          "
+          [movie]="view"
+        />
+      </div>
+    }
+  }
+</article>

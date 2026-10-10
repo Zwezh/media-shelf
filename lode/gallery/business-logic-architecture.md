@@ -29,7 +29,7 @@ export class GetMovieDetailsQuery {
 }
 ```
 
-Repository contracts are focused. There is no generic base repository, global Gallery facade, global entity cache, or one service containing every movie operation. Series and Wishlist expose independent stateless application/infrastructure slices with root repository bindings and shared normalized title data contracts; Series presentation uses scoped stores and shared catalog components while Wishlist presentation remains future work (see [Series and Wishlist foundations](series-wishlist.md)). `MOVIES_REPOSITORY` and `TITLE_AUTOFILL_REPOSITORY` are configured in the application composition root and implemented by `HttpMoviesRepository` and `HttpTitleAutofillRepository`.
+Repository contracts are focused. There is no generic base repository, global Gallery facade, global entity cache, or one service containing every movie operation. Series and Wishlist expose independent stateless application/infrastructure slices with root repository bindings and shared normalized title data contracts; Series presentation uses scoped stores and shared catalog components and Wishlist uses its own list/detail stores for mixed-title viewing (see [Series and Wishlist foundations](series-wishlist.md)). `MOVIES_REPOSITORY` and `TITLE_AUTOFILL_REPOSITORY` are configured in the application composition root and implemented by `HttpMoviesRepository` and `HttpTitleAutofillRepository`.
 
 ## Current ownership
 
@@ -39,9 +39,12 @@ Repository contracts are focused. There is no generic base repository, global Ga
 | `MoviesStore` | Same page instance | Page data/status, deletion state, URL-driven commands | `GetMoviesQuery`, `DeleteMovieUseCase`, `MoviesRouteState`, `GalleryFeedback` |
 | `MovieDetailsStore` | Detail route instance | Detail load/status, deletion reaction, return navigation | `GetMovieDetailsQuery`, `DeleteMovieUseCase`, `GalleryFeedback` |
 | `MovieEditorStore` | Add/edit route instance | Mode, seed, operation invariant, retry/navigation | `LoadMovieEditorQuery`, `AutofillMovieUseCase`, `SaveMovieUseCase`, `GalleryFeedback` |
-| `SeriesStore` | Series list page | URL-driven reads, list deletion and typed filter/sort/page commands | `GetSeriesQuery`, `DeleteSeriesUseCase`, `SeriesRouteState`, `GalleryFeedback` |
+| `SeriesStore` | Series list page | URL-driven reads, list deletion and typed filter/sort/page commands | `GetSeriesQuery`, `DeleteSeriesUseCase`, `CatalogRouteState`, `GalleryFeedback` |
 | `SeriesDetailsStore` | Series details page | Distinct route-ID reads, cancellation/retry and detail deletion | `GetSeriesTitleQuery`, `DeleteSeriesUseCase`, `GalleryFeedback` |
-| `QuickSearchStore` | Shell search instance | Debounce, result/status/open state | `GetMoviesQuery` |
+| `WishlistStore` | Wishlist list page | URL-driven mixed-title reads, refresh/delete and filter/sort/page commands | `GetWishlistQuery`, `RefreshWishlistUseCase`, `DeleteWishlistUseCase`, `CatalogRouteState` |
+| `WishlistDetailsStore` | Wishlist details page | Wishlist ID reads, refresh/delete, cancellation and retry | `GetWishlistTitleQuery`, Wishlist mutation use cases |
+| `GalleryStore` | Combined list page | Compact mixed collection reads, URL state, refresh and collection-specific deletion | `GetGalleryQuery`, `GalleryRouteState`, existing mutation use cases |
+| `QuickSearchStore` | Shell search instance | Debounce, result/status/open state | `GetGalleryQuery` |
 | `SettingsStore` | Application singleton | Presentation-facing catalogs/defaults | `SettingsRepository` |
 | `SeriesEditorStore` | Add/edit route instance | Draft seed, single operation, retry/navigation | `GetSeriesTitleQuery`, `SaveSeriesUseCase`, `AutofillTitleUseCase`, `GalleryFeedback` |
 | `DeletionConfirmation` | Application service | Dialog configuration and confirmed result | `FloatingPanel` |
@@ -95,7 +98,7 @@ unknown -> parser -> DTO -> pure mapper -> application/domain model
 
 ## Extension rules
 
-- Extend the existing `gallery/series` and `gallery/wishlist` application/infrastructure slices with component-scoped stores and lazy pages when their UI is implemented.
+- Series and Wishlist lazy pages use their own component-scoped stores. Wishlist imports from a provider-ID dialog and hands a source ID to existing library editors.
 - Share metadata fields/parsing, collection page/parameter shapes, and query serialization. Keep the legacy Movies DTO and normalized Series/Wishlist title DTOs separate; nullability, provider IDs, formats, and PUT paths differ.
 - Keep Quick Search movie-backed while Movies is the only searchable domain; introduce provider contracts only when global search spans domains.
 - Add a shared entity cache only for real cross-route caching, optimistic updates, offline behavior, prefetching, or coordinated invalidation.
@@ -117,3 +120,7 @@ unknown -> parser -> DTO -> pure mapper -> application/domain model
 | Application error taxonomy | `src/app/core/http/app-error.ts` |
 
 Related lodes: [Series and Wishlist foundations](series-wishlist.md), [routing](../routing/summary.md), [media gallery](../ui/media-gallery.md), [quick search](../ui/quick-search.md), [movie details](../plans/movie-details.md), [movie editor](../plans/movie-editor.md), [settings](../settings/summary.md), [practices](../practices.md).
+
+## Combined Gallery read contract
+
+`GALLERY_REPOSITORY` binds to `HttpGalleryRepository` at the composition root. `GET /api/gallery` returns explicit card summaries, not full Title/Media data. Runtime parsing and `galleryCard` preserve nullable metadata, quality values and compact Series counts. Existing Movie/Series/Wishlist list contracts remain full and unchanged. `GalleryRouteState` canonicalizes common filters plus collections/kinds; URL commands own reads, switchMap cancels stale requests, and successful mutations explicitly reconcile the same page. Wishlist refresh projects its full response to a compact summary immediately. No new content table or entity cache is introduced. See [Unified Gallery](../plans/unified-gallery.md).

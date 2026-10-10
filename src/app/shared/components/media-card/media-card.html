@@ -8,8 +8,12 @@
       (error)="usePlaceholder($event)"
     />
     <div class="media-card__topline">
-      <div class="media-card__topline-start">
-        @if (currentMedia.quality) {
+      <div class="media-card__topline-start" [class.media-card__topline-start--wrap]="wrapBadges()">
+        @if (showTypeBadge()) {
+          <msh-media-badge [tone]="currentMedia.type">{{ 'media.type.' + currentMedia.type | translate }}</msh-media-badge>
+        }
+        <ng-content select="[card-collection-badge]" />
+        @if (showQuality() && currentMedia.quality) {
           <msh-media-badge tone="quality">{{ currentMedia.quality }}</msh-media-badge>
         }
       </div>
@@ -21,16 +25,21 @@
       <div class="media-card__overlay-meta">
         <span>
           <ng-content select="[card-overlay-metadata]">
-            @if (media().type === 'series') {
-              {{ 'media.series' | translate }}
-            } @else if (currentMedia.durationMinutes !== null) {
+            @if (currentMedia.type === 'movie' && currentMedia.durationMinutes !== null) {
               {{ 'media.duration' | translate: durationParams() }}
             }
           </ng-content>
         </span>
-        <span>{{ media().quality }}</span>
+        @if (showQuality() && currentMedia.quality) {
+          <span>{{ currentMedia.quality }}</span>
+        }
       </div>
-      <div class="media-card__actions" [attr.aria-label]="'media.actions.label' | translate: { title: displayTitle() }" role="group">
+      <div
+        [style.--media-card-action-count]="actions().length"
+        class="media-card__actions"
+        [attr.aria-label]="'media.actions.label' | translate: { title: displayTitle() }"
+        role="group"
+      >
         @if (actions().includes('view')) {
           <button
             class="btn btn-xs btn-overlay media-card__action"
@@ -40,6 +49,18 @@
             (click)="viewRequested.emit(media())"
           >
             <msh-icon name="view" [size]="16" />
+          </button>
+        }
+        @if (actions().includes('refresh')) {
+          <button
+            class="btn btn-xs btn-overlay media-card__action"
+            type="button"
+            [attr.aria-label]="'wishlist.refresh' | translate"
+            [title]="'wishlist.refresh' | translate"
+            [mshRequiresAuth]="actionsDisabled() || refreshDisabled()"
+            (click)="refreshRequested.emit(media())"
+          >
+            <msh-icon name="refresh" [size]="16" />
           </button>
         }
         @if (actions().includes('edit')) {

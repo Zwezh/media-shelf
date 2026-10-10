@@ -6,7 +6,7 @@ export interface MediaCardModel {
   readonly id: string;
   readonly originalTitle: string;
   readonly posterUrl: string;
-  readonly quality: string | null;
+  readonly quality?: string | null;
   readonly rating: number | null;
   readonly title: string;
   readonly type: 'movie' | 'series';

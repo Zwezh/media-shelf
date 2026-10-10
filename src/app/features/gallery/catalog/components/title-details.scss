@@ -70,9 +70,13 @@
 
   &__cards {
     display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-xl);
     align-items: start;
+  }
+
+  &__cards--library {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   }
 
   &__status {
@@ -99,7 +103,7 @@
 }
 
 @include breakpoint.tablet {
-  .movie-details__cards {
+  .movie-details__cards--library {
     grid-template-columns: 1fr;
   }
 }

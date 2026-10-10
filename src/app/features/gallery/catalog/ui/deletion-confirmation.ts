@@ -7,7 +7,7 @@ import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 export type DeletionRequest = {
   readonly owner: DestroyRef;
   readonly title: string;
-  readonly collection?: 'movies' | 'series';
+  readonly collection?: 'movies' | 'series' | 'wishlist';
 };
 
 @Injectable({ providedIn: 'root' })
