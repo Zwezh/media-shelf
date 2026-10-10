@@ -19,8 +19,10 @@ export class MoviesApiClient {
     return this.http.get<unknown>(`${this.moviesUrl}/${encodeURIComponent(id)}`);
   }
 
-  addMovie(movie: MediaDto): Observable<unknown> {
-    return this.http.post<unknown>(this.moviesUrl, movie);
+  addMovie(movie: MediaDto, wishlistId?: string): Observable<unknown> {
+    const { id, ...draft } = movie;
+    void id;
+    return this.http.post<unknown>(this.moviesUrl, { ...draft, ...(wishlistId ? { wishlistId } : {}) });
   }
 
   updateMovie(movie: MediaDto): Observable<unknown> {

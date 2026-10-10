@@ -1,0 +1,13 @@
+@use './series-production-status';
+@use './title-details';
+.series-details {
+  &__summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-base);
+    margin-bottom: var(--space-base);
+    color: var(--color-text-secondary);
+    font: var(--text-label-md);
+  }
+}

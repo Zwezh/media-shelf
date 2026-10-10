@@ -150,7 +150,9 @@ describe('HttpMoviesRepository', () => {
     repository.create(toMovieEditorModel(mediaDto)).subscribe();
     const postRequest = http.expectOne('http://localhost:4200/api/movies');
     expect(postRequest.request.method).toBe('POST');
-    expect(postRequest.request.body).toEqual(mediaDto);
+    const { id, ...createBody } = mediaDto;
+    void id;
+    expect(postRequest.request.body).toEqual(createBody);
     postRequest.flush(mediaDto);
 
     repository.update(toMovieEditorModel(mediaDto)).subscribe();

@@ -10,7 +10,7 @@ export interface MoviesRepository {
   find(query: MoviesParams): Observable<MoviesPage>;
   findById(id: string): Observable<MovieDetails>;
   getForEdit(id: string): Observable<MovieEditorModel>;
-  create(draft: MovieEditorModel): Observable<Media>;
+  create(draft: MovieEditorModel, wishlistId?: string): Observable<Media>;
   update(draft: MovieEditorModel): Observable<Media>;
   delete(id: string): Observable<void>;
 }

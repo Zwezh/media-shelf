@@ -7,7 +7,8 @@ import { SERIES_REPOSITORY } from '../../series/application/series.repository';
 import { HttpSeriesRepository } from '../../series/infrastructure/http-series.repository';
 import { WISHLIST_REPOSITORY } from '../../wishlist/application/wishlist.repository';
 import { HttpWishlistRepository } from '../../wishlist/infrastructure/http-wishlist.repository';
-import { PromoteWishlistUseCase } from '../../wishlist/application/promote-wishlist.use-case';
+import { RefreshWishlistUseCase } from '../../wishlist/application/refresh-wishlist.use-case';
+import { CreateWishlistFromKinopoiskUseCase } from '../../wishlist/application/create-wishlist-from-kinopoisk.use-case';
 import { SaveSeriesUseCase } from '../../series/application/save-series.use-case';
 import { DEFAULT_CATALOG_PARAMS } from '../models/catalog-params';
 import { seriesDto, movieTitleDto, seriesDraft } from '../testing/title.fixture';
@@ -49,16 +50,14 @@ describe.each([
     const http = TestBed.inject(HttpTestingController);
     repository.findById('title/1').subscribe();
     http.expectOne(`/api/${endpoint}/title%2F1`).flush(seriesDto);
-    repository.create(seriesDraft()).subscribe();
-    const create = http.expectOne(`/api/${endpoint}`);
-    expect(create.request.method).toBe('POST');
-    expect(create.request.body).toEqual(toTitleWriteDto(seriesDraft()));
-    create.flush(seriesDto);
-    repository.update('title/1', seriesDraft()).subscribe();
-    const update = http.expectOne(`/api/${endpoint}/title%2F1`);
-    expect(update.request.method).toBe('PUT');
-    expect(update.request.body).toEqual(toTitleWriteDto(seriesDraft()));
-    update.flush(seriesDto);
+    if (repository instanceof HttpSeriesRepository) {
+      repository.create(seriesDraft()).subscribe();
+      const create = http.expectOne('/api/series');
+      expect(create.request.body).toEqual(toTitleWriteDto(seriesDraft()));
+      create.flush(seriesDto);
+      repository.update('title/1', seriesDraft()).subscribe();
+      http.expectOne('/api/series/title%2F1').flush(seriesDto);
+    }
     const deleted = vi.fn();
     repository.delete('title/1').subscribe(deleted);
     const remove = http.expectOne(`/api/${endpoint}/title%2F1`);
@@ -92,7 +91,7 @@ describe.each([
   });
 });
 
-describe('Wishlist promotion and series save operations', () => {
+describe('Wishlist provider operations and series save', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -105,22 +104,36 @@ describe('Wishlist promotion and series save operations', () => {
     });
   });
   afterEach(() => TestBed.inject(HttpTestingController).verify());
-  it.each([seriesDto, movieTitleDto])('promotes either title kind through the server operation', (dto) => {
+  it.each([seriesDto, movieTitleDto])('refreshes either title kind through the server operation', (dto) => {
     const result = vi.fn();
-    TestBed.inject(PromoteWishlistUseCase).execute('wish/1', '2026-10-05').subscribe(result);
-    const request = TestBed.inject(HttpTestingController).expectOne('/api/wishlist/wish%2F1/promote');
+    TestBed.inject(RefreshWishlistUseCase).execute('wish/1', '123').subscribe(result);
+    const request = TestBed.inject(HttpTestingController).expectOne('/api/wishlist/wish%2F1/refresh');
     expect(request.request.method).toBe('POST');
-    expect(request.request.body).toEqual({ addedDate: '2026-10-05' });
+    expect(request.request.body).toEqual({ kpId: '123' });
     request.flush(dto);
     expect(result).toHaveBeenCalledWith(toTitle(dto));
   });
-  it('preserves validation and conflict failures from promotion without follow-up requests', () => {
+  it('preserves validation and conflict failures from refresh without follow-up requests', () => {
     const error = vi.fn();
-    TestBed.inject(PromoteWishlistUseCase).execute('1', '2026-10-05').subscribe({ error });
+    TestBed.inject(RefreshWishlistUseCase).execute('1', '123').subscribe({ error });
     TestBed.inject(HttpTestingController)
-      .expectOne('/api/wishlist/1/promote')
+      .expectOne('/api/wishlist/1/refresh')
       .flush({ message: 'Already in library' }, { status: 409, statusText: 'Conflict' });
     expect(error).toHaveBeenCalledWith(expect.objectContaining({ kind: 'conflict', message: 'Already in library' }));
+  });
+  it('creates a provider-backed wishlist entry and rejects malformed returned IDs', () => {
+    const operation = TestBed.inject(CreateWishlistFromKinopoiskUseCase);
+    const http = TestBed.inject(HttpTestingController);
+    const result = vi.fn();
+    operation.execute('123').subscribe(result);
+    const request = http.expectOne('/api/wishlist/from-kinopoisk');
+    expect(request.request.body).toEqual({ kpId: '123' });
+    request.flush({ id: 'created' });
+    expect(result).toHaveBeenCalledWith('created');
+    const error = vi.fn();
+    operation.execute('123').subscribe({ error });
+    http.expectOne('/api/wishlist/from-kinopoisk').flush({ id: 5 });
+    expect(error).toHaveBeenCalledWith(expect.objectContaining({ kind: 'unexpected' }));
   });
   it('selects create or item update from the explicit save command', () => {
     const operation = TestBed.inject(SaveSeriesUseCase);

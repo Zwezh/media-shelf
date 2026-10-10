@@ -1,15 +1,5 @@
-@use '../components/series-production-status';
-@use '../../catalog/components/title-details';
+@use '../../catalog/components/title-details-summary';
 .series-details {
-  &__summary {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-sm) var(--space-base);
-    margin-bottom: var(--space-base);
-    color: var(--color-text-secondary);
-    font: var(--text-label-md);
-  }
   &__information {
     display: grid;
     gap: var(--space-base);

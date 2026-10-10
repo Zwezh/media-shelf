@@ -43,8 +43,8 @@ export class HttpMoviesRepository implements MoviesRepository {
     );
   }
 
-  create(draft: MovieEditorModel): Observable<Media> {
-    return this.api.addMovie(toMediaDto(draft)).pipe(
+  create(draft: MovieEditorModel, wishlistId?: string): Observable<Media> {
+    return this.api.addMovie(toMediaDto(draft), wishlistId).pipe(
       map(parseMediaDto),
       map(toMedia),
       catchError((error: unknown) => throwError(() => toAppError(error))),

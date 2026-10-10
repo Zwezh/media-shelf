@@ -9,7 +9,7 @@ The visual hierarchy follows workspace-root `stitch-gallery/code.html` and `stit
 | Owner | Responsibility |
 | --- | --- |
 | `series/pages/series.ts` | Collection page, settings-dependent computed card projections, filter dialog and View navigation. |
-| `series/state/series-route-state.ts` | Typed Catalog URL parsing/writing, with no independent writable state. |
+| `catalog/state/catalog-route-state.ts` | Typed Catalog URL parsing/writing, with no independent writable state. |
 | `series/state/series.store.ts` | Latest normalized params, server titles/count and finite read status; URL-driven reads and page/filter/sort commands. |
 | `series/pages/series-details.ts` | Breadcrumbs, computed details projection, shared sections and post-render heading focus. |
 | `series/state/series-details.store.ts` | Route-ID reads, clearing stale content, cancellation, retry and finite read status. |
@@ -49,7 +49,7 @@ applyFilters(filters: CollectionFilters): void {
 
 ```mermaid
 flowchart TD
-  URL[Series query params] --> Adapter[SeriesRouteState]
+  URL[Series query params] --> Adapter[CatalogRouteState]
   Adapter --> ListStore[SeriesStore]
   ListStore --> ListQuery[GetSeriesQuery]
   ID[Series route ID] --> DetailStore[SeriesDetailsStore]
@@ -98,3 +98,5 @@ Quality gates are `npm run check`, strict application/spec TypeScript checks and
 Related lodes: [Series foundations](../gallery/series-wishlist.md), [Gallery architecture](../gallery/business-logic-architecture.md), [media gallery](../ui/media-gallery.md), [movie details](movie-details.md), [settings](../settings/summary.md), [routing](../routing/summary.md), [minimal-change practice](../minimal-change.md).
 
 Series list cards place the year range alongside production status below the genres, while Movie cards keep the year in their title row. Related Series headings reuse the existing `movieDetails.additionalInformation.similarTitles` translation.
+
+Wishlist uses the same card/hero with explicit presentation inputs: `showTypeBadge=true`, `showQuality=false` on cards and `showQuality=false` on the hero. Library defaults remain type-badge-free cards with quality and projected season counts, plus full Additional Information/season sections. Series and Wishlist share catalog status/layout SCSS; only library details apply `movie-details__cards--library` for the 7/5 split.

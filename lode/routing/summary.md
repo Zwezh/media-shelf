@@ -1,6 +1,6 @@
 # Routing Summary
 
-The root router exposes three lazy feature boundaries: `/gallery`, `/statistics`, and `/settings`. Gallery loads a feature layout whose children include `/gallery/movies`, static `/gallery/movies/new`, `/gallery/movies/:id`, `/gallery/movies/:id/edit`, `/gallery/series`, `/gallery/series/:id`, `/gallery/series/new`, `/gallery/series/:id/edit`, and `/gallery/wishlist`; the static add route precedes the parameterized detail route. Movie and Series list/detail navigation preserve their collection query parameters; Movie and Series editor navigation also preserves them. Editor routes carry an explicit `add` or `edit` mode in route data and omit navigation metadata, so they add no subnavigation items. Gallery subnavigation is Movies → Series → Wishlist. `/`, the obsolete `/wishlist` URL, and other unmatched URLs redirect through `/gallery` to Movies. Route titles are translation keys resolved by `TranslatedTitleStrategy`.
+The root router exposes three lazy feature boundaries: `/gallery`, `/statistics`, and `/settings`. Gallery loads a feature layout whose children include `/gallery/movies`, static `/gallery/movies/new`, `/gallery/movies/:id`, `/gallery/movies/:id/edit`, `/gallery/series`, `/gallery/series/:id`, `/gallery/series/new`, `/gallery/series/:id/edit`, and `/gallery/wishlist`; the static add route precedes the parameterized detail route. Movie and Series list/detail navigation preserve their collection query parameters; Movie and Series editor navigation also preserves them. Editor routes carry an explicit `add` or `edit` mode in route data and omit navigation metadata, so they add no subnavigation items. Gallery subnavigation is All items → Movies → Series → Wishlist. All items matches the Gallery path exactly and ignores query parameters for active state. `/`, the obsolete `/wishlist` URL, and other unmatched URLs redirect to the combined `/gallery` list. Route titles are translation keys resolved by `TranslatedTitleStrategy`.
 
 Router navigation uses Angular's progressive View Transitions integration with a short global fade/vertical shift. Unsupported browsers navigate normally, and reduced-motion preference disables the animation.
 
@@ -45,7 +45,7 @@ flowchart LR
 Invariants:
 
 - Root feature entries use `loadChildren`; feature pages use `loadComponent`.
-- Movies, Series and Wishlist are gallery-owned children rendered inside `GalleryLayout`.
+- The combined empty-path Gallery list, Movies, Series and Wishlist are Gallery-owned children rendered inside `GalleryLayout`. Existing collection routes and editor/detail navigation remain unchanged.
 - Movie details is a lazy gallery child without navigation metadata, so it reuses the Gallery layout while adding no subnavigation tab.
 - Movie add/edit pages are lazy Gallery children without navigation metadata and share `MovieEditorPage`; `movies/new` must remain before `movies/:id`.
 - Movie add/edit routes use `authenticatedGuard`. A signed-out attempt returns a `/gallery/movies` `UrlTree` with the attempted route's collection query parameters; backend authorization remains authoritative.
@@ -58,3 +58,5 @@ Invariants:
 - New root features update `src/app/app.routes.ts`, route tests, and this routing contract together.
 
 Related lodes: [authentication](../auth/summary.md), [project summary](../summary.md), [practices](../practices.md), [application shell](../ui/application-shell.md), [media gallery](../ui/media-gallery.md).
+
+Wishlist viewing uses public lazy `/gallery/wishlist` and `/gallery/wishlist/:id` routes for either movie or series membership. Detail breadcrumbs and card navigation preserve query parameters; no Wishlist write routes are exposed. See [Wishlist viewing](../plans/wishlist-viewing.md).

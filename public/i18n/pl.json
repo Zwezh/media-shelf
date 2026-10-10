@@ -54,7 +54,14 @@
     "version": "wersja {{version}}"
   },
   "gallery": {
-    "navigation": "Nawigacja galerii"
+    "navigation": "Nawigacja galerii",
+    "allItems": "Wszystkie pozycje",
+    "loading": "Ładowanie galerii…",
+    "loadError": "Nie udało się załadować galerii.",
+    "noMatches": "Brak pozycji pasujących do wyszukiwania lub filtrów.",
+    "empty": "Twoja galeria jest pusta.",
+    "deleted": "Usunięto pozycję.",
+    "mutationError": "Nie udało się usunąć pozycji."
   },
   "header": {
     "home": "Strona główna MediaShelf",
@@ -532,5 +539,29 @@
     "saveError": "Nie udało się zapisać serialu. Zmiany zostały zachowane.",
     "autofilled": "Metadane zaktualizowane.",
     "autofillError": "Nie udało się zaktualizować metadanych. Zmiany zostały zachowane."
+  },
+  "wishlist": {
+    "loading": "Ładowanie listy życzeń…",
+    "loadError": "Nie udało się załadować listy życzeń. Spróbuj ponownie.",
+    "empty": "Lista życzeń jest pusta.",
+    "noMatches": "Brak tytułów na liście życzeń pasujących do filtrów.",
+    "details": "Szczegóły tytułu z listy życzeń",
+    "back": "Powrót do listy życzeń",
+    "add": "Dodaj do listy życzeń",
+    "adding": "Dodawanie…",
+    "refresh": "Odśwież dane",
+    "addToLibrary": "Dodaj do biblioteki",
+    "invalidId": "Wpisz prawidłowy dodatni identyfikator Kinopoisk.",
+    "added": "Dodano do listy życzeń.",
+    "refreshed": "Dane odświeżone.",
+    "deleted": "Usunięto z listy życzeń.",
+    "conflict": "Pozycja już istnieje lub została zmieniona. Odśwież stronę i spróbuj ponownie.",
+    "mutationError": "Operacja nie powiodła się. Istniejące dane zostały zachowane. Spróbuj ponownie.",
+    "editorError": "Nie udało się wczytać pozycji listy życzeń do edytora.",
+    "delete": {
+      "title": "Usuń z listy życzeń",
+      "confirm": "Usuń z listy życzeń",
+      "message": "Usunąć „{{title}}” z listy życzeń?"
+    }
   }
 }

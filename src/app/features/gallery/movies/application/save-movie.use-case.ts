@@ -8,7 +8,7 @@ import { MOVIES_REPOSITORY } from './movies.repository';
 export class SaveMovieUseCase {
   private readonly movies = inject(MOVIES_REPOSITORY);
 
-  execute(mode: MovieEditorMode, draft: MovieEditorModel): Observable<Media> {
-    return mode === 'add' ? this.movies.create(draft) : this.movies.update(draft);
+  execute(mode: MovieEditorMode, draft: MovieEditorModel, wishlistId?: string): Observable<Media> {
+    return mode === 'add' ? (wishlistId ? this.movies.create(draft, wishlistId) : this.movies.create(draft)) : this.movies.update(draft);
   }
 }

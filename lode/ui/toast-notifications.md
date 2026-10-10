@@ -54,3 +54,5 @@ Rationale and lessons:
 - The implementation adapts Figma node `32:560` geometry and elevation while using MediaShelf semantic tokens instead of raw component colors.
 
 Related lodes: [authentication](../auth/summary.md), [UI summary](summary.md), [design tokens](design-tokens.md), [application shell](application-shell.md), [project practices](../practices.md).
+
+Toast live regions use a generic `div` with `status` or `alert` semantics; an article cannot take those roles. Light-theme success messages use the foreground white token to meet AA contrast against the success background.

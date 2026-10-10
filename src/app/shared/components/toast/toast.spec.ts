@@ -34,6 +34,7 @@ describe('Toast', () => {
     const element: HTMLElement = fixture.nativeElement.querySelector('.toast');
     expect(element.classList.contains(`toast--${type}`)).toBe(true);
     expect(element.getAttribute('role')).toBe(role);
+    expect(element.tagName).toBe('DIV');
   });
 
   it('emits a dismissal from the close button', () => {

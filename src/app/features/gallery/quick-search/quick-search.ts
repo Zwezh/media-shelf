@@ -1,3 +1,6 @@
+import { computed } from '@angular/core';
+import { translate } from '@ngx-translate/core';
+import { galleryCard, galleryItemRoute } from '../catalog/utils/gallery-display';
 import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -22,12 +25,21 @@ export class QuickSearch {
   private readonly router = inject(Router);
   private readonly searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
   protected readonly store = inject(QuickSearchStore);
+  private readonly present = translate('series.present');
+  private readonly unknown = translate('series.unknown');
+  protected readonly cards = computed(() =>
+    this.store.media().map((item) => ({
+      ...galleryCard(item, { present: this.present(), unknown: this.unknown() }),
+      collection: item.collection,
+      route: galleryItemRoute(item),
+    })),
+  );
 
   protected applySearch(): void {
     if (!this.store.canApply()) return;
 
     this.store.close();
-    void this.router.navigate(['/gallery/movies'], {
+    void this.router.navigate(['/gallery'], {
       queryParams: { search: this.store.query().trim() },
     });
   }

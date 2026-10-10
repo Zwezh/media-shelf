@@ -82,3 +82,19 @@ describe('MediaCard nullable collection metadata', () => {
     expect(element.querySelector('msh-media-rating')).toBeNull();
   });
 });
+
+describe('Wishlist card presentation', () => {
+  it.each(['movie', 'series'] as const)('shows a %s type badge and hides quality even when supplied', async (type) => {
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
+    const fixture = TestBed.createComponent(MediaCard);
+    fixture.componentRef.setInput('media', { ...media, type });
+    fixture.componentRef.setInput('showTypeBadge', true);
+    fixture.componentRef.setInput('showQuality', false);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector(`.badge--${type}`)?.textContent).toBe(type === 'movie' ? 'Movie' : 'Series');
+    expect(element.querySelector('.badge--quality')).toBeNull();
+    expect(element.textContent).not.toContain('4K HDR');
+    expect(element.textContent).not.toContain('Seasons:');
+  });
+});

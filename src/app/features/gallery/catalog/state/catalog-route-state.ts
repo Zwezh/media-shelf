@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { ActivatedRoute, Router, type ParamMap } from '@angular/router';
 import { distinctUntilChanged, map } from 'rxjs';
-import { CATALOG_SORTING_KEYS, DEFAULT_CATALOG_PARAMS, type CatalogParams } from '../../catalog/models/catalog-params';
+import { CATALOG_SORTING_KEYS, DEFAULT_CATALOG_PARAMS, type CatalogParams } from '../models/catalog-params';
 import { toCollectionQueryParams } from '../../data-access/collection-query-params';
 import { readCollectionParams } from '../../utils/collection-params';
 
@@ -10,7 +10,7 @@ export function readCatalogParams(params: ParamMap): CatalogParams {
 }
 
 @Service({ autoProvided: false })
-export class SeriesRouteState {
+export class CatalogRouteState {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   readonly query = this.route.queryParamMap.pipe(

@@ -21,12 +21,16 @@
 - [gallery/kinopoisk-autofill.md](gallery/kinopoisk-autofill.md) - Authenticated backend autofill, server-only provider key, normalized contract, limits and error handling.
 - [gallery/title-autofill.md](gallery/title-autofill.md) - Normalized Kinopoisk Series/Wishlist metadata, latest-draft merging, local season preservation, and save contracts.
 - [gallery/business-logic-architecture.md](gallery/business-logic-architecture.md) - Current layered Gallery dependency contract, state ownership, workflows, runtime boundaries, and extension rules.
-- [gallery/series-wishlist.md](gallery/series-wishlist.md) - Callable Series/Wishlist API foundations, normalized title contracts, promotion, and future presentation boundaries.
+- [gallery/series-wishlist.md](gallery/series-wishlist.md) - Callable Series/Wishlist API foundations, normalized title contracts, provider-backed writes, and editor handoff.
 - [plans/media-sorting.md](plans/media-sorting.md) - Responsive, URL-backed Movies sorting contract and structure.
 - [plans/movie-details.md](plans/movie-details.md) - Movie details route, API/store flow, prototype adaptation, components, navigation, and verification contract.
 - [plans/movie-editor.md](plans/movie-editor.md) - Movie add/edit routes, Signal Form and store flow, Kinopoisk autofill, CRUD mutations, confirmation deletion, and verification contract.
-- [plans/series-viewing.md](plans/series-viewing.md) - Series list/details implementation, reusable presentation, URL flow, season metadata, accessibility, and episode-count limitation.
+- [plans/series-viewing.md](plans/series-viewing.md) - Series list/details implementation, reusable presentation, URL flow, production/year metadata, accessibility, and episode-count limitation.
+- [plans/series-viewing-simplification.md](plans/series-viewing-simplification.md) - Library versus Wishlist presentation contracts, explicit badge/quality inputs, and collection-owned sections.
 - [plans/series-editor.md](plans/series-editor.md) - Series add/edit/delete UI, shared editor sections, single season quality selections, derived availability/quality lists and verification.
+- [plans/wishlist-viewing.md](plans/wishlist-viewing.md) - Mixed-title Wishlist list/details, URL state, shared components, and verification.
+- [plans/wishlist-provider-workflow.md](plans/wishlist-provider-workflow.md) - Implemented provider-backed Wishlist creation/refresh, editor handoff, atomic library transfer, and deletion.
+- [plans/unified-gallery.md](plans/unified-gallery.md) - Combined Movies/Series/Wishlist list, compact read contracts, global search, default routing, and implementation gates.
 - `plans/` - Persistent roadmaps and TODOs when needed.
 - `tmp/` - Git-ignored session scraps and handovers.
 

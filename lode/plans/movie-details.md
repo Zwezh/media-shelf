@@ -111,3 +111,7 @@ type MovieDetailsState = {
 - Auxiliary Stream / Path controls remain visible and disabled.
 
 Related lodes: [media gallery](../ui/media-gallery.md), [routing](../routing/summary.md), [toast notifications](../ui/toast-notifications.md), [design tokens](../ui/design-tokens.md), [practices](../practices.md), [terminology](../terminology.md).
+
+Quality and Additional Information belong to library Movie details. Wishlist Movie details reuse the hero with `[showQuality]="false"` and omit Additional Information through page composition. Library details apply `movie-details__cards--library` for the responsive 7/5 split.
+
+Additional Information extension values use `--color-on-surface-variant` with code typography for AA contrast in both themes.

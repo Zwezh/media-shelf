@@ -1,3 +1,4 @@
+import { GetWishlistTitleQuery } from '../../wishlist/application/get-wishlist-title.query';
 import { SettingsStore } from '@msh-core/settings/settings.store';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
@@ -22,6 +23,7 @@ function setup(mode = 'edit', defaults = true) {
   const feedback = { success: vi.fn(), error: vi.fn() };
   TestBed.configureTestingModule({
     providers: [
+      { provide: GetWishlistTitleQuery, useValue: { execute: vi.fn() } },
       SeriesEditorStore,
       {
         provide: SettingsStore,
@@ -30,7 +32,7 @@ function setup(mode = 'edit', defaults = true) {
           extensionOptions: () => [{ id: 'default-extension', default: defaults }],
         },
       },
-      { provide: ActivatedRoute, useValue: { snapshot: { data: { mode } }, paramMap: params } },
+      { provide: ActivatedRoute, useValue: { snapshot: { data: { mode } }, queryParamMap: of(convertToParamMap({})), paramMap: params } },
       { provide: Router, useValue: { navigate } },
       { provide: GalleryFeedback, useValue: feedback },
       { provide: GetSeriesTitleQuery, useValue: { execute: read } },
@@ -124,4 +126,20 @@ describe('SeriesEditorStore', () => {
     expect(store.seed().name).toBe('Filled');
     expect(store.seed().seasons).toEqual(model.seasons);
   });
+});
+
+it('prefills the new series editor from Wishlist and saves its source identity', () => {
+  const { store, save } = setup('add');
+  const source = {
+    ...title,
+    id: 'wishlist-series',
+    series: { ...title.series, seasons: title.series.seasons.map((season) => ({ ...season, isAvailable: false, formats: [] })) },
+  };
+  vi.mocked(TestBed.inject(GetWishlistTitleQuery).execute).mockReturnValue(of(source));
+  store.loadWishlist(source.id);
+  expect(store.seed().name).toBe(source.title);
+  expect(store.seed().seasons.every((season) => !season.isAvailable)).toBe(true);
+  const draft = toSeriesDraft(store.seed());
+  store.save(draft);
+  expect(save).toHaveBeenCalledWith({ mode: 'add', draft, wishlistId: source.id });
 });

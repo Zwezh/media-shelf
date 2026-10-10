@@ -3,15 +3,6 @@
     <msh-page-header titleKey="series.title" headingId="series-title" badgeTone="series" [itemCount]="store.totalCount()">
       <div class="movies__toolbar">
         <button
-          class="btn btn-secondary movies__add-button"
-          type="button"
-          [mshRequiresAuth]="false"
-          [title]="(authSession.isAuthenticated() ? 'seriesEditor.addTitle' : 'auth.requiredForWrite') | translate"
-          (click)="add()"
-        >
-          <msh-icon name="add" [size]="18" /> {{ 'seriesEditor.addTitle' | translate }}
-        </button>
-        <button
           class="btn btn-primary movies__filters-button"
           type="button"
           (click)="openFilters()"
@@ -28,6 +19,15 @@
           [defaultSorting]="defaultSorting"
           (sortingChange)="store.applySorting($event)"
         />
+        <button
+          class="btn btn-secondary movies__add-button"
+          type="button"
+          [mshRequiresAuth]="false"
+          [title]="(authSession.isAuthenticated() ? 'seriesEditor.addTitle' : 'auth.requiredForWrite') | translate"
+          (click)="add()"
+        >
+          <msh-icon name="add" [size]="18" /> {{ 'seriesEditor.addTitle' | translate }}
+        </button>
       </div>
     </msh-page-header>
     @if (hasQuery()) {

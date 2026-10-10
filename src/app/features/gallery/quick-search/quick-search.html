@@ -26,14 +26,9 @@
         <p class="quick-search__status" role="status">{{ 'quickSearch.empty' | translate: { query: store.query().trim() } }}</p>
       } @else if (store.media().length > 0) {
         <ul class="quick-search__results" [attr.aria-label]="'quickSearch.results' | translate">
-          @for (item of store.media(); track item.id) {
+          @for (item of cards(); track item.id) {
             <li>
-              <a
-                class="quick-search__result"
-                [routerLink]="['/gallery/movies', item.id]"
-                [queryParams]="{ search: store.query().trim() }"
-                (click)="close()"
-              >
+              <a class="quick-search__result" [routerLink]="item.route" [queryParams]="{ search: store.query().trim() }" (click)="close()">
                 <img
                   class="quick-search__poster"
                   [src]="item.posterUrl"
@@ -51,9 +46,14 @@
                 </span>
                 <span class="quick-search__badges">
                   <msh-media-badge [tone]="item.type">{{ 'media.type.' + item.type | translate }}</msh-media-badge>
-                  <span class="quick-search__rating" [attr.aria-label]="'media.ratingLabel' | translate: { rating: item.rating }">
-                    <span aria-hidden="true">★</span> {{ item.rating }}
-                  </span>
+                  @if (item.collection === 'wishlist') {
+                    <msh-media-badge tone="wishlist">{{ 'navigation.wishlist' | translate }}</msh-media-badge>
+                  }
+                  @if (item.rating !== null) {
+                    <span class="quick-search__rating" [attr.aria-label]="'media.ratingLabel' | translate: { rating: item.rating }">
+                      <span aria-hidden="true">★</span> {{ item.rating }}
+                    </span>
+                  }
                   @if (item.quality) {
                     <msh-media-badge tone="quality">{{ item.quality }}</msh-media-badge>
                   }

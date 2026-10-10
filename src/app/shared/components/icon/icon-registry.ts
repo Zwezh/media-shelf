@@ -7,6 +7,7 @@ export const ICON_NAMES = [
   'arrow-up',
   'delete',
   'edit',
+  'refresh',
   'filters',
   'key',
   'login',

@@ -1,3 +1,8 @@
+import { GalleryFeedback } from '../../catalog/ui/gallery-feedback';
+import { movieTitleDto } from '../../catalog/testing/title.fixture';
+import { toTitle } from '../../catalog/utils/title.converter';
+import { BehaviorSubject } from 'rxjs';
+import { GetWishlistTitleQuery } from '../../wishlist/application/get-wishlist-title.query';
 import { Location } from '@angular/common';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -44,6 +49,7 @@ describe('MovieEditorStore', () => {
     const loadMovie = vi.fn(() => of(toMovieEditorModel(movie)));
     TestBed.configureTestingModule({
       providers: [
+        { provide: GetWishlistTitleQuery, useValue: { execute: vi.fn() } },
         MovieEditorStore,
         ...provideI18nTesting(),
         { provide: AutofillMovieUseCase, useValue: { execute: vi.fn() } },
@@ -70,6 +76,7 @@ describe('MovieEditorStore', () => {
     const navigate = vi.fn(() => Promise.resolve(true));
     TestBed.configureTestingModule({
       providers: [
+        { provide: GetWishlistTitleQuery, useValue: { execute: vi.fn() } },
         MovieEditorStore,
         ...provideI18nTesting(),
         { provide: AutofillMovieUseCase, useValue: { execute: vi.fn() } },
@@ -79,7 +86,7 @@ describe('MovieEditorStore', () => {
         { provide: Location, useValue: { back: vi.fn() } },
         {
           provide: ActivatedRoute,
-          useValue: { paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
+          useValue: { queryParamMap: of(convertToParamMap({})), paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
         },
       ],
     });
@@ -98,6 +105,7 @@ describe('MovieEditorStore', () => {
     const navigate = vi.fn(() => Promise.resolve(true));
     TestBed.configureTestingModule({
       providers: [
+        { provide: GetWishlistTitleQuery, useValue: { execute: vi.fn() } },
         MovieEditorStore,
         ...provideI18nTesting(),
         { provide: AutofillMovieUseCase, useValue: { execute: vi.fn() } },
@@ -107,7 +115,7 @@ describe('MovieEditorStore', () => {
         { provide: Location, useValue: { back: vi.fn() } },
         {
           provide: ActivatedRoute,
-          useValue: { paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
+          useValue: { queryParamMap: of(convertToParamMap({})), paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
         },
       ],
     });
@@ -130,6 +138,7 @@ describe('MovieEditorStore', () => {
     const response = new Subject<TitleAutofill>();
     TestBed.configureTestingModule({
       providers: [
+        { provide: GetWishlistTitleQuery, useValue: { execute: vi.fn() } },
         MovieEditorStore,
         ...provideI18nTesting(),
         {
@@ -145,7 +154,7 @@ describe('MovieEditorStore', () => {
         { provide: Location, useValue: { back: vi.fn() } },
         {
           provide: ActivatedRoute,
-          useValue: { paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
+          useValue: { queryParamMap: of(convertToParamMap({})), paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
         },
       ],
     });
@@ -188,6 +197,7 @@ describe('MovieEditorStore', () => {
     const autofill = vi.fn(() => of(toMovieEditorModel(movie)));
     TestBed.configureTestingModule({
       providers: [
+        { provide: GetWishlistTitleQuery, useValue: { execute: vi.fn() } },
         MovieEditorStore,
         ...provideI18nTesting(),
         { provide: AutofillMovieUseCase, useValue: { execute: autofill } },
@@ -197,7 +207,7 @@ describe('MovieEditorStore', () => {
         { provide: Location, useValue: { back: vi.fn() } },
         {
           provide: ActivatedRoute,
-          useValue: { paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
+          useValue: { queryParamMap: of(convertToParamMap({})), paramMap: of(convertToParamMap({})), snapshot: { data: { mode: 'add' } } },
         },
       ],
     });
@@ -212,4 +222,39 @@ describe('MovieEditorStore', () => {
     expect(save).toHaveBeenCalledOnce();
     expect(autofill).not.toHaveBeenCalled();
   });
+});
+
+it('loads a reload-safe Wishlist source into the movie creation editor and submits source identity', () => {
+  const source = toTitle({ ...movieTitleDto, id: 'wishlist-movie', name: 'Wishlisted movie', rating: null, movieLength: null });
+  const params = new BehaviorSubject(convertToParamMap({ wishlistId: source.id }));
+  const execute = vi.fn(() => of(source));
+  const save = vi.fn(() => of({ id: source.id }));
+  TestBed.configureTestingModule({
+    providers: [
+      MovieEditorStore,
+      { provide: ActivatedRoute, useValue: { snapshot: { data: { mode: 'add' } }, queryParamMap: params } },
+      { provide: GetWishlistTitleQuery, useValue: { execute } },
+      { provide: SaveMovieUseCase, useValue: { execute: save } },
+      { provide: AutofillMovieUseCase, useValue: { execute: vi.fn() } },
+      { provide: LoadMovieEditorQuery, useValue: { execute: vi.fn() } },
+      { provide: GalleryFeedback, useValue: { success: vi.fn(), error: vi.fn() } },
+      { provide: Location, useValue: { back: vi.fn() } },
+      { provide: Router, useValue: { navigate: vi.fn() } },
+    ],
+  });
+  const store = TestBed.inject(MovieEditorStore);
+  expect(execute).toHaveBeenCalledWith(source.id);
+  expect(store.seed().name).toBe('Wishlisted movie');
+  expect(store.seed().rating).toBe('');
+  expect(store.seed().movieLength).toBe('');
+  store.save(store.seed());
+  expect(save).toHaveBeenCalledWith('add', store.seed(), source.id);
+  const pendingSave = new Subject<{ id: string }>();
+  save.mockReturnValueOnce(pendingSave);
+  store.save(store.seed());
+  params.next(convertToParamMap({}));
+  pendingSave.next({ id: source.id });
+  expect(TestBed.inject(Router).navigate).toHaveBeenCalledTimes(1);
+  expect(store.wishlistId()).toBe('');
+  expect(store.seed().name).toBe('');
 });

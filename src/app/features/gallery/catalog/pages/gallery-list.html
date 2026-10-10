@@ -1,0 +1,102 @@
+<section #content class="movies" aria-labelledby="gallery-title">
+  <div class="movies__content">
+    <msh-page-header titleKey="gallery.allItems" headingId="gallery-title" badgeTone="movie" [itemCount]="store.totalCount()">
+      <div class="movies__toolbar">
+        <button
+          class="btn btn-primary movies__filters-button"
+          type="button"
+          (click)="openFilters()"
+          [attr.aria-label]="'movies.filters.openFilters' | translate: { count: store.activeFilterCount() }"
+        >
+          <msh-icon name="filters" /> {{ 'movies.filters.filtersButton' | translate }}
+          @if (store.activeFilterCount() > 0) {
+            <strong>{{ store.activeFilterCount() }}</strong>
+          }
+        </button>
+        <msh-movies-sort-select
+          [sorting]="store.sorting()"
+          [keys]="sortingKeys"
+          [defaultSorting]="defaultSorting"
+          (sortingChange)="store.applySorting($event)"
+        />
+        <button class="btn btn-secondary movies__add-button" type="button" [mshRequiresAuth]="false" (click)="add()">
+          <msh-icon name="add" [size]="18" /> {{ 'wishlist.add' | translate }}
+        </button>
+      </div>
+    </msh-page-header>
+    @if (hasQuery()) {
+      <div class="series__filters" [attr.aria-label]="'movies.filters.active' | translate">
+        @if (store.params().search; as search) {
+          <span>{{ 'series.search' | translate: { value: search } }}</span>
+        }
+        @for (chip of filterChips(); track chip.key) {
+          <button
+            class="btn btn-secondary"
+            type="button"
+            (click)="store.removeFilters(chip.filterKeys)"
+            [attr.aria-label]="'movies.filters.removeFilter' | translate: { filter: chip.value }"
+          >
+            {{ chip.labelKey | translate: { value: chip.value } }} <span aria-hidden="true">×</span>
+          </button>
+        }
+        @if (store.activeFilterCount() > 0) {
+          <button class="btn btn-secondary" type="button" (click)="store.clearFilters()">{{ 'series.clearFilters' | translate }}</button>
+        }
+      </div>
+    }
+    @if (store.status() === 'loading') {
+      <msh-page-status messageKey="gallery.loading" />
+    } @else if (store.status() === 'error') {
+      <div class="movies__error">
+        <msh-page-status kind="error" messageKey="gallery.loadError" />
+        <button class="btn btn-primary" type="button" (click)="store.retry()">{{ 'movies.retry' | translate }}</button>
+      </div>
+    } @else if (cards().length === 0) {
+      <msh-empty-state [messageKey]="hasQuery() ? 'gallery.noMatches' : 'gallery.empty'" />
+    } @else {
+      <div class="movies__grid">
+        @for (card of cards(); track card.title.id) {
+          <msh-media-card
+            [media]="card.media"
+            [showTypeBadge]="true"
+            [wrapBadges]="true"
+            [showQuality]="true"
+            [actions]="card.title.collection === 'wishlist' ? ['view', 'refresh', 'delete'] : ['view', 'edit', 'delete']"
+            [actionsDisabled]="store.pendingIds().includes(card.title.id)"
+            [refreshDisabled]="!card.title.kpId"
+            (viewRequested)="view(card.title)"
+            (editRequested)="edit(card.title)"
+            (refreshRequested)="store.refresh(card.title)"
+            (deleteRequested)="confirmDelete(card.title)"
+          >
+            @if (card.title.collection === 'wishlist') {
+              <msh-media-badge card-collection-badge tone="wishlist">{{ 'navigation.wishlist' | translate }}</msh-media-badge>
+            }
+            @if (card.title.series && card.title.collection !== 'wishlist') {
+              <span card-overlay-metadata>{{
+                'series.seasonSummary'
+                  | translate: { available: card.title.series.availableSeasonCount, recorded: card.title.series.recordedSeasonCount }
+              }}</span>
+            }
+            @if (card.title.series; as series) {
+              <div card-metadata class="series__card-metadata">
+                <span class="series-production-status" [attr.data-status]="series.productionStatus">{{
+                  'series.status.' + series.productionStatus | translate
+                }}</span>
+                <span class="text-label-sm">{{ card.media.year }}</span>
+              </div>
+            }
+          </msh-media-card>
+        }
+      </div>
+    }
+  </div>
+  @if (store.status() === 'loaded' && store.titles().length > 0) {
+    <msh-pagination
+      [page]="store.page()"
+      [pageSize]="store.params().pageSize"
+      [totalItems]="store.totalCount()"
+      (pageChange)="store.changePage($event)"
+    />
+  }
+</section>

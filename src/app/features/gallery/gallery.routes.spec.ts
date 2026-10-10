@@ -11,9 +11,10 @@ describe('gallery routes', () => {
     expect(paths.indexOf('series/new')).toBeLessThan(paths.indexOf('series/:id'));
     expect(paths).toContain('series/:id/edit');
     expect(GALLERY_NAVIGATION_ITEMS).toEqual([
-      { labelKey: 'navigation.movies', path: '/gallery/movies' },
-      { labelKey: 'navigation.series', path: '/gallery/series' },
-      { labelKey: 'navigation.wishlist', path: '/gallery/wishlist' },
+      { labelKey: 'gallery.allItems', path: '/gallery', exact: true },
+      { labelKey: 'navigation.movies', path: '/gallery/movies', exact: false },
+      { labelKey: 'navigation.series', path: '/gallery/series', exact: false },
+      { labelKey: 'navigation.wishlist', path: '/gallery/wishlist', exact: false },
     ]);
   });
 

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { GALLERY_NAVIGATION_ITEMS } from '../gallery.routes';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, RouterLinkActive, RouterOutlet, TranslatePipe],
   selector: 'msh-gallery-layout',
   styleUrl: './gallery-layout.scss',
@@ -12,9 +13,18 @@ import { GALLERY_NAVIGATION_ITEMS } from '../gallery.routes';
       <ul>
         @for (item of navigationItems; track item.path) {
           <li>
-            <a [routerLink]="item.path" routerLinkActive="gallery-navigation__link--active" ariaCurrentWhenActive="page">{{
-              item.labelKey | translate
-            }}</a>
+            <a
+              [routerLink]="item.path"
+              routerLinkActive="gallery-navigation__link--active"
+              [routerLinkActiveOptions]="{
+                paths: item.exact ? 'exact' : 'subset',
+                queryParams: 'ignored',
+                fragment: 'ignored',
+                matrixParams: 'ignored',
+              }"
+              ariaCurrentWhenActive="page"
+              >{{ item.labelKey | translate }}</a
+            >
           </li>
         }
       </ul>

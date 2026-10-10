@@ -1,0 +1,10 @@
+@use '../../catalog/components/title-details-summary';
+
+.wishlist-details__actions {
+  display: flex;
+  width: min(100%, 80rem);
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-inline: auto;
+  padding: var(--space-base) var(--size-shell-inline-padding);
+}

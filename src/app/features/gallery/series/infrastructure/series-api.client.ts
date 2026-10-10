@@ -17,8 +17,8 @@ export class SeriesApiClient {
   findById(id: string): Observable<unknown> {
     return this.http.get<unknown>(`${this.url}/${encodeURIComponent(id)}`);
   }
-  create(draft: SeriesTitleWriteDto): Observable<unknown> {
-    return this.http.post<unknown>(this.url, draft);
+  create(draft: SeriesTitleWriteDto, wishlistId?: string): Observable<unknown> {
+    return this.http.post<unknown>(this.url, { ...draft, ...(wishlistId ? { wishlistId } : {}) });
   }
   update(id: string, draft: SeriesTitleWriteDto): Observable<unknown> {
     return this.http.put<unknown>(`${this.url}/${encodeURIComponent(id)}`, draft);
