@@ -114,6 +114,7 @@ describe('root routes', () => {
       { labelKey: 'navigation.gallery', order: 1, path: '/gallery' },
       { labelKey: 'navigation.statistics', order: 2, path: '/statistics' },
       { labelKey: 'navigation.settings', order: 3, path: '/settings' },
+      { labelKey: 'navigation.about', order: 4, path: '/about' },
     ]);
   });
 
@@ -126,6 +127,7 @@ describe('root routes', () => {
     ['/gallery/wishlist/wishlist-series', 'Wishlist series'],
     ['/statistics', 'Library Statistics'],
     ['/settings', 'Settings'],
+    ['/about', 'About MediaShelf'],
   ])('lazy-loads %s', async (path, heading) => {
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl(path);

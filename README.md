@@ -1,89 +1,124 @@
 # MediaShelf
 
-MediaShelf is a private, local, non-commercial pet project for managing a personal collection of movies and TV series. The application works as a personal media library where the user can browse, search, filter, sort, add, edit, delete, and inspect movies and series, as well as maintain a wishlist.
+![MediaShelf logo](public/logo.svg)
 
-The project is built with Angular and SCSS, with global design tokens for colors, spacing, typography, radius, borders, elevation, motion, sizing, and z-index.
+**Version 4.0.0** — a personal library for films, TV series and the titles you want to watch next.
 
-## Project Status
+MediaShelf began as a small way to keep track of my films. Four generations later, it is a responsive web app with a combined gallery, dedicated collection pages and mobile installation. The frontend is hosted on Firebase.
 
-MediaShelf is intended for personal use and local development. It is not packaged or licensed for public/commercial distribution.
+A personal, non-commercial project by **Aleksy Zwierzyński, Senior Frontend Engineer**. This repository is private-package metadata (`private: true`, `UNLICENSED`); it does not grant a license for redistribution or commercial use.
 
-## Features
+[Frontend repository](https://github.com/Zwezh/media-shelf) · [Backend repository](https://github.com/Zwezh/cinema-catalogue-be)
 
-- Browse a personal movie and TV series collection.
-- Search, filter, and sort media entries.
-- Add, edit, delete, and inspect movies and series.
-- Track wishlist items separately from owned or cataloged media.
-- Keep UI styling consistent through shared SCSS design tokens.
+## What you can do
 
-## Tech Stack
+- Browse a combined gallery or separate Movies, Series and Wishlist pages.
+- Find titles with global search, sorting, pagination and filters for genres, years, rating, quality, age certification and people.
+- Add, edit and delete entries through protected workflows; inspect details, release formats and related films.
+- Autofill metadata and artwork through Poiskkino. Requests run on the backend, keeping the provider token out of the browser.
+- Track series production status, season availability, announced season counts and formats; filter by production status or missing seasons.
+- Import and refresh wishlist entries, then move them into the library.
+- Scan the library to save statistics by genre, quality, release year and rating.
+- Switch between English, Russian and Polish, with language-aware title names; choose light, dark or system themes and shared quality, extension and genre settings.
+- Install the app on mobile devices, open it without browser chrome and receive update prompts. The app shell works offline; library data and changes need a connection.
 
-- Angular 22
-- TypeScript
-- SCSS
-- Vitest
+The public **About** page at `/about` tells the project’s story in all three languages and includes dependency information and installation instructions.
 
-## Development server
+## Four generations
 
-To start a local development server, run:
+### 1. A first library, one window · 2010–2011
+
+I wrote the first version while studying at Baranovichi State University. It was a C# desktop application built with Windows Forms, usually called WinForms: one window, a table of films and information entered by hand. I could add rows, edit entries and delete films. I no longer remember every detail, but this small tool was the beginning of the project.
+
+Windows Forms was already the framework’s name at the time; Microsoft’s [2002 Visual Studio .NET launch transcript](https://news.microsoft.com/speeches/speech-transcript-anders-hejlsberg-visual-studio-net-launch/) documents its use. The original application code is not preserved here.
+
+### 2. My Library Cinema · 2015–2016
+
+I rebuilt the idea with Java 8 and JavaFX. **My Library Cinema**, or «Моя кинотека» in Russian, ran on different desktop operating systems and stored each installation’s collection in an XML file.
+
+A sortable film list occupied the left panel; the right panel showed details or a workspace for adding and editing films. Search helped with larger collections, while an HTML scraper retrieved information and artwork from Kinopoisk. There was no mobile version or shared collection between devices.
+
+![My Library Cinema: the JavaFX film list and details panel](public/images/about/my-library-cinema.png)
+
+### 3. Cinema Catalogue goes online
+
+The third generation moved the library to the web with Angular and Node.js. Early versions were rough around the edges, but the project grew into [Cinema Catalogue](https://cinema-catalogue.web.app).
+
+Angular 17, ng-bootstrap 16, Bootstrap and Font Awesome powered the interface, with ngx-translate for Russian, English and Polish. NestJS 10 and MongoDB powered the backend. Firebase hosted the frontend and Render hosted the backend; GitHub Actions checked lint and handled deployment after merges to the main branch.
+
+This edition introduced a film gallery, search, filters, detail pages, quality and file-extension defaults, and Poiskkino API autofill.
+
+![Cinema Catalogue: the third-generation film gallery](public/images/about/cinema-catalogue-gallery.png)
+
+![Cinema Catalogue: a film detail page](public/images/about/cinema-catalogue-details.png)
+
+### 4. MediaShelf · the current generation
+
+I built MediaShelf entirely with AI coding agents in Codex—mostly GPT-6 and GPT-6.1 with medium reasoning—while personally guiding the work, reviewing changes and checking the result. The Lode method keeps decisions and project knowledge close to the code; Google Stitch helped shape the design.
+
+The interface now uses Angular 22, signals, Signal Forms, NgRx SignalStore and ngx-translate, with a small set of focused dependencies. The backend grew from the previous edition, was updated to NestJS 12 and moved from MongoDB to SQLite/libSQL. Films, series and a wishlist now share one library, with the features described above.
+
+## Main dependencies
+
+### Frontend
+
+| Dependency                | Purpose                                                       |
+| ------------------------- | ------------------------------------------------------------- |
+| Angular 22                | Standalone components, lazy routing, signals and Signal Forms |
+| NgRx Signals 22           | Feature state and workflows through SignalStore               |
+| ngx-translate 18          | Runtime English, Russian and Polish translations              |
+| RxJS 7.8                  | HTTP streams, cancellation and asynchronous workflows         |
+| Angular Service Worker 22 | App-shell caching and update notifications                    |
+| SCSS and Nunito Sans      | Shared design tokens, component styles and typography         |
+
+See [package.json](package.json) for exact dependency ranges. Development tooling includes TypeScript 6, Vitest 4, ESLint and Prettier.
+
+### Backend
+
+The [separate backend repository](https://github.com/Zwezh/cinema-catalogue-be) uses NestJS 12 on Node.js, SQLite/libSQL for SQL storage, and Passport, JWT and bcrypt for authentication and protected writes. Provider integration and saved statistics also live in the backend.
+
+## Local development
+
+Use Node.js **22.22.3** and npm **11.4.1**, matching CI. Other supported Node versions are listed in [package.json](package.json).
+
+From this repository’s root:
 
 ```bash
+npm ci
 npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200/`. Angular reloads the app when source files change.
 
-## Install Dependencies
+Run the backend separately using its repository’s setup instructions. The development proxy forwards `/api` to `http://localhost:3000`; production uses the same-origin `/api` path, which hosting must route to the backend.
 
-```bash
-npm install
-```
+### Metadata autofill
 
-## Build
+Editors request normalized metadata from authenticated `GET /api/kinopoisk/titles/:id/autofill`. Configure `KINOPOISK_API_TOKEN` in the backend’s ignored `.env` or deployment environment. Frontend configuration contains no provider credentials. See the [title autofill contract](lode/gallery/title-autofill.md).
 
-To build the project, run:
+## Quality checks and build
 
 ```bash
+npm run check
 npm run build
 ```
 
-Build artifacts are written to the `dist/` directory.
+`check` runs ESLint and the non-watching unit suite. `npm test` starts the Vitest-backed Angular runner in watch mode; `npm run format:check` checks source formatting. GitHub Actions runs checks and a production build.
 
-## Test
+Production artifacts are written to `dist/app/browser`.
 
-To execute unit tests with the Vitest-backed Angular test runner, run:
+Code follows strict TypeScript, standalone OnPush components, signals, native template control flow and feature-owned state. Shared SCSS design tokens keep styling consistent. Accessibility work targets WCAG AA and AXE checks.
 
-```bash
-npm test
-```
+## Mobile installation and offline use
 
-## Code Style
+Host a production build over HTTPS. On the **About** page, choose **Install app** when offered, or open **How to install** for platform-specific instructions. On iOS, installation uses Safari’s Share menu and **Add to Home Screen**; on Android, use the browser’s installation prompt or menu. Installed apps open in their own window and include home-screen shortcuts.
 
-This repository follows the project Angular guidance in `AGENTS.md`:
+After an online visit, the production service worker caches the app shell, pages, fonts and translations. Historical screenshots are cached when viewed. API responses, authentication and mutations are not cached; there is no offline editing queue. Development mode does not register the worker.
 
-- Standalone Angular components.
-- Signals for local state and derived state.
-- Strict TypeScript.
-- Accessible UI that should satisfy WCAG AA and AXE checks.
-- Native Angular control flow in templates.
-- Shared design tokens consumed through CSS custom properties.
+When an update is ready, the app offers a manual reload and reminds you to save your work first.
 
-## Repository
+Hosting must provide an `index.html` fallback for application routes while handling API and asset requests separately. Avoid immutable caching for `index.html`, the web manifest and service-worker metadata. See the [PWA contract](lode/ui/pwa.md) for hosting and mobile verification details.
 
-SSH remote:
+## Project documentation
 
-```bash
-git@github.com:Zwezh/media-shelf.git
-```
-
-## Kinopoisk autofill
-
-The editor requests normalized metadata from authenticated `GET {apiUrl}/kinopoisk/movies/{id}/autofill`. Set `KINOPOISK_API_TOKEN` only in the sibling NestJS backend’s ignored `.env` or deployment environment. Frontend environments contain no provider keys. Deploy the backend endpoint before the frontend update. See [the Lode contract](lode/gallery/kinopoisk-autofill.md).
-
-## Mobile installation (PWA)
-
-Build with `npm run build` and host `dist/app/browser` over HTTPS. In Settings, use **Install app** when offered, or expand **How to install** for iOS/Android instructions. Installed apps open without the browser toolbar and include home-screen shortcuts.
-
-The production service worker caches the UI shell, lazy pages, fonts and translations after an online visit. Library data, authentication and changes require a connection. Available updates offer a manual reload with a save-work reminder. Development mode does not register a worker.
-
-Serve application routes with an index.html fallback, keep API routes separate, and avoid immutable caching for index.html, the web manifest and worker metadata. See [the PWA contract](lode/ui/pwa.md) for hosting and mobile verification.
+The [About page](src/app/features/about/pages/about.html) presents the project history and features in English, Russian and Polish. The [Lode map](lode/lode-map.md) links the architecture, contracts and implementation notes used during development.

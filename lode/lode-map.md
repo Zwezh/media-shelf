@@ -15,6 +15,7 @@
 - [ui/toast-notifications.md](ui/toast-notifications.md) - Global toast store, viewport, variants, timers, accessibility, and animations.
 - [routing/summary.md](routing/summary.md) - Root URL contract and lazy feature boundaries.
 - [i18n/summary.md](i18n/summary.md) - Runtime language initialization, translation resources, and key contracts.
+- [about/summary.md](about/summary.md) - Public project history, screenshots, dependency descriptions, version and installation page.
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
 - [auth/summary.md](auth/summary.md) - Memory JWTs, rotating refresh cookies, authorization dialog, interceptor, guarded routes, and protected-control contract.
 - [storage/summary.md](storage/summary.md) - Guarded localStorage wrapper and centralized token/language key contract.

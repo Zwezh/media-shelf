@@ -1,6 +1,6 @@
 {
   "name": "media-shelf",
-  "version": "0.0.0",
+  "version": "4.0.0",
   "description": "MediaShelf is a private, local, non-commercial pet project for managing a personal collection of movies and TV series. The application works as a personal media library where the user can browse, search, filter, sort, add, edit, delete, and inspect movies and series, as well as maintain a wishlist.",
   "private": true,
   "license": "UNLICENSED",

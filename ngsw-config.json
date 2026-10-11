@@ -19,6 +19,14 @@
           "/poster-placeholder.svg"
         ]
       }
+    },
+    {
+      "name": "about-history",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": ["/images/about/**"]
+      }
     }
   ],
   "dataGroups": [],

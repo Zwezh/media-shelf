@@ -2,9 +2,9 @@ import { signal } from '@angular/core';
 import { Pwa } from '@msh-core/pwa/pwa';
 import { TestBed } from '@angular/core/testing';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
-import { PwaSettings } from './pwa-settings';
+import { PwaInstallation } from './pwa-installation';
 
-describe('PwaSettings', () => {
+describe('PwaInstallation', () => {
   it('shows manual mobile installation instructions without authentication or an install event', async () => {
     TestBed.configureTestingModule({
       providers: [
@@ -15,7 +15,7 @@ describe('PwaSettings', () => {
         },
       ],
     });
-    const fixture = TestBed.createComponent(PwaSettings);
+    const fixture = TestBed.createComponent(PwaInstallation);
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('h2')?.textContent).toBe('Install MediaShelf');

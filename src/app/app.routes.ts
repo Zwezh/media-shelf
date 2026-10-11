@@ -29,6 +29,13 @@ export const routes: Routes = [
     loadChildren: () => import('@msh-features/settings/settings.routes').then((module) => module.SETTINGS_ROUTES),
   },
   {
+    path: 'about',
+    data: {
+      navigation: { labelKey: 'navigation.about', order: 4 } satisfies NavigationMetadata,
+    },
+    loadChildren: () => import('@msh-features/about/about.routes').then((module) => module.ABOUT_ROUTES),
+  },
+  {
     path: '**',
     redirectTo: 'gallery',
   },

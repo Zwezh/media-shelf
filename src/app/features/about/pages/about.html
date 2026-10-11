@@ -1,0 +1,110 @@
+<article class="about" aria-labelledby="about-title">
+  <header class="about__hero">
+    <img ngSrc="/logo.svg" width="88" height="88" alt="" priority />
+    <div>
+      <p class="about__eyebrow">{{ 'about.eyebrow' | translate }} · v{{ version }}</p>
+      <h1 #heading id="about-title" tabindex="-1">{{ 'about.title' | translate }}</h1>
+      <p class="about__intro">{{ 'about.intro' | translate }}</p>
+      <div class="about__links">
+        <a class="btn btn-primary" [href]="repositoryUrl" target="_blank" rel="noopener noreferrer">{{ 'about.repository' | translate }}</a>
+        <a class="btn btn-secondary" [href]="backendRepositoryUrl" target="_blank" rel="noopener noreferrer">{{
+          'about.backendRepository' | translate
+        }}</a>
+      </div>
+    </div>
+  </header>
+
+  <section aria-labelledby="about-history-title">
+    <h2 id="about-history-title">{{ 'about.historyTitle' | translate }}</h2>
+    <p class="about__muted">{{ 'about.historyIntro' | translate }}</p>
+    <div class="about__timeline">
+      @for (entry of history; track entry.id) {
+        <section class="surface-card about__chapter" [attr.aria-labelledby]="'about-' + entry.id">
+          <header class="about__chapter-heading">
+            @if (entry.id === 'fourth') {
+              <img ngSrc="/logo.svg" width="48" height="48" alt="" />
+            } @else {
+              <span class="about__number" aria-hidden="true">{{ entry.number }}</span>
+            }
+            <div>
+              <p class="about__eyebrow">{{ entry.period || ('about.history.' + entry.id + '.period' | translate) }}</p>
+              <h3 [id]="'about-' + entry.id">{{ 'about.history.' + entry.id + '.title' | translate }}</h3>
+            </div>
+          </header>
+          <p>{{ 'about.history.' + entry.id + '.intro' | translate }}</p>
+          <p>{{ 'about.history.' + entry.id + '.details' | translate }}</p>
+          @if (entry.id === 'first') {
+            <a [href]="winFormsReference" target="_blank" rel="noopener noreferrer">{{ 'about.winFormsReference' | translate }}</a>
+          }
+          @if (entry.id === 'third') {
+            <a [href]="legacyUrl" target="_blank" rel="noopener noreferrer">{{ 'about.legacyApp' | translate }}</a>
+          }
+          @if (entry.images.length) {
+            <div class="about__screenshots">
+              @for (image of entry.images; track image.src) {
+                <figure>
+                  <a
+                    [href]="image.src"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    [attr.aria-label]="'about.images.open' | translate: { title: ('about.images.' + image.caption | translate) }"
+                  >
+                    <img
+                      [ngSrc]="image.src"
+                      [width]="image.width"
+                      [height]="image.height"
+                      [alt]="'about.images.' + image.caption | translate"
+                      loading="lazy"
+                    />
+                  </a>
+                  <figcaption>{{ 'about.images.' + image.caption | translate }}</figcaption>
+                </figure>
+              }
+            </div>
+          }
+          @if (entry.id === 'fourth') {
+            <ul class="about__features">
+              @for (feature of features; track feature) {
+                <li>{{ 'about.features.' + feature | translate }}</li>
+              }
+            </ul>
+          }
+        </section>
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="about-stack-title">
+    <h2 id="about-stack-title">{{ 'about.stackTitle' | translate }}</h2>
+    <p class="about__muted">{{ 'about.stackIntro' | translate }}</p>
+    <div class="about__dependencies">
+      @for (group of dependencies; track group.key) {
+        <section class="surface-card" [attr.aria-labelledby]="'about-stack-' + group.key">
+          <h3 [id]="'about-stack-' + group.key">{{ 'about.stack.' + group.key | translate }}</h3>
+          <dl>
+            @for (dependency of group.items; track dependency.key) {
+              <div class="about__dependency">
+                <dt>
+                  <a [href]="dependency.url" target="_blank" rel="noopener noreferrer">{{ dependency.name }}</a>
+                  @if (dependency.version) {
+                    <span class="about__muted">{{ dependency.version }}</span>
+                  }
+                </dt>
+                <dd>{{ 'about.stack.' + dependency.key | translate }}</dd>
+              </div>
+            }
+          </dl>
+        </section>
+      }
+    </div>
+    <p class="about__muted">{{ 'about.delivery' | translate }}</p>
+  </section>
+
+  <msh-pwa-installation />
+
+  <section class="surface-card about__author" aria-labelledby="about-author-title">
+    <h2 id="about-author-title">{{ 'about.authorTitle' | translate }}</h2>
+    <p><strong>Aleksy Zwierzyński</strong><br />{{ 'about.authorRole' | translate }}</p>
+    <p>{{ 'about.authorNote' | translate }}</p>
+  </section>
+</article>
