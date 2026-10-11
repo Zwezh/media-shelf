@@ -1,3 +1,5 @@
+import { Language } from '@msh-core/i18n/language';
+import { displayTitle } from '@msh-shared/utils/display-title';
 import { DOCUMENT } from '@angular/common';
 import {
   afterNextRender,
@@ -37,7 +39,9 @@ export class WishlistDetails {
   private readonly route = inject(ActivatedRoute);
   private readonly deletion = inject(DeletionConfirmation);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly language = inject(Language).language;
   protected readonly store = inject(WishlistDetailsStore);
+  protected readonly breadcrumbTitle = computed(() => displayTitle(this.store.title(), this.language()));
   private readonly present = translate('series.present');
   private readonly unknown = translate('series.unknown');
   private readonly content = viewChild<ElementRef<HTMLElement>>('content');

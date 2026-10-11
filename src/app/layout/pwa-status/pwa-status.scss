@@ -1,0 +1,16 @@
+.pwa-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: var(--space-sm) var(--size-shell-inline-padding);
+  color: var(--color-shell-text);
+  background: var(--color-shell-surface);
+  border-bottom: var(--border-subtle);
+}
+
+p {
+  margin: 0;
+}

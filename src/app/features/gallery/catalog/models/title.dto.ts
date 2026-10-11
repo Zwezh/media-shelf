@@ -1,3 +1,4 @@
+import type { ProductionStatus } from '../../models/production-status';
 import type { MediaMetadataDto } from '../../models/media-metadata.dto';
 
 export type TitleFormatDto = { qualityId: string; extensionId: string };
@@ -10,7 +11,7 @@ export type SeriesSeasonDto = {
 export type SeriesDetailsDto = {
   startYear: number | null;
   endYear: number | null;
-  productionStatus: 'unknown' | 'in_production' | 'finished';
+  productionStatus: ProductionStatus;
   announcedSeasonCount: number | null;
   seasons: SeriesSeasonDto[];
 };

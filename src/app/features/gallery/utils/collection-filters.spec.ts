@@ -47,4 +47,14 @@ describe('movie filters', () => {
     expect(normalizeCommaSeparatedNames(' Actor One, Actor Two,Actor One ')).toBe('Actor One,Actor Two');
     expect(normalizeCommaSeparatedNames(' , ')).toBeUndefined();
   });
+  it('counts and removes Series filters while retaining search and resetting pagination', () => {
+    const filters = { productionStatus: 'finished' as const, seasonAvailability: 'incomplete' as const };
+    expect(countActiveCollectionFilters(filters)).toBe(2);
+    expect(removeCollectionFilter({ ...baseParams, ...filters }, 'seasonAvailability')).toEqual({
+      ...baseParams,
+      currentPage: 0,
+      productionStatus: 'finished',
+    });
+    expect(replaceCollectionFilters({ ...baseParams, ...filters }, {})).toEqual({ ...baseParams, currentPage: 0 });
+  });
 });

@@ -1,0 +1,18 @@
+:host {
+  display: block;
+  margin-bottom: var(--space-xl);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+summary {
+  cursor: pointer;
+  padding-block: var(--space-sm);
+}
+
+summary:focus-visible {
+  outline: var(--border-focus);
+  outline-offset: var(--space-xxs);
+}

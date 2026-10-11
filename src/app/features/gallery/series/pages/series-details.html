@@ -9,7 +9,7 @@
         <a routerLink="/gallery/series" queryParamsHandling="preserve">{{ 'navigation.series' | translate }}</a>
       </li>
       <li aria-hidden="true">/</li>
-      <li aria-current="page">{{ store.title()?.title || ('series.details' | translate) }}</li>
+      <li aria-current="page">{{ breadcrumbTitle() || ('series.details' | translate) }}</li>
     </ol>
   </nav>
   @if (store.status() === 'loading' || store.status() === 'idle') {

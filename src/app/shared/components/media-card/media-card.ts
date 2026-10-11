@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { Language } from '@msh-core/i18n/language';
+import { displayTitle } from '@msh-shared/utils/display-title';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, translate } from '@ngx-translate/core';
 import { MEDIA_POSTER_PLACEHOLDER } from '@msh-core/config/media';
 import { RequiresAuth } from '@msh-shared/directives/requires-auth';
@@ -26,8 +28,9 @@ export class MediaCard {
   readonly refreshRequested = output<MediaCardModel>();
   readonly editRequested = output<MediaCardModel>();
   readonly viewRequested = output<MediaCardModel>();
+  private readonly language = inject(Language).language;
   private readonly untitled = translate('media.untitled');
-  protected readonly displayTitle = computed(() => this.media().title || this.untitled());
+  protected readonly displayTitle = computed(() => displayTitle(this.media(), this.language()) || this.untitled());
   protected readonly genresLabel = computed(() => this.media().genres.slice(0, 2).join(', '));
   protected readonly durationParams = computed(() => ({
     hours: Math.floor((this.media().durationMinutes ?? 0) / 60),

@@ -79,3 +79,11 @@ git@github.com:Zwezh/media-shelf.git
 ## Kinopoisk autofill
 
 The editor requests normalized metadata from authenticated `GET {apiUrl}/kinopoisk/movies/{id}/autofill`. Set `KINOPOISK_API_TOKEN` only in the sibling NestJS backend’s ignored `.env` or deployment environment. Frontend environments contain no provider keys. Deploy the backend endpoint before the frontend update. See [the Lode contract](lode/gallery/kinopoisk-autofill.md).
+
+## Mobile installation (PWA)
+
+Build with `npm run build` and host `dist/app/browser` over HTTPS. In Settings, use **Install app** when offered, or expand **How to install** for iOS/Android instructions. Installed apps open without the browser toolbar and include home-screen shortcuts.
+
+The production service worker caches the UI shell, lazy pages, fonts and translations after an online visit. Library data, authentication and changes require a connection. Available updates offer a manual reload with a save-work reminder. Development mode does not register a worker.
+
+Serve application routes with an index.html fallback, keep API routes separate, and avoid immutable caching for index.html, the web manifest and worker metadata. See [the PWA contract](lode/ui/pwa.md) for hosting and mobile verification.

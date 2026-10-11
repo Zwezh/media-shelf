@@ -1,3 +1,4 @@
+import { Language } from '@msh-core/i18n/language';
 import { provideAuthSessionTesting } from '@msh/testing/auth-testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -49,6 +50,13 @@ describe('Series details page', () => {
     ).toBe(true);
     expect(element.querySelector('.movie-hero__rating')).toBeNull();
     expect(element.querySelector('a[href="/gallery/series"]')).not.toBeNull();
+    expect(element.querySelector('[aria-current="page"]')?.textContent).toBe('Original');
+    await TestBed.inject(Language).select('ru');
+    await fixture.whenStable();
+    expect(element.querySelector('[aria-current="page"]')?.textContent).toBe('Series');
+    await TestBed.inject(Language).select('pl');
+    await fixture.whenStable();
+    expect(element.querySelector('[aria-current="page"]')?.textContent).toBe('Original');
     store.status.set('error');
     await fixture.whenStable();
     element.querySelector<HTMLButtonElement>('.movie-details__error-actions button')?.click();

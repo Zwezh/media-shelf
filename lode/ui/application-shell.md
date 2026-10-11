@@ -1,11 +1,12 @@
 # Application Shell
 
-The root `App` composes three standalone, OnPush layout components: `Header`, `MainContent`, and `Footer`. The host is a row grid with `auto minmax(0, 1fr) auto`, so short feature pages keep the footer at the viewport bottom while long pages expand normally. `MainContent` owns the application's only semantic `<main>` and primary `RouterOutlet`; routed feature pages use sections and own their internal grids and padding.
+The root `App` composes standalone layout components: `Header`, `PwaStatus`, `MainContent`, and `Footer`. The host is a row grid with `auto auto minmax(0, 1fr) auto`, so short feature pages keep the footer at the viewport bottom while long pages expand normally. `MainContent` owns the application's only semantic `<main>` and primary `RouterOutlet`; routed feature pages use sections and own their internal grids and padding.
 
 ```html
 <msh-header [navigationItems]="navigationItems">
   <msh-quick-search header-search />
 </msh-header>
+<msh-pwa-status />
 <msh-main-content />
 <msh-footer [version]="version" />
 ```
@@ -21,6 +22,7 @@ The root `App` composes three standalone, OnPush layout components: `Header`, `M
 ```mermaid
 flowchart TD
   App[App grid] --> Header[Header]
+  App --> PwaStatus[Offline and update status]
   App --> Main[MainContent]
   App --> Footer[Footer]
   Routes[Root route metadata] --> Header
@@ -47,3 +49,5 @@ Contracts:
 - Shell components use `--color-shell-*` and `--size-shell-*` tokens rather than hard-coded layout values.
 
 Related lodes: [authentication](../auth/summary.md), [UI summary](summary.md), [design tokens](design-tokens.md), [quick search](quick-search.md), [routing](../routing/summary.md).
+
+The production shell is installable and caches static resources for offline reopening. Header, footer and body respect device safe-area insets. Installation and update behavior is documented in [PWA](pwa.md).

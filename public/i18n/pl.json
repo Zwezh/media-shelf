@@ -507,6 +507,12 @@
       "successMessage": "Serial został usunięty z biblioteki.",
       "successTitle": "Serial usunięty",
       "title": "Usunąć ten serial?"
+    },
+    "filters": {
+      "productionStatus": "Status produkcji",
+      "seasonAvailability": "Dostępność sezonów",
+      "incomplete": "Brakujące sezony",
+      "productionChip": "Produkcja: {{value}}"
     }
   },
   "seriesEditor": {
@@ -607,5 +613,20 @@
     "median": "Mediana ocen",
     "unknownRatings": "Tytuły bez oceny:",
     "highRated": "Ocena 9,0 lub wyższa"
+  },
+  "pwa": {
+    "title": "Zainstaluj MediaShelf",
+    "description": "Dodaj MediaShelf do ekranu głównego i otwieraj jako osobną aplikację.",
+    "install": "Zainstaluj aplikację",
+    "installed": "MediaShelf działa jako zainstalowana aplikacja.",
+    "instructions": "Jak zainstalować",
+    "ios": "iPhone lub iPad: otwórz stronę w Safari, wybierz Udostępnij, a potem Dodaj do ekranu początkowego. Włącz Otwórz jako aplikację internetową, jeśli ta opcja jest widoczna.",
+    "android": "Android: w menu przeglądarki wybierz Zainstaluj aplikację lub Dodaj do ekranu głównego. Instalacja wymaga HTTPS.",
+    "installError": "Nie udało się rozpocząć instalacji. Spróbuj użyć menu przeglądarki.",
+    "offlineHint": "Po pierwszej wizycie online interfejs aplikacji może otwierać się offline. Dane biblioteki, logowanie i zmiany wymagają połączenia.",
+    "offline": "Jesteś offline. Dane biblioteki i zmiany wymagają połączenia.",
+    "updateReady": "Aktualizacja aplikacji jest gotowa. Zapisz zmiany przed ponownym załadowaniem.",
+    "recovery": "Aplikacja wymaga ponownego załadowania. Jeśli to możliwe, najpierw zapisz zmiany.",
+    "reload": "Załaduj ponownie"
   }
 }

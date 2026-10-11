@@ -102,3 +102,5 @@ Movies, Series and Wishlist list toolbars place Filters, Sort, then Add in DOM a
 ## Combined Gallery
 
 The default `/gallery` page composes the existing list/header/filter/sort/pagination controls with a compact mixed collection read. Cards show Movie/Series type plus a Wishlist membership badge when applicable, with opt-in badge wrapping at narrow widths; existing MediaCard defaults and collection pages remain unchanged. Global header search writes canonical Gallery URL state; the page keeps the common filter and sort controls without local search or scope selectors. Actions select the existing detail/editor routes and mutation use cases by collection. The optional `card-collection-badge` projection slot is presentation only. See [Unified Gallery](../plans/unified-gallery.md).
+
+The filter panel uses `--space-xl` above each fieldset and `--space-sm` below each legend. Fieldset padding is zero so the browser places the gap between groups rather than between legends and controls. People fields retain their own inter-input gap.

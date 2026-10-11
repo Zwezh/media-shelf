@@ -19,6 +19,7 @@
       </div>
     </header>
 
+    <msh-pwa-settings />
     @if (settings.settings.isLoading()) {
       <msh-page-status messageKey="settings.loading" />
     } @else if (settings.settings.error()) {

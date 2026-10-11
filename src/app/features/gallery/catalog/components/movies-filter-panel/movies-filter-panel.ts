@@ -1,3 +1,12 @@
+import {
+  EMPTY_FORM,
+  toFormModel,
+  toCollectionFilters,
+  toggleValue,
+  areCollectionFiltersEqual,
+  type MoviesFilterFormModel,
+} from './movies-filter-form';
+import { PRODUCTION_STATUSES } from '../../../models/production-status';
 import { RELEASE_YEAR_RANGE } from '../../../models/media-limits';
 import { ChangeDetectionStrategy, computed, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,40 +16,18 @@ import { SettingsStore } from '@msh-core/settings/settings.store';
 import { FLOATING_PANEL_DATA } from '@msh-shared/floating-panel/floating-panel.tokens';
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
 import { Icon } from '@msh-shared/components/icon/icon';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, translate } from '@ngx-translate/core';
 import { MEDIA_AGE_RATINGS } from '../../../models/media-options';
 import { type CollectionFilters } from '../../../models/collection-filters';
-import { normalizeCommaSeparatedNames } from '../../../utils/collection-filters';
 
 export type MoviesFilterPanelData = {
   readonly filters: CollectionFilters;
-};
-
-type MoviesFilterFormModel = {
-  actors: string;
-  ageRating: number[];
-  directors: string;
-  fromYear: string;
-  genres: string[];
-  quality: string[];
-  rating: number;
-  toYear: string;
+  readonly seriesFilters?: boolean;
 };
 
 type SelectedFilter = {
   readonly id: string;
   readonly label: string;
-};
-
-const EMPTY_FORM: MoviesFilterFormModel = {
-  actors: '',
-  ageRating: [],
-  directors: '',
-  fromYear: '',
-  genres: [],
-  quality: [],
-  rating: 0,
-  toYear: '',
 };
 
 @Component({
@@ -55,11 +42,16 @@ export class MoviesFilterPanel {
   private readonly panelRef = inject<FloatingPanelRef<CollectionFilters>>(FloatingPanelRef);
   private readonly initialFilters = toCollectionFilters(toFormModel(this.data.filters));
 
+  protected readonly seriesFilters = this.data.seriesFilters === true;
+  protected readonly productionStatuses = PRODUCTION_STATUSES.map((value) => ({ value, label: translate(`series.status.${value}`) }));
+  private readonly incompleteLabel = translate('series.filters.incomplete');
   protected readonly settings = inject(SettingsStore);
   protected readonly ageRatings = MEDIA_AGE_RATINGS;
   protected readonly qualityOptions = this.settings.qualityOptions;
   private readonly initialModel = toFormModel(this.data.filters);
   protected readonly filterForm = inject(FormBuilder).nonNullable.group({
+    productionStatus: this.initialModel.productionStatus,
+    seasonAvailability: this.initialModel.seasonAvailability,
     actors: this.initialModel.actors,
     ageRating: [this.initialModel.ageRating],
     directors: this.initialModel.directors,
@@ -90,6 +82,10 @@ export class MoviesFilterPanel {
   protected readonly selectedFilters = computed<readonly SelectedFilter[]>(() => {
     const value = this.model();
     return [
+      ...(value.productionStatus
+        ? [{ id: 'productionStatus', label: this.productionStatuses.find((status) => status.value === value.productionStatus)!.label() }]
+        : []),
+      ...(value.seasonAvailability ? [{ id: 'seasonAvailability', label: this.incompleteLabel() }] : []),
       ...(value.genres.length ? [{ id: 'genres', label: value.genres.join(', ') }] : []),
       ...(value.fromYear || value.toYear ? [{ id: 'years', label: `${value.fromYear || '…'}–${value.toYear || '…'}` }] : []),
       ...(value.rating > 0 ? [{ id: 'rating', label: `${value.rating}+` }] : []),
@@ -122,6 +118,10 @@ export class MoviesFilterPanel {
   protected removeSelectedFilter(id: string): void {
     this.updateModel((value) => {
       switch (id) {
+        case 'productionStatus':
+          return { ...value, productionStatus: '' };
+        case 'seasonAvailability':
+          return { ...value, seasonAvailability: false };
         case 'genres':
           return { ...value, genres: [] };
         case 'years':
@@ -157,58 +157,4 @@ export class MoviesFilterPanel {
   protected toggleAgeRating(ageRating: number): void {
     this.updateModel((value) => ({ ...value, ageRating: toggleValue(value.ageRating, ageRating) }));
   }
-}
-
-function toFormModel(filters: CollectionFilters): MoviesFilterFormModel {
-  return {
-    actors: filters.actors ?? '',
-    ageRating: [...(filters.ageRating ?? [])],
-    directors: filters.directors ?? '',
-    fromYear: filters.fromYear?.toString() ?? '',
-    genres: [...(filters.genres ?? [])],
-    quality: [...(filters.quality ?? [])],
-    rating: filters.rating ?? 0,
-    toYear: filters.toYear?.toString() ?? '',
-  };
-}
-
-function toCollectionFilters(value: MoviesFilterFormModel): CollectionFilters {
-  const actors = normalizeCommaSeparatedNames(value.actors);
-  const directors = normalizeCommaSeparatedNames(value.directors);
-  const fromYear = value.fromYear ? Number(value.fromYear) : undefined;
-  const toYear = value.toYear ? Number(value.toYear) : undefined;
-
-  return {
-    ...(actors ? { actors } : {}),
-    ...(value.ageRating.length ? { ageRating: [...value.ageRating].sort((left, right) => left - right) } : {}),
-    ...(directors ? { directors } : {}),
-    ...(fromYear ? { fromYear } : {}),
-    ...(value.genres.length ? { genres: [...value.genres] } : {}),
-    ...(value.quality.length ? { quality: [...value.quality] } : {}),
-    ...(value.rating > 0 ? { rating: value.rating } : {}),
-    ...(toYear ? { toYear } : {}),
-  };
-}
-
-function toggleValue<T>(values: readonly T[], value: T): T[] {
-  return values.includes(value) ? values.filter((candidate) => candidate !== value) : [...values, value];
-}
-
-function areCollectionFiltersEqual(left: CollectionFilters, right: CollectionFilters): boolean {
-  return (
-    left.actors === right.actors &&
-    left.directors === right.directors &&
-    left.fromYear === right.fromYear &&
-    left.rating === right.rating &&
-    left.toYear === right.toYear &&
-    haveSameValues(left.ageRating, right.ageRating) &&
-    haveSameValues(left.genres, right.genres) &&
-    haveSameValues(left.quality, right.quality)
-  );
-}
-
-function haveSameValues<T>(left: readonly T[] | undefined, right: readonly T[] | undefined): boolean {
-  const leftValues = left ?? [];
-  const rightValues = right ?? [];
-  return leftValues.length === rightValues.length && leftValues.every((value) => rightValues.includes(value));
 }

@@ -1,0 +1,9 @@
+@if (!pwa.online()) {
+  <p class="pwa-status" role="status">{{ 'pwa.offline' | translate }}</p>
+}
+@if (pwa.updateReady() || pwa.recoveryRequired()) {
+  <div class="pwa-status">
+    <p role="status">{{ (pwa.recoveryRequired() ? 'pwa.recovery' : 'pwa.updateReady') | translate }}</p>
+    <button class="btn btn-secondary" type="button" (click)="pwa.reload()">{{ 'pwa.reload' | translate }}</button>
+  </div>
+}

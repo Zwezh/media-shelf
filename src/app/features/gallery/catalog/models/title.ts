@@ -1,3 +1,4 @@
+import type { ProductionStatus } from '../../models/production-status';
 /** Domain data preserves unknown metadata rather than inventing card display values. */
 export type TitleFormat = { readonly qualityId: string; readonly extensionId: string };
 export type SeriesSeason = {
@@ -9,7 +10,7 @@ export type SeriesSeason = {
 export type SeriesDetails = {
   readonly startYear: number | null;
   readonly endYear: number | null;
-  readonly productionStatus: 'unknown' | 'in_production' | 'finished';
+  readonly productionStatus: ProductionStatus;
   readonly announcedSeasonCount: number | null;
   readonly seasons: readonly SeriesSeason[];
 };

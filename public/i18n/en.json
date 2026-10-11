@@ -507,6 +507,12 @@
       "successMessage": "The series was removed from your library.",
       "successTitle": "Series deleted",
       "title": "Delete this series?"
+    },
+    "filters": {
+      "productionStatus": "Production status",
+      "seasonAvailability": "Season availability",
+      "incomplete": "Missing seasons",
+      "productionChip": "Production: {{value}}"
     }
   },
   "seriesEditor": {
@@ -607,5 +613,20 @@
     "median": "Median rating",
     "unknownRatings": "Titles without a rating:",
     "highRated": "Rated 9.0 or higher"
+  },
+  "pwa": {
+    "title": "Install MediaShelf",
+    "description": "Add MediaShelf to your home screen and open it as a standalone app.",
+    "install": "Install app",
+    "installed": "MediaShelf is running as an installed app.",
+    "instructions": "How to install",
+    "ios": "iPhone or iPad: open this site in Safari, tap Share, then Add to Home Screen. Enable Open as Web App if shown.",
+    "android": "Android: open the browser menu and choose Install app or Add to Home screen. Installation requires HTTPS.",
+    "installError": "Installation could not start. Try the browser menu instead.",
+    "offlineHint": "After your first online visit, the app shell can open offline. Library data, sign-in and changes require a connection.",
+    "offline": "You’re offline. Library data and changes require a connection.",
+    "updateReady": "An app update is ready. Save your work before reloading.",
+    "recovery": "The app needs to reload. Save your work first if possible.",
+    "reload": "Reload app"
   }
 }

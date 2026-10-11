@@ -7,13 +7,14 @@ import type { SettingsDto } from '@msh-core/settings/settings.dto';
 import { SettingsStore } from '@msh-core/settings/settings.store';
 import { Icon } from '@msh-shared/components/icon/icon';
 import { PageStatus } from '@msh-shared/components/page-status/page-status';
+import { PwaSettings } from '../components/pwa-settings/pwa-settings';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { EMPTY_SETTINGS_FORM_MODEL, type SettingsFormModel, type SettingsOperation } from './settings.model';
 import { genresEqual, settingsFormModelsEqual, sortGenres, toSettingsFormModel } from './settings.utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormField, Icon, PageStatus, TranslatePipe],
+  imports: [FormField, Icon, PageStatus, PwaSettings, TranslatePipe],
   selector: 'msh-settings',
   styleUrl: './settings.scss',
   templateUrl: './settings.html',

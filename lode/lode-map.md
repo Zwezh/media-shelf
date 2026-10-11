@@ -6,6 +6,7 @@
 - [minimal-change.md](minimal-change.md) - User-required investigation, complexity control, diff review, and completion policy for future work.
 - [ui/summary.md](ui/summary.md) - UI architecture overview.
 - [ui/application-shell.md](ui/application-shell.md) - Responsive header, main outlet, footer, and version contract.
+- [ui/pwa.md](ui/pwa.md) - Mobile installation, static offline shell, updates and production hosting contract.
 - [ui/design-tokens.md](ui/design-tokens.md) - Global CSS design-token contract.
 - [ui/style-primitives.md](ui/style-primitives.md) - Reusable Bootstrap-like button, typography, and form class contract.
 - [ui/floating-panels.md](ui/floating-panels.md) - Dynamic native-dialog infrastructure, typed data/results, lifecycle, and responsive placement.

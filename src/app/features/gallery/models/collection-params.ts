@@ -1,3 +1,4 @@
+import type { ProductionStatus } from './production-status';
 import type { SortingDirection } from './sorting-direction';
 
 export type CollectionParams<TKey extends string> = {
@@ -14,4 +15,6 @@ export type CollectionParams<TKey extends string> = {
   rating?: number;
   search?: string;
   toYear?: number;
+  productionStatus?: ProductionStatus;
+  seasonAvailability?: 'incomplete';
 };

@@ -13,8 +13,9 @@
   align-items: center;
   gap: var(--space-md);
   min-width: 0;
-  height: var(--size-shell-header-height);
+  height: calc(var(--size-shell-header-height) + env(safe-area-inset-top));
   padding-inline: var(--size-shell-inline-padding);
+  padding-top: env(safe-area-inset-top);
   background: var(--color-shell-surface);
   border-bottom: var(--border-width-hairline) solid var(--color-shell-border);
   box-shadow: var(--shadow-level-1);
@@ -126,7 +127,7 @@
 
 @include breakpoint.tablet {
   .app-header {
-    height: var(--size-shell-header-height-mobile);
+    height: calc(var(--size-shell-header-height-mobile) + env(safe-area-inset-top));
     padding-inline: var(--size-shell-inline-padding-mobile);
   }
 
