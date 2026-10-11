@@ -1,22 +1,27 @@
+import { isRecord } from '@msh-shared/utils/record';
 import type { StatisticsSnapshot, QualityBucket } from '../models/statistics-snapshot';
+
+const STATISTICS_VERSION = 1;
+const MAX_LABEL_LENGTH = 1000;
+const MAX_STATISTICS_BUCKETS = 10_000;
 
 function invalid(): never {
   throw new TypeError('Invalid statistics data');
 }
 function object(value: unknown): Record<string, unknown> {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return invalid();
-  return value as Record<string, unknown>;
+  if (!isRecord(value)) return invalid();
+  return value;
 }
 function count(value: unknown): number {
   if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0) return invalid();
   return value;
 }
 function label(value: unknown): string {
-  if (typeof value !== 'string' || !value.trim() || value.length > 1000) return invalid();
+  if (typeof value !== 'string' || !value.trim() || value.length > MAX_LABEL_LENGTH) return invalid();
   return value;
 }
 function list<T>(value: unknown, parse: (item: unknown) => T): T[] {
-  if (!Array.isArray(value) || value.length > 10000) return invalid();
+  if (!Array.isArray(value) || value.length > MAX_STATISTICS_BUCKETS) return invalid();
   return value.map(parse);
 }
 function rating(value: unknown): number | null {
@@ -32,7 +37,7 @@ export function parseStatisticsSnapshot(value: unknown): StatisticsSnapshot {
     t = object(raw['totals']),
     r = object(raw['ratings']);
   if (
-    raw['version'] !== 1 ||
+    raw['version'] !== STATISTICS_VERSION ||
     typeof raw['scannedAt'] !== 'string' ||
     !/^\d{4}-\d{2}-\d{2}T.*Z$/.test(raw['scannedAt']) ||
     !Number.isFinite(Date.parse(raw['scannedAt']))
@@ -108,7 +113,7 @@ export function parseStatisticsSnapshot(value: unknown): StatisticsSnapshot {
   )
     invalid();
   return {
-    version: 1,
+    version: STATISTICS_VERSION,
     scannedAt: raw['scannedAt'],
     totals,
     genres,

@@ -37,7 +37,7 @@ describe('AuthDialog', () => {
     element.querySelector<HTMLFormElement>('form')!.dispatchEvent(new SubmitEvent('submit'));
     await fixture.whenStable();
 
-    expect(signIn).toHaveBeenCalledWith('secret');
+    expect(signIn).toHaveBeenCalledWith('  secret  ');
     expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(true);
     expect(success).toHaveBeenCalledOnce();
     expect(close).toHaveBeenCalledWith(true);

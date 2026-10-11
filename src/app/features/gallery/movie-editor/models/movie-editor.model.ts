@@ -1,3 +1,4 @@
+import { toLocalDate } from '@msh-shared/utils/date';
 import type { EditorMetadataModel } from '../../catalog/models/editor-fields';
 export type MovieEditorMode = 'add' | 'edit';
 
@@ -31,8 +32,3 @@ export const createEmptyMovieEditorModel = (): MovieEditorModel => ({
   similarMovies: '',
   year: '',
 });
-
-function toLocalDate(date: Date): string {
-  const offset = date.getTimezoneOffset() * 60_000;
-  return new Date(date.getTime() - offset).toISOString().slice(0, 10);
-}

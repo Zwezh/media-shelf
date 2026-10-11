@@ -1,7 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { catchError, EMPTY, filter, pipe, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, filter, map, pipe, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { type Media } from '../../models/media';
 import { type CollectionFilterKey, type CollectionFilters } from '../../models/collection-filters';
 import { type MoviesParams } from '../../models/movies-params';
@@ -57,13 +57,23 @@ export const MoviesStore = signalStore(
       getMovies = inject(GetMoviesQuery),
       routeState = inject(MoviesRouteState),
     ) => {
+      const deleted = new Subject<void>();
       const deleteMovie = rxMethod<string>(
         pipe(
           filter(() => store.deletingId() === null),
           tap((id) => patchState(store, { deletingId: id })),
-          switchMap((id) =>
+          map((id) => ({ id, params: store.params() })),
+          switchMap(({ id, params }) =>
             deleteMovieUseCase.execute(id).pipe(
               tap(() => {
+                const mustReload = store.isLoading() || store.params() !== params;
+                deleted.next();
+                if (mustReload) {
+                  patchState(store, { deletingId: null });
+                  feedback.success('movies.delete.successTitle', 'movies.delete.successMessage');
+                  loadMovies(store.params());
+                  return;
+                }
                 const media = store.media().filter((item) => item.id !== id);
                 const totalCount = Math.max(0, store.totalCount() - 1);
                 patchState(store, { deletingId: null, media, totalCount });
@@ -88,6 +98,7 @@ export const MoviesStore = signalStore(
           tap((params) => patchState(store, { hasError: false, isLoading: true, params })),
           switchMap((params) =>
             getMovies.execute(params).pipe(
+              takeUntil(deleted),
               tap(({ media, totalCount }) => {
                 const lastPage = Math.max(0, Math.ceil(totalCount / params.pageSize) - 1);
                 if (params.currentPage > lastPage) {

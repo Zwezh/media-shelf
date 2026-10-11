@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ActivatedRoute, Router, type ParamMap } from '@angular/router';
 import { distinctUntilChanged, map } from 'rxjs';
 import { readCatalogParams } from './catalog-route-state';
@@ -12,7 +12,7 @@ export function readGalleryParams(params: ParamMap): GalleryParams {
   };
   return { ...readCatalogParams(params), collections: scope('collections', GALLERY_COLLECTIONS), kinds: scope('kinds', GALLERY_KINDS) };
 }
-@Injectable()
+@Service({ autoProvided: false })
 export class GalleryRouteState {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);

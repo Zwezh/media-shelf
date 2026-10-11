@@ -1,5 +1,6 @@
+import { toLocalDate } from '@msh-shared/utils/date';
 import type { EditorMetadataModel } from '../../catalog/models/editor-fields';
-import type { SeriesDetails } from '../../catalog/models/title';
+import type { SeriesDetails, SeriesDraft, SeriesTitle } from '../../catalog/models/title';
 
 export type SeasonEditorModel = {
   readonly key: number;
@@ -10,6 +11,7 @@ export type SeasonEditorModel = {
   readonly extensionId: string;
 };
 export type SeriesEditorModel = EditorMetadataModel & {
+  readonly original?: SeriesDraft | SeriesTitle;
   readonly releaseDate: string;
   readonly startYear: string;
   readonly endYear: string;
@@ -19,8 +21,6 @@ export type SeriesEditorModel = EditorMetadataModel & {
 };
 
 export function createSeriesEditorModel(): SeriesEditorModel {
-  const date = new Date();
-  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
   return {
     name: '',
     enName: '',
@@ -38,7 +38,7 @@ export function createSeriesEditorModel(): SeriesEditorModel {
     actors: '',
     sequelsAndPrequels: '',
     similarMovies: '',
-    addedDate: localDate,
+    addedDate: toLocalDate(new Date()),
     releaseDate: '',
     startYear: '',
     endYear: '',

@@ -3,6 +3,7 @@ import type { SeasonEditorModel, SeriesEditorModel } from '../models/series-edit
 
 export function toSeriesEditor(title: SeriesDraft | SeriesTitle, previous?: SeriesEditorModel): SeriesEditorModel {
   return {
+    original: title,
     name: title.title,
     enName: title.originalTitle,
     description: title.description,
@@ -62,7 +63,7 @@ export function toSeriesDraft(model: SeriesEditorModel): SeriesDraft {
     addedDate: model.addedDate,
     releaseDate: model.releaseDate || null,
     year: startYear === null ? null : endYear === null || endYear === startYear ? startYear : [startYear, endYear],
-    formats: seriesSeasonFormats(model.seasons),
+    formats: unchangedSeasonSelections(model) ? [...model.original!.formats] : seriesSeasonFormats(model.seasons, model.original),
     series: {
       startYear,
       endYear,
@@ -72,7 +73,7 @@ export function toSeriesDraft(model: SeriesEditorModel): SeriesDraft {
         seasonNumber: Number(season.seasonNumber),
         releaseYear: number(season.releaseYear),
         isAvailable: season.isAvailable,
-        formats: seasonFormats(season),
+        formats: seasonFormats(season, model.original),
       })),
     },
   };
@@ -94,16 +95,37 @@ function list(value: string): string[] {
   ];
 }
 
-function seriesSeasonFormats(seasons: readonly SeasonEditorModel[]): readonly TitleFormat[] {
+function seriesSeasonFormats(seasons: readonly SeasonEditorModel[], original?: SeriesDraft | SeriesTitle): readonly TitleFormat[] {
   return seasons
-    .flatMap(seasonFormats)
+    .flatMap((season) => seasonFormats(season, original))
     .filter(
       (format, index, formats) =>
         formats.findIndex((existing) => existing.qualityId === format.qualityId && existing.extensionId === format.extensionId) === index,
     );
 }
-function seasonFormats(season: SeasonEditorModel): TitleFormat[] {
+function seasonFormats(season: SeasonEditorModel, original?: SeriesDraft | SeriesTitle): TitleFormat[] {
+  const prior = original?.series.seasons.find((item) => item.seasonNumber === Number(season.seasonNumber));
+  if (prior && sameSeasonSelection(season, prior)) return prior.formats.map((format) => ({ ...format }));
   return season.isAvailable && season.qualityId && season.extensionId
     ? [{ qualityId: season.qualityId, extensionId: season.extensionId }]
     : [];
+}
+
+function sameSeasonSelection(model: SeasonEditorModel, prior: SeriesDraft['series']['seasons'][number]): boolean {
+  return (
+    model.isAvailable === prior.isAvailable &&
+    model.qualityId === (prior.formats[0]?.qualityId ?? '') &&
+    model.extensionId === (prior.formats[0]?.extensionId ?? '')
+  );
+}
+function unchangedSeasonSelections(model: SeriesEditorModel): boolean {
+  const original = model.original;
+  return (
+    !!original &&
+    model.seasons.length === original.series.seasons.length &&
+    model.seasons.every((season) => {
+      const prior = original.series.seasons.find((item) => item.seasonNumber === Number(season.seasonNumber));
+      return !!prior && sameSeasonSelection(season, prior);
+    })
+  );
 }

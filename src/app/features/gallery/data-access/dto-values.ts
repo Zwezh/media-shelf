@@ -1,6 +1,7 @@
+import { isRecord } from '@msh-shared/utils/record';
 export function asRecord(value: unknown, field: string): Record<string, unknown> {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw invalid(field);
-  return value as Record<string, unknown>;
+  if (!isRecord(value)) throw invalid(field);
+  return value;
 }
 
 export function booleanValue(value: unknown, field: string): boolean {

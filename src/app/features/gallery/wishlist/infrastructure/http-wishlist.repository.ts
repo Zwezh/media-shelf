@@ -1,4 +1,5 @@
-import { inject, Injectable } from '@angular/core';
+import { isRecord } from '@msh-shared/utils/record';
+import { inject, Service } from '@angular/core';
 import { toAppError } from '@msh-core/http/app-error';
 import { catchError, map, type Observable, throwError } from 'rxjs';
 import { parseTitleDto, parseTitlesPageDto } from '../../catalog/data-access/title-dto.parser';
@@ -9,16 +10,16 @@ import type { CollectionPage } from '../../models/collection-page';
 import type { WishlistRepository } from '../application/wishlist.repository';
 import { WishlistApiClient } from './wishlist-api.client';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class HttpWishlistRepository implements WishlistRepository {
   private readonly api = inject(WishlistApiClient);
 
   createFromKinopoisk(kpId: string): Observable<string> {
     return this.api.createFromKinopoisk(kpId).pipe(
       map((value) => {
-        if (typeof value !== 'object' || value === null || !('id' in value) || typeof value.id !== 'string' || !value.id.trim())
+        if (!isRecord(value) || typeof value['id'] !== 'string' || !value['id'].trim())
           throw new TypeError('Invalid created wishlist response');
-        return value.id;
+        return value['id'];
       }),
       catchError((error: unknown) => throwError(() => toAppError(error))),
     );

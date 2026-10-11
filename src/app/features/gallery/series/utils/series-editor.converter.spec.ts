@@ -17,7 +17,7 @@ describe('Series editor conversion', () => {
     const model = toSeriesEditor(title);
     const dto = toTitleWriteDto(toSeriesDraft(model));
     expect(dto.series).toEqual(seriesDto.series);
-    expect(dto.formats).toEqual([{ qualityId: 'quality-1', extensionId: 'extension-1' }]);
+    expect(dto.formats).toEqual(title.formats);
     expect(dto.kpId).toBe(seriesDto.kpId);
     expect(dto.movieLength).toBeNull();
     expect(dto.rating).toBeNull();
@@ -26,6 +26,23 @@ describe('Series editor conversion', () => {
     expect(dto).not.toHaveProperty('manualAvailableCount');
     expect(dto).not.toHaveProperty('id');
     expect(dto.series.seasons[0]).not.toHaveProperty('key');
+  });
+  it('retains extra format pairs on metadata-only edits and replaces an explicitly changed season', () => {
+    const first = { qualityId: 'q1', extensionId: 'e1' };
+    const second = { qualityId: 'q2', extensionId: 'e2' };
+    const title = {
+      ...toTitle(seriesDto),
+      formats: [first, second],
+      series: { ...seriesDto.series, seasons: [{ seasonNumber: 1, releaseYear: 2020, isAvailable: true, formats: [first, second] }] },
+    };
+    const model = toSeriesEditor(title);
+    const edited = toSeriesDraft({ ...model, description: 'Only metadata changed' });
+    expect(edited.formats).toEqual([first, second]);
+    expect(edited.series.seasons[0].formats).toEqual([first, second]);
+    const changed = toSeriesDraft({ ...model, seasons: model.seasons.map((season) => ({ ...season, qualityId: 'q3' })) });
+    expect(changed.series.seasons[0].formats).toEqual([{ qualityId: 'q3', extensionId: 'e1' }]);
+    expect(changed.formats).toEqual([{ qualityId: 'q3', extensionId: 'e1' }]);
+    expect(title.series.seasons[0].formats).toEqual([first, second]);
   });
   it('deduplicates title formats from seasons and writes at most one pair per season', () => {
     const model = toSeriesEditor(toTitle(seriesDto));

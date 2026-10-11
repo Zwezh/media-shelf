@@ -6,7 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'msh-detail-card',
   styleUrl: './detail-card.scss',
   template: `
-    <section class="detail-card" [attr.aria-labelledby]="headingId()">
+    <section class="surface-card detail-card" [attr.aria-labelledby]="headingId()">
       <header class="detail-card__header">
         <h2 class="text-headline-sm" [id]="headingId()">{{ titleKey() | translate }}</h2>
         <ng-content select="[detail-card-header]" />

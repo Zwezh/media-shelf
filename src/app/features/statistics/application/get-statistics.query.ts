@@ -1,8 +1,8 @@
 import type { Observable } from 'rxjs';
 import type { StatisticsSnapshot } from '../models/statistics-snapshot';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { STATISTICS_REPOSITORY } from './statistics.repository';
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GetStatisticsQuery {
   private readonly repository = inject(STATISTICS_REPOSITORY);
   execute(): Observable<StatisticsSnapshot | null> {

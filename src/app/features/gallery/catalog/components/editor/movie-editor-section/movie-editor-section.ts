@@ -7,7 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'msh-movie-editor-section',
   styleUrl: './movie-editor-section.scss',
   template: `
-    <section class="editor-section" [attr.aria-labelledby]="headingId()">
+    <section class="surface-card editor-section" [attr.aria-labelledby]="headingId()">
       <header class="editor-section__header">
         <h2 [id]="headingId()">{{ titleKey() | translate }}</h2>
         @if (eyebrowKey()) {

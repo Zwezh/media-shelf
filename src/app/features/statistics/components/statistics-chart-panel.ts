@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'msh-statistics-chart-panel',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe],
-  template: `<section [attr.aria-labelledby]="headingId()">
+  template: `<section class="surface-card" [attr.aria-labelledby]="headingId()">
     <h2 [id]="headingId()">{{ titleKey() | translate }}</h2>
     <p class="description">{{ descriptionKey() | translate }}</p>
     <ng-content />
@@ -16,11 +16,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     }
     section {
       height: 100%;
-      padding: var(--space-xl);
-      border: var(--border-subtle);
-      border-radius: var(--radius-xl);
-      background: var(--color-surface-container-lowest);
-      box-shadow: var(--shadow-level-1);
     }
     h2 {
       margin: 0;

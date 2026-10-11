@@ -55,3 +55,21 @@ flowchart LR
 The Movies toolbar, filter panel, sorting trigger/panel, page header, and empty state are current reference consumers.
 
 Related lodes: [design tokens](design-tokens.md), [floating panels](floating-panels.md), [media sorting](../plans/media-sorting.md), [practices](../practices.md).
+
+## Card surface contract
+
+`.surface-card` owns the common surface, subtle border, padding, radius, and elevation for metric cards, chart panels, settings cards, detail cards, editor sections, and related-title sections. Templates apply it to their existing semantic `article` or `section`; no extra wrapper component is required. Feature styles retain layout, headings, height, and responsive behavior.
+
+```html
+<section class="surface-card settings-card" aria-labelledby="settings-title">...</section>
+```
+
+Local `--card-padding`, `--card-radius`, and `--card-shadow` overrides express real design differences. Settings uses its existing smaller radius and no shadow; editor sections use zero outer padding and retain padded header/body areas. Defaults use `--space-xl`, `--radius-xl`, and `--shadow-level-1`.
+
+```mermaid
+flowchart LR
+  Tokens[Semantic tokens] --> Surface[surface-card class]
+  Surface --> Metric[Statistics metrics and charts]
+  Surface --> Settings[Settings cards]
+  Surface --> Details[Details and editor sections]
+```

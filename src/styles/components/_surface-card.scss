@@ -1,0 +1,9 @@
+// Shared surface recipe; layout and semantic markup remain with the consumer.
+.surface-card {
+  min-width: 0;
+  padding: var(--card-padding, var(--space-xl));
+  background: var(--color-surface-container-lowest);
+  border: var(--border-subtle);
+  border-radius: var(--card-radius, var(--radius-xl));
+  box-shadow: var(--card-shadow, var(--shadow-level-1));
+}

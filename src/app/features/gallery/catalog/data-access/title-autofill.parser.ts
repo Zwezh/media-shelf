@@ -1,3 +1,5 @@
+import { MEDIA_LIMITS } from '../../models/media-limits';
+import { isProviderId } from '../../utils/provider-id';
 import { AppError } from '@msh-core/http/app-error';
 import { parseAutofillMetadata } from '../../data-access/autofill-metadata.parser';
 import { asRecord, invalid, stringValue } from '../../data-access/dto-values';
@@ -10,19 +12,22 @@ export function parseTitleAutofillDto(value: unknown): TitleAutofillDto {
   const kind = body['kind'];
   if (kind !== null && kind !== 'movie' && kind !== 'series') throw invalid('kind');
   const kpId = stringValue(body['kpId'], 'kpId');
-  if (kpId.length > 100 || !/^[1-9]\d*$/.test(kpId) || BigInt(kpId) > BigInt(Number.MAX_SAFE_INTEGER)) throw invalid('kpId');
+  if (!isProviderId(kpId)) throw invalid('kpId');
   const year = body['year'];
-  const years = Array.isArray(year) ? year.map((value: unknown) => integer(value, 'year', 1, 9999)) : nullableRange(year, 'year', 1, 9999);
-  if (Array.isArray(years) && (years.length === 0 || years.length > 200 || new Set(years).size !== years.length)) throw invalid('year');
+  const years = Array.isArray(year)
+    ? year.map((value: unknown) => integer(value, 'year', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear))
+    : nullableRange(year, 'year', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear);
+  if (Array.isArray(years) && (years.length === 0 || years.length > MEDIA_LIMITS.maxYears || new Set(years).size !== years.length))
+    throw invalid('year');
   const series = body['series'];
   if (kind !== 'series' && series !== null) throw invalid('series');
   return {
     ...parseAutofillMetadata(value),
     kind,
     kpId,
-    ageRating: nullableRange(body['ageRating'], 'ageRating', 0, 21),
-    movieLength: nullableRange(body['movieLength'], 'movieLength', 0, 100000),
-    rating: nullableRange(body['rating'], 'rating', 0, 10, false),
+    ageRating: nullableRange(body['ageRating'], 'ageRating', 0, MEDIA_LIMITS.maxAgeRating),
+    movieLength: nullableRange(body['movieLength'], 'movieLength', 0, MEDIA_LIMITS.maxRuntimeMinutes),
+    rating: nullableRange(body['rating'], 'rating', 0, MEDIA_LIMITS.maxRating, false),
     year: years,
     releaseDate: nullableDate(body['releaseDate'], 'releaseDate'),
     series: kind === 'series' ? parseSeriesAutofill(series) : null,
@@ -43,15 +48,15 @@ function parseSeriesAutofill(value: unknown): SeriesAutofill {
   const productionStatus = body['productionStatus'];
   if (productionStatus !== 'unknown' && productionStatus !== 'in_production' && productionStatus !== 'finished')
     throw invalid('productionStatus');
-  const startYear = nullableRange(body['startYear'], 'startYear', 1, 9999);
-  const endYear = nullableRange(body['endYear'], 'endYear', 1, 9999);
+  const startYear = nullableRange(body['startYear'], 'startYear', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear);
+  const endYear = nullableRange(body['endYear'], 'endYear', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear);
   if (endYear !== null && (startYear === null || endYear < startYear || productionStatus !== 'finished')) throw invalid('endYear');
-  if (!Array.isArray(body['seasons']) || body['seasons'].length > 1000) throw invalid('seasons');
+  if (!Array.isArray(body['seasons']) || body['seasons'].length > MEDIA_LIMITS.maxSeasons) throw invalid('seasons');
   const seasons = body['seasons'].map((value: unknown) => {
     const season = asRecord(value, 'season autofill');
     return {
-      seasonNumber: integer(season['seasonNumber'], 'seasonNumber', 0, 10000),
-      releaseYear: nullableRange(season['releaseYear'], 'releaseYear', 1, 9999),
+      seasonNumber: integer(season['seasonNumber'], 'seasonNumber', 0, MEDIA_LIMITS.maxSeasonNumber),
+      releaseYear: nullableRange(season['releaseYear'], 'releaseYear', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear),
     };
   });
   if (new Set(seasons.map((season) => season.seasonNumber)).size !== seasons.length) throw invalid('seasonNumber');
@@ -59,7 +64,7 @@ function parseSeriesAutofill(value: unknown): SeriesAutofill {
     startYear,
     endYear,
     productionStatus,
-    announcedSeasonCount: nullableRange(body['announcedSeasonCount'], 'announcedSeasonCount', 0, 10000),
+    announcedSeasonCount: nullableRange(body['announcedSeasonCount'], 'announcedSeasonCount', 0, MEDIA_LIMITS.maxSeasonNumber),
     seasons,
   };
 }

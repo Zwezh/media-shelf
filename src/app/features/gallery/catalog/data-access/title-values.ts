@@ -1,10 +1,10 @@
+import { isIsoDate } from '@msh-shared/utils/date';
 import { invalid, numberValue, stringValue } from '../../data-access/dto-values';
 
 export function nullableDate(value: unknown, field: string): string | null {
   if (value === null) return null;
   const date = stringValue(value, field);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date)
-    throw invalid(field);
+  if (!isIsoDate(date)) throw invalid(field);
   return date;
 }
 

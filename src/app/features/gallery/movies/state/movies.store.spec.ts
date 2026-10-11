@@ -409,4 +409,38 @@ describe('MoviesStore', () => {
     expect(getMovies).toHaveBeenCalledTimes(1);
     expect(toastStore.toasts()).toEqual([]);
   });
+  it.each([true, false])('reloads the current query after deletion while another read is pending: %s', (pendingRead) => {
+    const initial = convertToParamMap({});
+    const route = new BehaviorSubject(initial);
+    const deletion = new Subject<void>();
+    const stale = new Subject<MoviesPage>();
+    const other = { ...media, id: 'other' };
+    const current = { currentPage: 0, media: [other], totalCount: 5 };
+    const execute = vi
+      .fn<(params: MoviesParams) => Observable<MoviesPage>>()
+      .mockReturnValueOnce(of({ currentPage: 0, media: [media], totalCount: 1 }))
+      .mockReturnValueOnce(pendingRead ? stale : of(current))
+      .mockReturnValueOnce(of(current));
+    TestBed.configureTestingModule({
+      providers: [
+        MoviesStore,
+        MoviesRouteState,
+        ...provideI18nTesting(),
+        { provide: DeleteMovieUseCase, useValue: { execute: () => deletion } },
+        { provide: GetMoviesQuery, useValue: { execute } },
+        { provide: ActivatedRoute, useValue: { queryParamMap: route } },
+        { provide: Router, useValue: { navigate: vi.fn() } },
+      ],
+    });
+    const store = TestBed.inject(MoviesStore);
+    store.deleteMovie(media.id);
+    route.next(convertToParamMap({ search: 'Other' }));
+    deletion.next();
+    stale.next({ currentPage: 0, media: [media], totalCount: 1 });
+    expect(execute).toHaveBeenCalledTimes(3);
+    expect(execute).toHaveBeenLastCalledWith(expect.objectContaining({ search: 'Other' }));
+    expect(store.media()).toEqual([other]);
+    expect(store.totalCount()).toBe(5);
+    expect(store.isLoading()).toBe(false);
+  });
 });

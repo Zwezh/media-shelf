@@ -1,3 +1,4 @@
+import { RELEASE_YEAR_RANGE } from '../../../models/media-limits';
 import { ChangeDetectionStrategy, computed, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -62,11 +63,17 @@ export class MoviesFilterPanel {
     actors: this.initialModel.actors,
     ageRating: [this.initialModel.ageRating],
     directors: this.initialModel.directors,
-    fromYear: [this.initialModel.fromYear, [Validators.pattern(/^$|^\d{4}$/), Validators.min(1888), Validators.max(2100)]],
+    fromYear: [
+      this.initialModel.fromYear,
+      [Validators.pattern(/^$|^\d{4}$/), Validators.min(RELEASE_YEAR_RANGE.min), Validators.max(RELEASE_YEAR_RANGE.max)],
+    ],
     genres: [this.initialModel.genres],
     quality: [this.initialModel.quality],
     rating: [this.initialModel.rating, [Validators.min(0), Validators.max(10)]],
-    toYear: [this.initialModel.toYear, [Validators.pattern(/^$|^\d{4}$/), Validators.min(1888), Validators.max(2100)]],
+    toYear: [
+      this.initialModel.toYear,
+      [Validators.pattern(/^$|^\d{4}$/), Validators.min(RELEASE_YEAR_RANGE.min), Validators.max(RELEASE_YEAR_RANGE.max)],
+    ],
   });
   protected readonly model = toSignal(this.filterForm.valueChanges.pipe(map(() => this.filterForm.getRawValue())), {
     initialValue: this.initialModel,

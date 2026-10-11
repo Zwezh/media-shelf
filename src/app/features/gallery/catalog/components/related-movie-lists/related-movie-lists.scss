@@ -9,11 +9,6 @@
 
   section {
     min-width: 0;
-    padding: var(--space-xl);
-    background: var(--color-surface-container-lowest);
-    border: var(--border-subtle);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-level-1);
 
     &:only-child {
       grid-column: 1 / -1;

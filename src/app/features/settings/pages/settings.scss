@@ -155,10 +155,8 @@
 }
 
 .settings-card {
-  padding: var(--space-xl);
-  background: var(--color-surface-container-lowest);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  --card-radius: var(--radius-lg);
+  --card-shadow: none;
 
   &__header {
     display: grid;
@@ -203,7 +201,7 @@
   }
 
   .settings-card {
-    padding: var(--space-base);
+    --card-padding: var(--space-base);
 
     &__header,
     &__header--genres,

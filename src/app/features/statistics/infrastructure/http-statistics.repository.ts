@@ -1,13 +1,13 @@
 import type { Observable } from 'rxjs';
 import type { StatisticsSnapshot } from '../models/statistics-snapshot';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, map, throwError } from 'rxjs';
 import { ENVIRONMENT } from '@msh-core/config/environment.token';
 import { toAppError } from '@msh-core/http/app-error';
 import type { StatisticsRepository } from '../application/statistics.repository';
 import { parseStatisticsResponse, parseStatisticsScanResponse } from './statistics-parser';
-@Injectable({ providedIn: 'root' })
+@Service()
 export class HttpStatisticsRepository implements StatisticsRepository {
   private readonly http = inject(HttpClient);
   private readonly url = `${inject(ENVIRONMENT).apiUrl.replace(/\/$/, '')}/statistics`;

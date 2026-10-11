@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { WISHLIST_REPOSITORY } from './wishlist.repository';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DeleteWishlistUseCase {
   private readonly repository = inject(WISHLIST_REPOSITORY);
 

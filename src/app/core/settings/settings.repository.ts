@@ -1,3 +1,4 @@
+import { isRecord } from '@msh-shared/utils/record';
 import { HttpClient, httpResource } from '@angular/common/http';
 import { computed, inject, Service } from '@angular/core';
 import { ENVIRONMENT } from '@msh-core/config/environment.token';
@@ -50,11 +51,7 @@ function toTransportDto(settings: SettingsDto): Omit<SettingsDto, 'id'> & { read
 }
 
 function parseGenresResponse(value: unknown): readonly string[] {
-  const genres = Array.isArray(value)
-    ? value
-    : typeof value === 'object' && value !== null && !Array.isArray(value)
-      ? (value as Record<string, unknown>)['genres']
-      : undefined;
+  const genres = Array.isArray(value) ? value : isRecord(value) ? value['genres'] : undefined;
   if (!Array.isArray(genres) || genres.some((genre) => typeof genre !== 'string')) {
     throw new TypeError('Invalid movie genres response');
   }

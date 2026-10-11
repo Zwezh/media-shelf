@@ -45,7 +45,7 @@ export function toTitleWriteDto(draft: TitleDraft): TitleWriteDto {
     sequelsAndPrequels: [...draft.sequelsAndPrequels],
     similarMovies: [...draft.similarMovies],
     kpId: draft.kpId,
-    year: typeof draft.year === 'object' && draft.year !== null ? [...draft.year] : draft.year,
+    year: draft.year === null || typeof draft.year === 'number' ? draft.year : [...draft.year],
     movieLength: draft.durationMinutes,
     rating: draft.rating,
     releaseDate: draft.releaseDate,

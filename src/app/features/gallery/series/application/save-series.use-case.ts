@@ -1,10 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type { SaveTitleCommand } from '../../catalog/models/save-title-command';
 import type { SeriesTitle, SeriesDraft } from '../../catalog/models/title';
 import { SERIES_REPOSITORY } from './series.repository';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SaveSeriesUseCase {
   private readonly repository = inject(SERIES_REPOSITORY);
 

@@ -1,9 +1,9 @@
-import { Injectable, Provider } from '@angular/core';
+import { Service, Provider } from '@angular/core';
 import { provideTranslateLoader, provideTranslateService, TranslateLoader, TranslationObject } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import translations from '../../../public/i18n/en.json';
 
-@Injectable()
+@Service({ autoProvided: false })
 class TestTranslateLoader implements TranslateLoader {
   getTranslation(): Observable<TranslationObject> {
     return of(translations);

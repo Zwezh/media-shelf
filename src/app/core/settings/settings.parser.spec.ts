@@ -16,4 +16,9 @@ describe('Settings format catalog IDs', () => {
   it.each([null, '', 123])('rejects a malformed provided catalog ID: %j', (id) => {
     expect(() => parseSettingsDto({ ...settings, extension: [{ id, value: 'MKV' }] })).toThrow(TypeError);
   });
+  it('preserves exact catalog values rather than changing the value behind a stable ID', () => {
+    const quality = [{ id: 'quality:20313038307020', title: ' FHD ', value: ' 1080p ' }];
+    const extension = [{ id: 'extension:204D4B5620', value: ' MKV ' }];
+    expect(parseSettingsDto({ ...settings, quality, extension })).toMatchObject({ quality, extension });
+  });
 });

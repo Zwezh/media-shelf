@@ -1,3 +1,5 @@
+import { MEDIA_LIMITS } from '../../models/media-limits';
+import { isProviderId } from '../../utils/provider-id';
 import { integer, nullableDate, nullableRange } from './title-values';
 import { asRecord, booleanValue, invalid, stringValue } from '../../data-access/dto-values';
 import { parseMediaMetadataDto } from '../../data-access/media-metadata.parser';
@@ -9,19 +11,15 @@ export function parseTitleDto(value: unknown): TitleDto {
   const kind = record['kind'];
   if (kind !== 'movie' && kind !== 'series') throw invalid('kind');
   const kpId = record['kpId'];
-  if (
-    kpId !== null &&
-    (typeof kpId !== 'string' || kpId.length > 100 || !/^[1-9]\d*$/.test(kpId) || BigInt(kpId) > BigInt(Number.MAX_SAFE_INTEGER))
-  )
-    throw invalid('kpId');
+  if (kpId !== null && !isProviderId(kpId)) throw invalid('kpId');
   const metadata = {
     ...parseMediaMetadataDto(record),
-    ageRating: nullableRange(record['ageRating'], 'ageRating', 0, 21),
+    ageRating: nullableRange(record['ageRating'], 'ageRating', 0, MEDIA_LIMITS.maxAgeRating),
     id: stringValue(record['id'], 'id'),
-    kpId: kpId as string | null,
+    kpId,
     year: parseYear(record['year'], kind === 'series'),
-    movieLength: nullableRange(record['movieLength'], 'movieLength', 0, 100000),
-    rating: nullableRange(record['rating'], 'rating', 0, 10, false),
+    movieLength: nullableRange(record['movieLength'], 'movieLength', 0, MEDIA_LIMITS.maxRuntimeMinutes),
+    rating: nullableRange(record['rating'], 'rating', 0, MEDIA_LIMITS.maxRating, false),
     releaseDate: nullableDate(record['releaseDate'], 'releaseDate'),
     formats: parseFormats(record['formats']),
   };
@@ -33,7 +31,7 @@ export function parseTitleDto(value: unknown): TitleDto {
     ...metadata,
     kind,
     series: parseSeries(record['series']),
-    availableSeasonCount: integer(record['availableSeasonCount'], 'availableSeasonCount', 0, 1000),
+    availableSeasonCount: integer(record['availableSeasonCount'], 'availableSeasonCount', 0, MEDIA_LIMITS.maxSeasons),
   };
 }
 
@@ -54,7 +52,7 @@ export function parseTitlesPageDto<T extends TitleDto>(value: unknown, parseTitl
 }
 
 function parseFormats(value: unknown): TitleFormatDto[] {
-  if (!Array.isArray(value) || value.length > 100) throw invalid('formats');
+  if (!Array.isArray(value) || value.length > MEDIA_LIMITS.maxFormats) throw invalid('formats');
   const formats = value.map((entry: unknown) => {
     const record = asRecord(entry, 'format');
     return { qualityId: stringValue(record['qualityId'], 'qualityId'), extensionId: stringValue(record['extensionId'], 'extensionId') };
@@ -72,15 +70,15 @@ function parseSeries(value: unknown): SeriesDetailsDto {
   const productionStatus = record['productionStatus'];
   if (productionStatus !== 'unknown' && productionStatus !== 'in_production' && productionStatus !== 'finished')
     throw invalid('productionStatus');
-  const startYear = nullableRange(record['startYear'], 'startYear', 1, 9999);
-  const endYear = nullableRange(record['endYear'], 'endYear', 1, 9999);
+  const startYear = nullableRange(record['startYear'], 'startYear', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear);
+  const endYear = nullableRange(record['endYear'], 'endYear', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear);
   if (endYear !== null && (startYear === null || endYear < startYear || productionStatus !== 'finished')) throw invalid('endYear');
-  if (!Array.isArray(record['seasons']) || record['seasons'].length > 1000) throw invalid('seasons');
+  if (!Array.isArray(record['seasons']) || record['seasons'].length > MEDIA_LIMITS.maxSeasons) throw invalid('seasons');
   const seasons = record['seasons'].map((entry: unknown) => {
     const season = asRecord(entry, 'season');
     return {
-      seasonNumber: integer(season['seasonNumber'], 'seasonNumber', 0, 10000),
-      releaseYear: nullableRange(season['releaseYear'], 'releaseYear', 1, 9999),
+      seasonNumber: integer(season['seasonNumber'], 'seasonNumber', 0, MEDIA_LIMITS.maxSeasonNumber),
+      releaseYear: nullableRange(season['releaseYear'], 'releaseYear', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear),
       isAvailable: booleanValue(season['isAvailable'], 'isAvailable'),
       formats: parseFormats(season['formats']),
     };
@@ -90,7 +88,7 @@ function parseSeries(value: unknown): SeriesDetailsDto {
     startYear,
     endYear,
     productionStatus,
-    announcedSeasonCount: nullableRange(record['announcedSeasonCount'], 'announcedSeasonCount', 0, 10000),
+    announcedSeasonCount: nullableRange(record['announcedSeasonCount'], 'announcedSeasonCount', 0, MEDIA_LIMITS.maxSeasonNumber),
     seasons,
   };
 }
@@ -99,7 +97,9 @@ function parseYear(value: unknown, allowUnknownEnd: boolean): number | (number |
   if (value === null) return null;
   if (Array.isArray(value)) {
     if (!allowUnknownEnd && value.length === 0) throw invalid('year');
-    return value.map((year: unknown) => (allowUnknownEnd && year === null ? null : integer(year, 'year', 1, 9999)));
+    return value.map((year: unknown) =>
+      allowUnknownEnd && year === null ? null : integer(year, 'year', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear),
+    );
   }
-  return integer(value, 'year', 1, 9999);
+  return integer(value, 'year', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear);
 }

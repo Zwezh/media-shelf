@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ENVIRONMENT } from '@msh-core/config/environment.token';
 import type { Observable } from 'rxjs';
 import type { CatalogParams } from '../../catalog/models/catalog-params';
 import type { SeriesTitleWriteDto } from '../../catalog/models/title.dto';
 import { toCollectionQueryParams } from '../../data-access/collection-query-params';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SeriesApiClient {
   private readonly environment = inject(ENVIRONMENT);
   private readonly http = inject(HttpClient);

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { toAppError } from '@msh-core/http/app-error';
 import { catchError, map, type Observable, throwError } from 'rxjs';
 import type { TitleAutofillRepository } from '../../application/title-autofill.repository';
@@ -6,7 +6,7 @@ import { assertAutofillId, parseTitleAutofillDto, toTitleAutofill } from '../../
 import type { TitleAutofill } from '../../models/title-autofill';
 import { TitleAutofillApiClient } from './title-autofill-api.client';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class HttpTitleAutofillRepository implements TitleAutofillRepository {
   private readonly api = inject(TitleAutofillApiClient);
 
