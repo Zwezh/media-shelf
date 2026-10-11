@@ -1,0 +1,231 @@
+<section class="statistics" aria-labelledby="statistics-title">
+  <header class="statistics__header">
+    <div>
+      <h1 #heading id="statistics-title" class="text-headline-lg" tabindex="-1">{{ 'statistics.title' | translate }}</h1>
+      <p class="statistics__subtitle">{{ 'statistics.subtitle' | translate }}</p>
+      @if (store.snapshot(); as snapshot) {
+        <p class="statistics__timestamp">
+          {{ 'statistics.lastScanned' | translate }}
+          <time [attr.datetime]="snapshot.scannedAt">{{ snapshot.scannedAt | date: 'medium' : undefined : locale() }}</time>
+        </p>
+      }
+    </div>
+    <button class="btn btn-primary" type="button" [mshRequiresAuth]="store.status() !== 'ready'" (click)="store.scan()">
+      <msh-icon name="refresh" [size]="18" />{{ (store.snapshot() ? 'statistics.rescan' : 'statistics.scan') | translate }}
+    </button>
+  </header>
+  @if (!authenticated()) {
+    <p class="statistics__note">{{ 'statistics.signIn' | translate }}</p>
+  }
+  @if (store.status() === 'loading') {
+    <msh-page-status messageKey="statistics.loading" />
+  } @else if (store.status() === 'error') {
+    <msh-page-status kind="error" messageKey="statistics.loadError" /><button
+      class="btn btn-secondary"
+      type="button"
+      (click)="store.load()"
+    >
+      {{ 'movies.retry' | translate }}
+    </button>
+  } @else {
+    @if (store.status() === 'scanning') {
+      <msh-page-status messageKey="statistics.scanning" />
+    }
+    @if (store.snapshot(); as snapshot) {
+      @if (snapshot.totals.titles === 0) {
+        <msh-empty-state messageKey="statistics.emptyLibrary" />
+      }
+      <div class="statistics__kpis">
+        <msh-statistic-card
+          [label]="'statistics.totalLibrary' | translate"
+          [value]="(snapshot.totals.titles | number: '1.0-0' : locale()) ?? '0'"
+        >
+          <div class="composition" aria-hidden="true">
+            <span [style.width.%]="snapshot.totals.titles ? (snapshot.totals.movies / snapshot.totals.titles) * 100 : 0"></span
+            ><span [style.width.%]="snapshot.totals.titles ? (snapshot.totals.series / snapshot.totals.titles) * 100 : 0"></span>
+          </div>
+          <div class="metric-row">
+            <span>{{ 'navigation.movies' | translate }}</span
+            ><strong>{{
+              (snapshot.totals.titles ? snapshot.totals.movies / snapshot.totals.titles : 0) | percent: '1.0-1' : locale()
+            }}</strong>
+          </div>
+          <div class="metric-row">
+            <span>{{ 'navigation.series' | translate }}</span
+            ><strong>{{
+              (snapshot.totals.titles ? snapshot.totals.series / snapshot.totals.titles : 0) | percent: '1.0-1' : locale()
+            }}</strong>
+          </div>
+        </msh-statistic-card>
+        <msh-statistic-card
+          [label]="'navigation.movies' | translate"
+          [value]="(snapshot.totals.movies | number: '1.0-0' : locale()) ?? '0'"
+        >
+          <div class="metric-row">
+            <span>{{ 'statistics.runtime' | translate }}</span
+            ><strong
+              >{{ snapshot.totals.movieRuntimeMinutes / 60 | number: '1.0-1' : locale() }} {{ 'statistics.hours' | translate }}</strong
+            >
+          </div>
+          <p>
+            {{
+              'statistics.runtimeCoverage'
+                | translate
+                  : {
+                      known: (snapshot.totals.knownMovieRuntimes | number: '1.0-0' : locale()),
+                      total: (snapshot.totals.movies | number: '1.0-0' : locale()),
+                    }
+            }}
+          </p>
+        </msh-statistic-card>
+        <msh-statistic-card
+          tone="series"
+          [label]="'navigation.series' | translate"
+          [value]="(snapshot.totals.series | number: '1.0-0' : locale()) ?? '0'"
+        >
+          <div class="metric-row">
+            <span>{{ 'statistics.recordedSeasons' | translate }}</span
+            ><strong>{{ snapshot.totals.recordedSeasons | number: '1.0-0' : locale() }}</strong>
+          </div>
+          <div class="metric-row">
+            <span>{{ 'statistics.availableSeasons' | translate }}</span
+            ><strong>{{ snapshot.totals.availableSeasons | number: '1.0-0' : locale() }}</strong>
+          </div>
+          <p>{{ 'statistics.seasonNote' | translate }}</p>
+        </msh-statistic-card>
+      </div>
+      <div class="statistics__charts">
+        <msh-statistics-chart-panel
+          headingId="statistics-genres"
+          titleKey="statistics.genres"
+          descriptionKey="statistics.genresDescription"
+        >
+          @if (allGenres().length) {
+            <ul class="genre-list">
+              @for (genre of topGenres(); track genre.label) {
+                <li>
+                  <div class="metric-row">
+                    <strong>{{ genre.label }}</strong
+                    ><span
+                      >{{ genre.count | number: '1.0-0' : locale() }}
+                      <span class="muted">({{ genre.count / snapshot.totals.titles | percent: '1.0-1' : locale() }})</span></span
+                    >
+                  </div>
+                  <div class="genre-track" aria-hidden="true">
+                    <span [style.width.%]="(genre.count / snapshot.totals.titles) * 100"></span>
+                  </div>
+                </li>
+              }
+            </ul>
+            @if (allGenres().length > 8) {
+              <details>
+                <summary>{{ 'statistics.allGenres' | translate }}</summary>
+                <ul class="data-list">
+                  @for (genre of allGenres(); track genre.label) {
+                    <li>
+                      <span>{{ genre.label }}</span
+                      ><strong>{{ genre.count | number: '1.0-0' : locale() }}</strong>
+                    </li>
+                  }
+                </ul>
+              </details>
+            }
+          } @else {
+            <p class="muted">{{ 'statistics.noGenres' | translate }}</p>
+          }
+          <p class="coverage">
+            {{ 'statistics.missingGenres' | translate }}
+            <strong>{{ snapshot.totals.titlesWithoutGenres | number: '1.0-0' : locale() }}</strong>
+          </p>
+        </msh-statistics-chart-panel>
+        <msh-statistics-chart-panel
+          headingId="statistics-quality"
+          titleKey="statistics.qualityTitle"
+          descriptionKey="statistics.qualityDescription"
+        >
+          <div class="quality-chart">
+            <div class="donut" aria-hidden="true">
+              <svg viewBox="0 0 120 120">
+                <circle class="donut__base" cx="60" cy="60" r="45" />
+                @for (slice of quality(); track $index) {
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="45"
+                    pathLength="100"
+                    [attr.stroke]="slice.color"
+                    [attr.stroke-dasharray]="slice.percentage + ' ' + (100 - slice.percentage)"
+                    [attr.stroke-dashoffset]="-slice.offset"
+                    transform="rotate(-90 60 60)"
+                  />
+                }
+              </svg>
+              <div class="donut__center">
+                <strong>{{ snapshot.totals.titles | number: '1.0-0' : locale() }}</strong
+                ><span>{{ 'statistics.titles' | translate }}</span>
+              </div>
+            </div>
+            <ul class="quality-list">
+              @for (slice of quality(); track $index) {
+                <li>
+                  <span class="quality-list__label"
+                    ><i aria-hidden="true" [style.background]="slice.color"></i
+                    >{{ slice.kind === 'quality' ? slice.value : ('statistics.quality.' + slice.kind | translate) }}</span
+                  ><strong
+                    >{{ slice.count | number: '1.0-0' : locale() }}
+                    <span class="muted">({{ slice.percentage / 100 | percent: '1.0-1' : locale() }})</span></strong
+                  >
+                </li>
+              }
+            </ul>
+          </div>
+        </msh-statistics-chart-panel>
+        <msh-statistics-chart-panel headingId="statistics-years" titleKey="statistics.years" descriptionKey="statistics.yearsDescription">
+          <ul class="histogram">
+            @for (decade of snapshot.decades; track decade.start; let i = $index) {
+              <li>
+                <span>{{ 'statistics.decade' | translate: { year: decade.start } }}</span>
+                <div class="histogram__track" aria-hidden="true"><span [style.width.%]="years()[i]"></span></div>
+                <strong>{{ decade.count | number: '1.0-0' : locale() }}</strong>
+              </li>
+            }
+          </ul>
+          <p class="coverage">
+            {{ 'statistics.unknownYears' | translate }} <strong>{{ snapshot.unknownYears | number: '1.0-0' : locale() }}</strong>
+          </p>
+        </msh-statistics-chart-panel>
+        <msh-statistics-chart-panel
+          headingId="statistics-ratings"
+          titleKey="statistics.ratings"
+          descriptionKey="statistics.ratingsDescription"
+        >
+          <div class="rating-summary">
+            <p>
+              {{ 'statistics.mean' | translate }} <strong>{{ (snapshot.ratings.mean | number: '1.0-2' : locale()) ?? '—' }}</strong>
+            </p>
+            <p>
+              {{ 'statistics.median' | translate }} <strong>{{ (snapshot.ratings.median | number: '1.0-2' : locale()) ?? '—' }}</strong>
+            </p>
+          </div>
+          <ul class="histogram histogram--rating">
+            @for (bin of snapshot.ratings.bins; track bin.from; let i = $index) {
+              <li>
+                <span>{{ bin.from | number: '1.0-0' : locale() }}–{{ bin.to | number: '1.0-0' : locale() }}</span>
+                <div class="histogram__track" aria-hidden="true"><span [style.width.%]="ratings()[i]"></span></div>
+                <strong>{{ bin.count | number: '1.0-0' : locale() }}</strong>
+              </li>
+            }
+          </ul>
+          <p class="coverage">
+            {{ 'statistics.unknownRatings' | translate }} <strong>{{ snapshot.ratings.unknownCount | number: '1.0-0' : locale() }}</strong>
+          </p>
+          <p class="rating-highlight">
+            {{ 'statistics.highRated' | translate }} <strong>{{ snapshot.ratings.highRatedCount | number: '1.0-0' : locale() }}</strong>
+          </p>
+        </msh-statistics-chart-panel>
+      </div>
+    } @else {
+      <msh-empty-state messageKey="statistics.unscanned" />
+    }
+  }
+</section>

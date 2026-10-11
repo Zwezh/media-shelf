@@ -1,3 +1,5 @@
+import { GetStatisticsQuery } from './features/statistics/application/get-statistics.query';
+import { ScanStatisticsUseCase } from './features/statistics/application/scan-statistics.use-case';
 import { DeleteSeriesUseCase } from './features/gallery/series/application/delete-series.use-case';
 import { GetGalleryQuery } from './features/gallery/catalog/application/get-gallery.query';
 import { WISHLIST_MUTATION_TEST_PROVIDERS } from '@msh/testing/wishlist-testing';
@@ -76,6 +78,8 @@ describe('root routes', () => {
         provideAuthSessionTesting(),
         provideHttpClient(),
         provideRouter(routes),
+        { provide: GetStatisticsQuery, useValue: { execute: () => of(null) } },
+        { provide: ScanStatisticsUseCase, useValue: { execute: vi.fn() } },
         { provide: DeleteSeriesUseCase, useValue: { execute: vi.fn() } },
         { provide: GetGalleryQuery, useValue: { execute: () => of({ currentPage: 0, media: [], totalCount: 0 }) } },
         provideI18nTesting(),
@@ -120,7 +124,7 @@ describe('root routes', () => {
     ['/gallery/wishlist', 'Wishlist'],
     ['/gallery/wishlist/wishlist-movie', 'Wishlist movie'],
     ['/gallery/wishlist/wishlist-series', 'Wishlist series'],
-    ['/statistics', 'Statistics'],
+    ['/statistics', 'Library Statistics'],
     ['/settings', 'Settings'],
   ])('lazy-loads %s', async (path, heading) => {
     const harness = await RouterTestingHarness.create();
