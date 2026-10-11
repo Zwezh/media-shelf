@@ -1,7 +1,10 @@
+import { isRecord } from '@msh-shared/utils/record';
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { map, timeout, type Observable } from 'rxjs';
 import { ENVIRONMENT } from '@msh-core/config/environment.token';
+
+const AUTH_REQUEST_TIMEOUT_MS = 15_000;
 
 @Service()
 export class AuthApi {
@@ -10,18 +13,20 @@ export class AuthApi {
 
   signIn(secretKey: string): Observable<string> {
     return this.http
-      .post<unknown>(this.authUrl(), { secretKey: secretKey.trim() }, this.options)
-      .pipe(timeout(15_000), map(parseAccessToken));
+      .post<unknown>(this.authUrl(), { secretKey }, this.options)
+      .pipe(timeout(AUTH_REQUEST_TIMEOUT_MS), map(parseAccessToken));
   }
 
   private readonly options = { withCredentials: true, headers: { 'X-MediaShelf-Request': '1' } };
 
   refresh(): Observable<string> {
-    return this.http.post<unknown>(`${this.authUrl()}/refresh`, {}, this.options).pipe(timeout(15_000), map(parseAccessToken));
+    return this.http
+      .post<unknown>(`${this.authUrl()}/refresh`, {}, this.options)
+      .pipe(timeout(AUTH_REQUEST_TIMEOUT_MS), map(parseAccessToken));
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${this.authUrl()}/logout`, {}, this.options);
+    return this.http.post<void>(`${this.authUrl()}/logout`, {}, this.options).pipe(timeout(AUTH_REQUEST_TIMEOUT_MS));
   }
 
   private authUrl(): string {
@@ -30,8 +35,8 @@ export class AuthApi {
 }
 
 function parseAccessToken(value: unknown): string {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw invalidAuthResponse();
-  const token = (value as Record<string, unknown>)['access_token'];
+  if (!isRecord(value)) throw invalidAuthResponse();
+  const token = value['access_token'];
   if (typeof token !== 'string' || !token.trim()) throw invalidAuthResponse();
   return token.trim();
 }

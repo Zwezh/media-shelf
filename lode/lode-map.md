@@ -31,6 +31,8 @@
 - [plans/wishlist-viewing.md](plans/wishlist-viewing.md) - Mixed-title Wishlist list/details, URL state, shared components, and verification.
 - [plans/wishlist-provider-workflow.md](plans/wishlist-provider-workflow.md) - Implemented provider-backed Wishlist creation/refresh, editor handoff, atomic library transfer, and deletion.
 - [plans/unified-gallery.md](plans/unified-gallery.md) - Combined Movies/Series/Wishlist list, compact read contracts, global search, default routing, and implementation gates.
+- [statistics/summary.md](statistics/summary.md) - Implemented persisted Library snapshots, scan/rescan state, metrics, API and dashboard verification.
+- [plans/statistics.md](plans/statistics.md) - Implemented persisted Library-only statistics, explicit scan/rescan, aggregate definitions, transaction/API contracts and dashboard implementation gates.
 - `plans/` - Persistent roadmaps and TODOs when needed.
 - `tmp/` - Git-ignored session scraps and handovers.
 
@@ -69,6 +71,8 @@ flowchart TD
   Gallery --> KinopoiskAutofill[kinopoisk-autofill.md]
   Gallery --> SeriesWishlist[series-wishlist.md]
   Gallery --> GalleryArchitecture[business-logic-architecture.md]
+  Root --> Statistics[statistics]
+  Statistics --> StatisticsSummary[summary.md]
   Root --> Plans[plans]
   Plans --> MediaSorting[media-sorting.md]
   Plans --> MovieDetails[movie-details.md]

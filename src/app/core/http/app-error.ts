@@ -1,3 +1,4 @@
+import { isRecord } from '@msh-shared/utils/record';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export type AppErrorKind = 'conflict' | 'forbidden' | 'network' | 'not-found' | 'unauthorized' | 'unexpected' | 'validation';
@@ -27,7 +28,7 @@ export function toAppError(error: unknown): AppError {
 }
 
 function readErrorMessage(error: HttpErrorResponse): string | undefined {
-  if (typeof error.error !== 'object' || error.error === null || Array.isArray(error.error)) return undefined;
-  const message = (error.error as Record<string, unknown>)['message'];
+  if (!isRecord(error.error)) return undefined;
+  const message = error.error['message'];
   return typeof message === 'string' ? message : undefined;
 }

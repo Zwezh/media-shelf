@@ -6,11 +6,15 @@ Application imports use the stable aliases configured in `tsconfig.json`. Cross-
 
 Templates alias a signal input with `@let` when the same value is read repeatedly. Derived display values such as joined names or formatted ratings live in `computed()` signals rather than invoking array or number methods in template expressions.
 
+Runtime object shape checks use the pure `isRecord(value)` guard from `@msh-shared/utils/record`. It excludes null, arrays and primitives and narrows to `Record<string, unknown>`; parsers retain their own validation errors and field contracts. The backend owns the equivalent guard in `src/common/record.ts` so neither application imports the other application's build sources. Validation stays stateless rather than becoming an injectable service.
+
 Barrel exports are small, explicit public APIs for stable cohesive folders. They use named exports and `export type`, never `export *` chains. Internal sibling imports and lazy-route imports target implementation files directly. A module must not import through its own barrel, and barrels must not introduce top-level side effects, circular dependencies, hidden lazy-loading boundaries, or architecture violations.
 
 New features and runtime behavior changes ship with focused Vitest unit tests in the same change. Tests assert observable behavior and public contracts, cover the introduced success and meaningful edge/error states, and remain deterministic. Bug fixes include regression coverage whenever practical. Zoneless Angular component tests use Act, Wait, Assert with `await fixture.whenStable()` after actions that schedule rendering. Documentation-only, formatting-only, and non-executable configuration changes do not need artificial tests.
 
 ESLint and Prettier share one formatting contract: `.prettierrc` owns formatting options, while `eslint-plugin-prettier/recommended` reports violations through `npm run lint`. Before every commit, `npm run check` must pass; it runs ESLint and the complete unit suite in non-watch mode. Failures are fixed at their source and checks are never disabled or weakened merely to permit a commit.
+
+Frontend `tsconfig.json` enables `strict` TypeScript and `strictTemplates` Angular checking for application and test builds.
 
 Declared production TypeScript functions and methods always expose an explicit return type. This includes queries, use cases, repositories, API clients, validators, component methods, and store lifecycle hooks. Side-effect-only functions use `void`; asynchronous and value-returning functions expose concrete contracts such as `Promise<void>`, `Observable<MovieDetails>`, or `MoviesPage`. Spec files may rely on inferred return types so test setup and stubs stay concise. ESLint enforces the production rule through `@typescript-eslint/explicit-function-return-type` with a `*.spec.ts` override.
 

@@ -1,3 +1,4 @@
+import { toLocalDate } from '@msh-shared/utils/date';
 import type { MovieTitle } from '../../catalog/models/title';
 import { type MediaDto } from '../../models/media.dto';
 import { AppError } from '@msh-core/http/app-error';
@@ -11,7 +12,7 @@ export function wishlistMovieEditor(title: MovieTitle): MovieEditorModel {
     enName: title.originalTitle,
     description: title.description,
     kpId: title.kpId ?? '',
-    addedDate: new Date().toISOString().slice(0, 10),
+    addedDate: toLocalDate(new Date()),
     year: Array.isArray(title.year) ? title.year.filter((year) => year !== null).join(', ') : (title.year?.toString() ?? ''),
     movieLength: title.durationMinutes?.toString() ?? '',
     rating: title.rating?.toString() ?? '',

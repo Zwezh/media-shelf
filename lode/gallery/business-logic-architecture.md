@@ -124,3 +124,23 @@ Related lodes: [Series and Wishlist foundations](series-wishlist.md), [routing](
 ## Combined Gallery read contract
 
 `GALLERY_REPOSITORY` binds to `HttpGalleryRepository` at the composition root. `GET /api/gallery` returns explicit card summaries, not full Title/Media data. Runtime parsing and `galleryCard` preserve nullable metadata, quality values and compact Series counts. Existing Movie/Series/Wishlist list contracts remain full and unchanged. `GalleryRouteState` canonicalizes common filters plus collections/kinds; URL commands own reads, switchMap cancels stale requests, and successful mutations explicitly reconcile the same page. Wishlist refresh projects its full response to a compact summary immediately. No new content table or entity cache is introduced. See [Unified Gallery](../plans/unified-gallery.md).
+
+## Shared validation bounds and calendar dates
+
+Gallery parsers and editors use `models/media-limits.ts` for API numeric and collection limits; the cinema-oriented `RELEASE_YEAR_RANGE` intentionally preserves the existing 1888–2100 filter/movie-editor range. `utils/provider-id.ts` accepts canonical positive decimal Kinopoisk IDs through `Number.MAX_SAFE_INTEGER`, including values above the retired movie editor's arbitrary 15-million cap. Shape checks delegate to the shared pure `isRecord` guard while field-specific error handling remains in each parser.
+
+```typescript
+if (!isProviderId(kpId)) throw invalid('kpId');
+const addedDate = toLocalDate(new Date());
+```
+
+Movie and Series editor defaults, including Wishlist-to-library handoff, use the user's local calendar date through `@msh-shared/utils/date`. `isIsoDate` validates real YYYY-MM-DD dates and rejects calendar rollovers. UTC timestamps remain timestamps; the date helper does not rewrite existing server values.
+
+```mermaid
+flowchart LR
+  Limits[Gallery media limits] --> Parsers[Runtime parsers]
+  Limits --> Editors[Editor validation]
+  Date[Shared calendar date helpers] --> Editors
+```
+
+Deletion in Movies and Series cancels overlapping reads. If the URL query changed while deletion was pending, the store reloads that query instead of adjusting its unrelated total. See [MoviesStore](../../src/app/features/gallery/movies/state/movies.store.ts) and [SeriesStore](../../src/app/features/gallery/series/state/series.store.ts).

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { toAppError } from '@msh-core/http/app-error';
 import { catchError, map, type Observable, throwError } from 'rxjs';
 import { parseSeriesTitleDto, parseTitlesPageDto } from '../../catalog/data-access/title-dto.parser';
@@ -9,7 +9,7 @@ import type { CollectionPage } from '../../models/collection-page';
 import type { SeriesRepository } from '../application/series.repository';
 import { SeriesApiClient } from './series-api.client';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class HttpSeriesRepository implements SeriesRepository {
   private readonly api = inject(SeriesApiClient);
 

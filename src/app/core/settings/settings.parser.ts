@@ -1,8 +1,9 @@
+import { isRecord } from '@msh-shared/utils/record';
 import type { ExtensionSettingOption, QualitySettingOption, SettingsDto } from './settings.dto';
 
 export function parseSettingsDto(value: unknown): SettingsDto {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new TypeError('Invalid settings response');
-  const record = value as Record<string, unknown>;
+  if (!isRecord(value)) throw new TypeError('Invalid settings response');
+  const record = value;
   const genres = record['genresForFilters'];
   if (!Array.isArray(genres) || genres.some((genre) => typeof genre !== 'string')) throw invalid('genresForFilters');
 
@@ -39,8 +40,8 @@ function parseQualityOption(value: unknown, field: string): QualitySettingOption
 }
 
 function optionRecord(value: unknown, field: string): Record<string, unknown> {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw invalid(field);
-  return value as Record<string, unknown>;
+  if (!isRecord(value)) throw invalid(field);
+  return value;
 }
 
 function optionalDefault(value: unknown, field: string): { readonly default?: boolean } {
@@ -50,8 +51,8 @@ function optionalDefault(value: unknown, field: string): { readonly default?: bo
 }
 
 function nonEmptyStringValue(value: unknown, field: string): string {
-  const result = stringValue(value, field).trim();
-  if (!result) throw invalid(field);
+  const result = stringValue(value, field);
+  if (!result.trim()) throw invalid(field);
   return result;
 }
 

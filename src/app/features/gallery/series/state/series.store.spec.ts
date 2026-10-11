@@ -162,4 +162,18 @@ describe('Series list deletion', () => {
     expect(store.titles()).toEqual([]);
     expect(store.status()).toBe('loaded');
   });
+  it('reloads an already completed different query instead of decrementing its total', () => {
+    const { store, execute, route } = setup();
+    const pending = new Subject<void>();
+    vi.spyOn(TestBed.inject(DeleteSeriesUseCase), 'execute').mockReturnValue(pending);
+    const other = { ...title, id: 'other' };
+    const current = { ...page, media: [other], totalCount: 5 };
+    execute.mockReturnValue(of(current));
+    store.deleteSeries(title.id);
+    route.next(convertToParamMap({ search: 'Other' }));
+    pending.next();
+    expect(execute).toHaveBeenCalledTimes(3);
+    expect(store.titles()).toEqual([other]);
+    expect(store.totalCount()).toBe(5);
+  });
 });

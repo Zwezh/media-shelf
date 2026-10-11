@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Service } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, filter, finalize, map, type Observable, take } from 'rxjs';
 import { ConfirmationDialog, type ConfirmationDialogData } from '@msh-shared/components/confirmation-dialog/confirmation-dialog';
@@ -10,7 +10,7 @@ export type DeletionRequest = {
   readonly collection?: 'movies' | 'series' | 'wishlist';
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DeletionConfirmation {
   private isOpen = false;
   private readonly floatingPanel = inject(FloatingPanel);

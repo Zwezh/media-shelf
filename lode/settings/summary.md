@@ -56,3 +56,5 @@ Invariants:
 - A saved edit value absent from the current catalog is appended locally to that editor select only; the cached settings DTO is never mutated.
 
 Related lodes: [Series/Wishlist formats](../gallery/series-wishlist.md), [project summary](../summary.md), [terminology](../terminology.md), [media gallery](../ui/media-gallery.md), [movie editor](../plans/movie-editor.md), [practices](../practices.md).
+
+The runtime [settings parser](../../src/app/core/settings/settings.parser.ts) validates nonempty IDs, values and labels without trimming them. Catalog values are exact backend identifiers; normalizing them during reads can break an unchanged settings PUT or exact quality filters.

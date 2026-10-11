@@ -4,11 +4,8 @@
 }
 
 .editor-section {
+  --card-padding: 0;
   overflow: hidden;
-  background: var(--color-surface-container-lowest);
-  border: var(--border-subtle);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-level-1);
 
   &__header {
     display: flex;

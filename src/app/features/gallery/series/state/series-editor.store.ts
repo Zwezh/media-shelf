@@ -1,3 +1,4 @@
+import { toLocalDate } from '@msh-shared/utils/date';
 import { GetWishlistTitleQuery } from '../../wishlist/application/get-wishlist-title.query';
 import { computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -76,7 +77,7 @@ export const SeriesEditorStore = signalStore(
               tap((title) => {
                 if (title.kind !== 'series') throw new AppError('validation', 'Wrong wishlist kind');
                 patchState(store, {
-                  seed: { ...toSeriesEditor(title), addedDate: new Date().toISOString().slice(0, 10) },
+                  seed: { ...toSeriesEditor(title), addedDate: toLocalDate(new Date()) },
                   operation: 'idle',
                 });
               }),

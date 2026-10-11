@@ -52,7 +52,7 @@ export class AuthDialog {
     await submit(this.credentialsForm, async () => {
       this.isSubmitting.set(true);
       try {
-        const token = await firstValueFrom(this.authApi.signIn(this.credentials().secretKey.trim()));
+        const token = await firstValueFrom(this.authApi.signIn(this.credentials().secretKey));
         this.authSession.start(token);
         this.credentials.set({ secretKey: '' });
         this.isSubmitting.set(false);

@@ -2,6 +2,8 @@
 
 The root router exposes three lazy feature boundaries: `/gallery`, `/statistics`, and `/settings`. Gallery loads a feature layout whose children include `/gallery/movies`, static `/gallery/movies/new`, `/gallery/movies/:id`, `/gallery/movies/:id/edit`, `/gallery/series`, `/gallery/series/:id`, `/gallery/series/new`, `/gallery/series/:id/edit`, and `/gallery/wishlist`; the static add route precedes the parameterized detail route. Movie and Series list/detail navigation preserve their collection query parameters; Movie and Series editor navigation also preserves them. Editor routes carry an explicit `add` or `edit` mode in route data and omit navigation metadata, so they add no subnavigation items. Gallery subnavigation is All items → Movies → Series → Wishlist. All items matches the Gallery path exactly and ignores query parameters for active state. `/`, the obsolete `/wishlist` URL, and other unmatched URLs redirect to the combined `/gallery` list. Route titles are translation keys resolved by `TranslatedTitleStrategy`.
 
+`/statistics` lazily renders the persisted Library dashboard. Its page-owned store loads only the saved snapshot; the authenticated Scan/Rescan action explicitly calculates it. See [Statistics](../statistics/summary.md).
+
 Router navigation uses Angular's progressive View Transitions integration with a short global fade/vertical shift. Unsupported browsers navigate normally, and reduced-motion preference disables the animation.
 
 ```typescript

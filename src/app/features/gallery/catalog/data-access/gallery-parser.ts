@@ -1,3 +1,5 @@
+import { MEDIA_LIMITS } from '../../models/media-limits';
+import { isProviderId } from '../../utils/provider-id';
 import { asRecord, invalid, stringArray, stringValue } from '../../data-access/dto-values';
 import { integer, nullableRange } from './title-values';
 import type { CollectionPage } from '../../models/collection-page';
@@ -16,27 +18,25 @@ export function parseGalleryItem(value: unknown): GalleryItem {
   const id = stringValue(r['id'], 'id');
   if (!id.trim()) throw invalid('id');
   const kpId = r['kpId'];
-  if (
-    kpId !== null &&
-    (typeof kpId !== 'string' || kpId.length > 100 || !/^[1-9]\d*$/.test(kpId) || BigInt(kpId) > BigInt(Number.MAX_SAFE_INTEGER))
-  )
-    throw invalid('kpId');
+  if (kpId !== null && !isProviderId(kpId)) throw invalid('kpId');
   const year =
     r['year'] === null
       ? null
       : Array.isArray(r['year'])
-        ? r['year'].map((y: unknown) => (kind === 'series' && y === null ? null : integer(y, 'year', 1, 9999)))
-        : integer(r['year'], 'year', 1, 9999);
+        ? r['year'].map((y: unknown) =>
+            kind === 'series' && y === null ? null : integer(y, 'year', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear),
+          )
+        : integer(r['year'], 'year', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear);
   let series: GalleryItem['series'] = null;
   if (kind === 'series') {
     const d = asRecord(r['series'], 'series'),
       status = d['productionStatus'];
     if (status !== 'unknown' && status !== 'in_production' && status !== 'finished') throw invalid('productionStatus');
-    const startYear = nullableRange(d['startYear'], 'startYear', 1, 9999),
-      endYear = nullableRange(d['endYear'], 'endYear', 1, 9999);
+    const startYear = nullableRange(d['startYear'], 'startYear', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear),
+      endYear = nullableRange(d['endYear'], 'endYear', MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear);
     if (endYear !== null && (startYear === null || endYear < startYear || status !== 'finished')) throw invalid('endYear');
-    const availableSeasonCount = integer(d['availableSeasonCount'], 'availableSeasonCount', 0, 1000),
-      recordedSeasonCount = integer(d['recordedSeasonCount'], 'recordedSeasonCount', 0, 1000);
+    const availableSeasonCount = integer(d['availableSeasonCount'], 'availableSeasonCount', 0, MEDIA_LIMITS.maxSeasons),
+      recordedSeasonCount = integer(d['recordedSeasonCount'], 'recordedSeasonCount', 0, MEDIA_LIMITS.maxSeasons);
     if (availableSeasonCount > recordedSeasonCount) throw invalid('availableSeasonCount');
     series = { startYear, endYear, productionStatus: status, availableSeasonCount, recordedSeasonCount };
   } else if (r['series'] !== null) throw invalid('series');
@@ -44,14 +44,14 @@ export function parseGalleryItem(value: unknown): GalleryItem {
     id,
     kind,
     collection: collection as GalleryItem['collection'],
-    kpId: kpId as string | null,
+    kpId,
     title: stringValue(r['name'], 'name'),
     originalTitle: stringValue(r['enName'], 'enName'),
     addedDate: stringValue(r['addedDate'], 'addedDate'),
     year,
-    rating: nullableRange(r['rating'], 'rating', 0, 10, false),
-    ageRating: nullableRange(r['ageRating'], 'ageRating', 0, 21),
-    durationMinutes: nullableRange(r['movieLength'], 'movieLength', 0, 100000),
+    rating: nullableRange(r['rating'], 'rating', 0, MEDIA_LIMITS.maxRating, false),
+    ageRating: nullableRange(r['ageRating'], 'ageRating', 0, MEDIA_LIMITS.maxAgeRating),
+    durationMinutes: nullableRange(r['movieLength'], 'movieLength', 0, MEDIA_LIMITS.maxRuntimeMinutes),
     posterUrl: stringValue(r['posterUrl'], 'posterUrl'),
     compactPosterUrl: stringValue(r['compactPosterUrl'], 'compactPosterUrl'),
     genres: stringArray(r['genres'], 'genres'),

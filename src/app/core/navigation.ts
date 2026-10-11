@@ -1,3 +1,4 @@
+import { isRecord } from '@msh-shared/utils/record';
 import { Route } from '@angular/router';
 
 export interface NavigationMetadata {
@@ -10,11 +11,11 @@ export interface NavigationItem extends NavigationMetadata {
 }
 
 const isNavigationMetadata = (value: unknown): value is NavigationMetadata => {
-  if (typeof value !== 'object' || value === null) {
+  if (!isRecord(value)) {
     return false;
   }
 
-  const metadata = value as Record<string, unknown>;
+  const metadata = value;
 
   return typeof metadata['labelKey'] === 'string' && typeof metadata['order'] === 'number';
 };

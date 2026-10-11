@@ -1,3 +1,5 @@
+import { isProviderId } from '../../utils/provider-id';
+import { MEDIA_LIMITS, RELEASE_YEAR_RANGE } from '../../models/media-limits';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, linkedSignal } from '@angular/core';
 import { FormField, form, required, submit, validate } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
@@ -85,11 +87,13 @@ export class MovieEditorPage {
     required(schema.description, { message: 'movieEditor.validation.required' });
     validate(schema.description, ({ value }) => requiredText(value()));
     required(schema.rating, { message: 'movieEditor.validation.required' });
-    validate(schema.rating, ({ value }) => numericRange(value(), 0, 10, false, 'movieEditor.validation.rating'));
+    validate(schema.rating, ({ value }) => numericRange(value(), 0, MEDIA_LIMITS.maxRating, false, 'movieEditor.validation.rating'));
     required(schema.movieLength, { message: 'movieEditor.validation.required' });
-    validate(schema.movieLength, ({ value }) => numericRange(value(), 0, 100_000, false, 'movieEditor.validation.duration', true));
+    validate(schema.movieLength, ({ value }) =>
+      numericRange(value(), 0, MEDIA_LIMITS.maxRuntimeMinutes, false, 'movieEditor.validation.duration', true),
+    );
     required(schema.kpId, { message: 'movieEditor.validation.required' });
-    validate(schema.kpId, ({ value }) => numericRange(value(), 1, 15_000_000, false, 'movieEditor.validation.kpId', true));
+    validate(schema.kpId, ({ value }) => (isProviderId(value()) ? undefined : { kind: 'id', message: 'movieEditor.validation.kpId' }));
     required(schema.posterUrl, { message: 'movieEditor.validation.required' });
     validate(schema.posterUrl, ({ value }) => requiredText(value()));
     required(schema.backdropUrl, { message: 'movieEditor.validation.required' });
@@ -112,8 +116,7 @@ export class MovieEditorPage {
     () => this.store.breadcrumbTitle() || (this.store.mode() === 'add' ? 'movieEditor.breadcrumbs.add' : 'movieEditor.breadcrumbs.edit'),
   );
   protected readonly canAutofill = computed(() => {
-    const id = Number(this.model().kpId);
-    return Number.isInteger(id) && id > 0 && id <= 15_000_000 && !this.store.isBusy();
+    return isProviderId(this.model().kpId) && !this.store.isBusy();
   });
 
   protected autofill(): void {
@@ -194,7 +197,8 @@ function numericRange(
 function yearRange(value: string, message: string): ValidationResult {
   if (value.trim() === '') return { kind: 'range', message };
   const years = value.split(',').map((year) => Number(year.trim()));
-  return years.length <= 2 && years.every((year) => Number.isInteger(year) && year >= 1888 && year <= 2100)
+  return years.length <= 2 &&
+    years.every((year) => Number.isInteger(year) && year >= RELEASE_YEAR_RANGE.min && year <= RELEASE_YEAR_RANGE.max)
     ? undefined
     : { kind: 'range', message };
 }

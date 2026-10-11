@@ -1,10 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 import type { SeriesDraft, TitleDraft } from '../models/title';
 import { mergeTitleAutofill } from '../utils/title-autofill';
 import { TITLE_AUTOFILL_REPOSITORY } from './title-autofill.repository';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AutofillTitleUseCase {
   private readonly repository = inject(TITLE_AUTOFILL_REPOSITORY);
 

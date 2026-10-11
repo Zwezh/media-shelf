@@ -1,3 +1,6 @@
+import { MEDIA_LIMITS } from '../../models/media-limits';
+import { isProviderId } from '../../utils/provider-id';
+import { isIsoDate } from '@msh-shared/utils/date';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, ElementRef, inject, Injector, linkedSignal } from '@angular/core';
 import { FormField, form, required, submit, validate, applyEach, applyWhen } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
@@ -52,21 +55,22 @@ export class SeriesEditorPage {
     required(schema.name, { message: 'movieEditor.validation.required' });
     validate(schema.name, ({ value }) => (value().trim() ? undefined : { kind: 'required', message: 'movieEditor.validation.required' }));
     required(schema.addedDate, { message: 'movieEditor.validation.required' });
-    for (const field of [schema.startYear, schema.endYear]) validate(field, ({ value }) => validNumber(value(), 1, 9999));
+    for (const field of [schema.startYear, schema.endYear])
+      validate(field, ({ value }) => validNumber(value(), MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear));
     for (const field of [schema.announcedSeasonCount, schema.movieLength])
-      validate(field, ({ value }) => validNumber(value(), 0, field === schema.movieLength ? 100000 : 10000));
-    validate(schema.rating, ({ value }) => validNumber(value(), 0, 10, false));
-    validate(schema.ageRating, ({ value }) => validNumber(value(), 0, 21));
+      validate(field, ({ value }) =>
+        validNumber(value(), 0, field === schema.movieLength ? MEDIA_LIMITS.maxRuntimeMinutes : MEDIA_LIMITS.maxSeasonNumber),
+      );
+    validate(schema.rating, ({ value }) => validNumber(value(), 0, MEDIA_LIMITS.maxRating, false));
+    validate(schema.ageRating, ({ value }) => validNumber(value(), 0, MEDIA_LIMITS.maxAgeRating));
     validate(schema.kpId, ({ value }) =>
-      !value().trim() || validProviderId(value()) ? undefined : { kind: 'id', message: 'seriesEditor.invalidId' },
+      !value().trim() || isProviderId(value()) ? undefined : { kind: 'id', message: 'seriesEditor.invalidId' },
     );
     for (const field of [schema.addedDate, schema.releaseDate])
       validate(field, ({ value }) => {
         const date = value();
         if (!date) return undefined;
-        return /^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0, 10) === date
-          ? undefined
-          : { kind: 'date', message: 'seriesEditor.invalidDate' };
+        return isIsoDate(date) ? undefined : { kind: 'date', message: 'seriesEditor.invalidDate' };
       });
     validate(schema.endYear, ({ value, valueOf }) =>
       !value().trim() ||
@@ -78,8 +82,8 @@ export class SeriesEditorPage {
     );
     applyEach(schema.seasons, (season) => {
       required(season.seasonNumber, { message: 'movieEditor.validation.required' });
-      validate(season.seasonNumber, ({ value }) => validNumber(value(), 0, 10000));
-      validate(season.releaseYear, ({ value }) => validNumber(value(), 1, 9999));
+      validate(season.seasonNumber, ({ value }) => validNumber(value(), 0, MEDIA_LIMITS.maxSeasonNumber));
+      validate(season.releaseYear, ({ value }) => validNumber(value(), MEDIA_LIMITS.minYear, MEDIA_LIMITS.maxYear));
       applyWhen(
         season,
         ({ value }) => value().isAvailable,
@@ -109,7 +113,7 @@ export class SeriesEditorPage {
     })),
   );
   protected readonly titleKey = computed(() => (this.store.mode() === 'add' ? 'seriesEditor.addTitle' : 'seriesEditor.editTitle'));
-  protected readonly canAutofill = computed(() => validProviderId(this.model().kpId) && !this.store.isBusy());
+  protected readonly canAutofill = computed(() => isProviderId(this.model().kpId) && !this.store.isBusy());
 
   constructor() {
     afterNextRender(() => this.element.nativeElement.querySelector<HTMLElement>('h1')?.focus());
@@ -165,7 +169,4 @@ function validNumber(value: string, min: number, max: number, integer = true): {
   return Number.isFinite(number) && (!integer || Number.isInteger(number)) && number >= min && number <= max
     ? undefined
     : { kind: 'range', message: 'seriesEditor.invalidNumber' };
-}
-function validProviderId(value: string): boolean {
-  return /^[1-9]\d*$/.test(value) && value.length <= 16 && BigInt(value) <= BigInt(Number.MAX_SAFE_INTEGER);
 }

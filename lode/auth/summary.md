@@ -24,6 +24,8 @@ sequenceDiagram
 
 ## Contracts
 
+- Sign-in sends the secret exactly as typed; leading/trailing whitespace is significant to bcrypt. All auth HTTP operations, including logout, use a bounded 15-second timeout.
+
 - POST `/auth` and `/auth/refresh` return only `{ access_token }`. POST `/auth/logout` returns 204. Cookie responses use Cache-Control: no-store.
 - Refresh tokens are opaque 256-bit values. Only SHA-256 hashes are stored. Consumed hashes remain until session expiry for replay detection. Rotation retains the original 30-day deadline. Replay revokes the entire family.
 - Access JWTs include a session ID and administrator credential version. Every protected request verifies the active session on the primary database. Logout and secret rotation invalidate access and refresh credentials.

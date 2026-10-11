@@ -1,0 +1,233 @@
+@use 'abstracts/breakpoints' as breakpoint;
+:host {
+  display: block;
+}
+.statistics {
+  padding: var(--space-xl);
+  color: var(--color-text-primary);
+}
+.statistics__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-base);
+  margin-bottom: var(--space-xl);
+}
+h1 {
+  margin: 0;
+  &:focus-visible {
+    outline: var(--border-focus);
+    outline-offset: var(--space-xs);
+  }
+}
+.statistics__subtitle,
+.statistics__timestamp,
+.statistics__note {
+  margin-block: var(--space-xs);
+  font: var(--text-body-sm);
+  color: var(--color-text-muted);
+}
+.statistics__header button {
+  flex-shrink: 0;
+}
+.statistics__note {
+  margin-bottom: var(--space-xl);
+}
+.statistics__kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-base);
+  margin-bottom: var(--space-xl);
+}
+.statistics__charts {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-base);
+}
+.metric-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-block: var(--space-sm);
+}
+.metric-row strong {
+  flex-shrink: 0;
+}
+p {
+  margin-block: var(--space-sm);
+}
+.composition,
+.genre-track,
+.histogram__track {
+  display: flex;
+  height: var(--space-sm);
+  background: var(--color-surface-container);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+.composition span:first-child {
+  background: var(--color-primary);
+}
+.composition span:last-child {
+  background: var(--color-badge-series-text);
+}
+.genre-track span,
+.histogram__track span {
+  background: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+.genre-list,
+.quality-list,
+.histogram,
+.data-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.genre-list li {
+  margin-block: var(--space-base);
+}
+.coverage,
+.muted {
+  color: var(--color-text-muted);
+  font: var(--text-body-sm);
+}
+.coverage {
+  margin-top: var(--space-xl);
+}
+.quality-chart {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+.donut {
+  position: relative;
+  width: 12rem;
+  max-width: 100%;
+  aspect-ratio: 1;
+}
+.donut svg {
+  width: 100%;
+  height: 100%;
+}
+.donut circle {
+  fill: none;
+  stroke-width: 14;
+}
+.donut__base {
+  stroke: var(--color-surface-container);
+}
+.donut__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.donut__center strong {
+  font: var(--text-display-lg);
+}
+.donut__center span {
+  font: var(--text-label-md);
+  color: var(--color-text-muted);
+}
+.quality-list {
+  width: 100%;
+}
+.quality-list li,
+.data-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-block: var(--space-sm);
+  border-bottom: var(--border-subtle);
+}
+.quality-list__label {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.quality-list i {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+.quality-list strong {
+  white-space: nowrap;
+  font: var(--text-label-lg);
+}
+.histogram li {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) 3rem;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-block: var(--space-sm);
+  font: var(--text-label-md);
+}
+.histogram li strong {
+  text-align: right;
+}
+.histogram--rating .histogram__track span {
+  background: var(--color-badge-series-text);
+}
+.rating-summary {
+  display: flex;
+  gap: var(--space-xl);
+}
+.rating-summary p {
+  font: var(--text-body-sm);
+  color: var(--color-text-muted);
+}
+.rating-summary strong {
+  display: block;
+  font: var(--text-headline-md);
+  color: var(--color-text-primary);
+}
+.rating-highlight {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-base);
+  background: var(--color-badge-rating-bg);
+  color: var(--color-badge-rating-text);
+  border-radius: var(--radius-md);
+  font: var(--text-label-lg);
+}
+summary {
+  cursor: pointer;
+  color: var(--color-badge-movie-text);
+  margin-top: var(--space-base);
+  font: var(--text-label-lg);
+}
+@include breakpoint.tablet {
+  .statistics__kpis,
+  .statistics__charts {
+    grid-template-columns: 1fr;
+  }
+}
+@include breakpoint.mobile {
+  .statistics {
+    padding: var(--space-base);
+  }
+  .statistics__header {
+    flex-wrap: wrap;
+  }
+  .statistics__header button {
+    width: 100%;
+  }
+  .metric-row {
+    flex-wrap: wrap;
+  }
+}
+
+.genre-list .metric-row strong {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

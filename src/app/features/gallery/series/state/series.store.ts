@@ -1,7 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { catchError, EMPTY, exhaustMap, filter, pipe, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, EMPTY, exhaustMap, filter, map, pipe, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { CATALOG_SORTING_KEYS, DEFAULT_CATALOG_PARAMS, type CatalogParams } from '../../catalog/models/catalog-params';
 import type { SeriesTitle } from '../../catalog/models/title';
 import type { CollectionFilterKey, CollectionFilters } from '../../models/collection-filters';
@@ -69,13 +69,14 @@ export const SeriesStore = signalStore(
         pipe(
           filter(() => store.deletingId() === null),
           tap((deletingId) => patchState(store, { deletingId })),
-          exhaustMap((id) =>
+          map((id) => ({ id, params: store.params() })),
+          exhaustMap(({ id, params }) =>
             deletion.execute(id).pipe(
               tap(() => {
-                const wasLoading = store.status() === 'loading';
+                const mustReload = store.status() === 'loading' || store.params() !== params;
                 deleted.next();
                 feedback.success('series.delete.successTitle', 'series.delete.successMessage');
-                if (wasLoading) {
+                if (mustReload) {
                   patchState(store, { deletingId: null });
                   load(store.params());
                   return;

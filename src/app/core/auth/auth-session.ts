@@ -1,3 +1,4 @@
+import { isRecord } from '@msh-shared/utils/record';
 import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
@@ -125,8 +126,8 @@ function jwtExpiryTime(token: string): number | undefined {
     const payload = segments[1]?.replace(/-/g, '+').replace(/_/g, '/') ?? '';
     const paddedPayload = payload.padEnd(Math.ceil(payload.length / 4) * 4, '=');
     const claims: unknown = JSON.parse(globalThis.atob(paddedPayload));
-    if (typeof claims !== 'object' || claims === null || Array.isArray(claims)) return undefined;
-    const expiresAt = (claims as Record<string, unknown>)['exp'];
+    if (!isRecord(claims)) return undefined;
+    const expiresAt = claims['exp'];
     return typeof expiresAt === 'number' && Number.isFinite(expiresAt) ? expiresAt * 1_000 : undefined;
   } catch {
     return undefined;

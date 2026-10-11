@@ -1,9 +1,8 @@
+import { RELEASE_YEAR_RANGE } from '../models/media-limits';
 import type { ParamMap } from '@angular/router';
 import type { CollectionParams } from '../models/collection-params';
 import { SORTING_DIRECTIONS } from '../models/sorting-direction';
 const MAX_PAGE_SIZE = 100;
-const MIN_RELEASE_YEAR = 1888;
-const MAX_RELEASE_YEAR = 2100;
 export function readCollectionParams<TKey extends string>(
   paramMap: ParamMap,
   keys: readonly TKey[],
@@ -17,12 +16,12 @@ export function readCollectionParams<TKey extends string>(
     pageSize: readPositiveInteger(paramMap.get('pageSize'), MAX_PAGE_SIZE) ?? defaults.pageSize,
     ...readStringParam(paramMap, 'actors'),
     ...readStringParam(paramMap, 'directors'),
-    ...readNumberParam(paramMap, 'fromYear', MIN_RELEASE_YEAR, MAX_RELEASE_YEAR, true),
+    ...readNumberParam(paramMap, 'fromYear', RELEASE_YEAR_RANGE.min, RELEASE_YEAR_RANGE.max, true),
     ...readStringArrayParam(paramMap, 'genres'),
     ...readStringArrayParam(paramMap, 'quality'),
     ...readNumberParam(paramMap, 'rating', 0, 10),
     ...readStringParam(paramMap, 'search'),
-    ...readNumberParam(paramMap, 'toYear', MIN_RELEASE_YEAR, MAX_RELEASE_YEAR, true),
+    ...readNumberParam(paramMap, 'toYear', RELEASE_YEAR_RANGE.min, RELEASE_YEAR_RANGE.max, true),
   };
 }
 

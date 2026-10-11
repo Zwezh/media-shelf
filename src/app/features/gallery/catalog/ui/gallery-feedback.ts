@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastStore } from '@msh-shared/services/toast-store';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GalleryFeedback {
   private readonly toastStore = inject(ToastStore);
   private readonly translate = inject(TranslateService);
