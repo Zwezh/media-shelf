@@ -36,11 +36,11 @@ Contracts:
 
 - The desktop header is 56 px high with 24 px inline padding; at 48 rem and below it is 64 px high with 16 px padding.
 - The application header is sticky at the viewport top and remains above feature-level sticky navigation.
-- Mobile navigation remains in the header and scrolls horizontally. The right-side authentication action becomes icon-only visually while retaining its translated accessible text.
-- The header renders Sign In for an empty session and Sign Out for an authenticated session restored from storage when valid. Sign In opens the authorization dialog; Sign Out clears both signal and persisted token state and reports success through the global toast viewport.
+- At 640 px and below, root navigation becomes a fixed bottom bar with icons and translated labels, without an add button. The bar is 64 px tall before the bottom safe area, with a 90% shell-surface tint and backdrop blur matching the translucent detail-hero treatment. Root padding reserves the bar height plus the bottom safe area; toast placement clears it. The right-side authentication action becomes icon-only visually while retaining its translated accessible text.
+- The header renders Sign In for an empty session and Sign Out for an authenticated session restored from storage when valid. Sign In dynamically imports the authorization dialog, disables its trigger while loading and reports load failures; Sign Out clears both signal and persisted token state and reports success through the global toast viewport.
 - The header receives root navigation items from `App`; it does not import route configuration.
 - The header exposes a `[header-search]` projection slot. `App` fills it with the Gallery-owned debounced quick search, preserving the rule that layout never imports feature logic.
-- Header search is hidden at 640 px and below so the existing mobile navigation and authentication action retain their compact shell contract.
+- At 640 px and below, a search icon opens the projected search over the header controls. The close button or Escape hides it and restores trigger focus after rendering; opening focuses the input. Desktop keeps the inline field.
 - `Gallery` remains active for `/gallery` child URLs such as `/gallery/wishlist`.
 - The main content shell is full width and adds no feature padding.
 - Routed components are aligned to the top of the main content shell; empty and short feature pages leave unused space below their content.

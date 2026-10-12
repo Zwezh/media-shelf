@@ -3,6 +3,10 @@
   margin-bottom: var(--space-xl);
 }
 
+:host([hidden]) {
+  display: none;
+}
+
 h2 {
   margin-top: 0;
 }

@@ -15,7 +15,13 @@ describe('About', () => {
         ...provideI18nTesting(),
         {
           provide: Pwa,
-          useValue: { installed: signal(false), canInstall: signal(false), installError: signal(false), installing: signal(false) },
+          useValue: {
+            mobilePlatform: 'ios',
+            installed: signal(false),
+            canInstall: signal(false),
+            installError: signal(false),
+            installing: signal(false),
+          },
         },
       ],
     });

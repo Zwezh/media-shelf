@@ -95,134 +95,183 @@
         </msh-statistic-card>
       </div>
       <div class="statistics__charts">
-        <msh-statistics-chart-panel
-          headingId="statistics-genres"
-          titleKey="statistics.genres"
-          descriptionKey="statistics.genresDescription"
-        >
-          @if (allGenres().length) {
-            <ul class="genre-list">
-              @for (genre of topGenres(); track genre.label) {
-                <li>
-                  <div class="metric-row">
-                    <strong>{{ genre.label }}</strong
-                    ><span
-                      >{{ genre.count | number: '1.0-0' : locale() }}
-                      <span class="muted">({{ genre.count / snapshot.totals.titles | percent: '1.0-1' : locale() }})</span></span
-                    >
-                  </div>
-                  <div class="genre-track" aria-hidden="true">
-                    <span [style.width.%]="(genre.count / snapshot.totals.titles) * 100"></span>
-                  </div>
-                </li>
-              }
-            </ul>
-            @if (allGenres().length > 8) {
-              <details>
-                <summary>{{ 'statistics.allGenres' | translate }}</summary>
-                <ul class="data-list">
-                  @for (genre of allGenres(); track genre.label) {
-                    <li>
-                      <span>{{ genre.label }}</span
-                      ><strong>{{ genre.count | number: '1.0-0' : locale() }}</strong>
-                    </li>
-                  }
-                </ul>
-              </details>
-            }
-          } @else {
-            <p class="muted">{{ 'statistics.noGenres' | translate }}</p>
-          }
-          <p class="coverage">
-            {{ 'statistics.missingGenres' | translate }}
-            <strong>{{ snapshot.totals.titlesWithoutGenres | number: '1.0-0' : locale() }}</strong>
-          </p>
-        </msh-statistics-chart-panel>
-        <msh-statistics-chart-panel
-          headingId="statistics-quality"
-          titleKey="statistics.qualityTitle"
-          descriptionKey="statistics.qualityDescription"
-        >
-          <div class="quality-chart">
-            <div class="donut" aria-hidden="true">
-              <svg viewBox="0 0 120 120">
-                <circle class="donut__base" cx="60" cy="60" r="45" />
-                @for (slice of quality(); track $index) {
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="45"
-                    pathLength="100"
-                    [attr.stroke]="slice.color"
-                    [attr.stroke-dasharray]="slice.percentage + ' ' + (100 - slice.percentage)"
-                    [attr.stroke-dashoffset]="-slice.offset"
-                    transform="rotate(-90 60 60)"
-                  />
+        @defer (on viewport) {
+          <msh-statistics-chart-panel
+            headingId="statistics-genres"
+            titleKey="statistics.genres"
+            descriptionKey="statistics.genresDescription"
+          >
+            @if (allGenres().length) {
+              <ul class="genre-list">
+                @for (genre of topGenres(); track genre.label) {
+                  <li>
+                    <div class="metric-row">
+                      <strong>{{ genre.label }}</strong
+                      ><span
+                        >{{ genre.count | number: '1.0-0' : locale() }}
+                        <span class="muted">({{ genre.count / snapshot.totals.titles | percent: '1.0-1' : locale() }})</span></span
+                      >
+                    </div>
+                    <div class="genre-track" aria-hidden="true">
+                      <span [style.width.%]="(genre.count / snapshot.totals.titles) * 100"></span>
+                    </div>
+                  </li>
                 }
-              </svg>
-              <div class="donut__center">
-                <strong>{{ snapshot.totals.titles | number: '1.0-0' : locale() }}</strong
-                ><span>{{ 'statistics.titles' | translate }}</span>
+              </ul>
+              @if (allGenres().length > 8) {
+                <details>
+                  <summary>{{ 'statistics.allGenres' | translate }}</summary>
+                  <ul class="data-list">
+                    @for (genre of allGenres(); track genre.label) {
+                      <li>
+                        <span>{{ genre.label }}</span
+                        ><strong>{{ genre.count | number: '1.0-0' : locale() }}</strong>
+                      </li>
+                    }
+                  </ul>
+                </details>
+              }
+            } @else {
+              <p class="muted">{{ 'statistics.noGenres' | translate }}</p>
+            }
+            <p class="coverage">
+              {{ 'statistics.missingGenres' | translate }}
+              <strong>{{ snapshot.totals.titlesWithoutGenres | number: '1.0-0' : locale() }}</strong>
+            </p>
+          </msh-statistics-chart-panel>
+        } @placeholder {
+          <section class="surface-card statistics__chart-placeholder" aria-labelledby="statistics-genres">
+            <h2 id="statistics-genres">{{ 'statistics.genres' | translate }}</h2>
+            <p role="status">{{ 'deferred.loading' | translate }}</p>
+          </section>
+        } @error {
+          <section class="surface-card statistics__chart-placeholder" aria-labelledby="statistics-genres">
+            <h2 id="statistics-genres">{{ 'statistics.genres' | translate }}</h2>
+            <p role="alert">{{ 'deferred.error' | translate }}</p>
+          </section>
+        }
+        @defer (on viewport) {
+          <msh-statistics-chart-panel
+            headingId="statistics-quality"
+            titleKey="statistics.qualityTitle"
+            descriptionKey="statistics.qualityDescription"
+          >
+            <div class="quality-chart">
+              <div class="donut" aria-hidden="true">
+                <svg viewBox="0 0 120 120">
+                  <circle class="donut__base" cx="60" cy="60" r="45" />
+                  @for (slice of quality(); track $index) {
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="45"
+                      pathLength="100"
+                      [attr.stroke]="slice.color"
+                      [attr.stroke-dasharray]="slice.percentage + ' ' + (100 - slice.percentage)"
+                      [attr.stroke-dashoffset]="-slice.offset"
+                      transform="rotate(-90 60 60)"
+                    />
+                  }
+                </svg>
+                <div class="donut__center">
+                  <strong>{{ snapshot.totals.titles | number: '1.0-0' : locale() }}</strong
+                  ><span>{{ 'statistics.titles' | translate }}</span>
+                </div>
               </div>
+              <ul class="quality-list">
+                @for (slice of quality(); track $index) {
+                  <li>
+                    <span class="quality-list__label"
+                      ><i aria-hidden="true" [style.background]="slice.color"></i
+                      >{{ slice.kind === 'quality' ? slice.value : ('statistics.quality.' + slice.kind | translate) }}</span
+                    ><strong
+                      >{{ slice.count | number: '1.0-0' : locale() }}
+                      <span class="muted">({{ slice.percentage / 100 | percent: '1.0-1' : locale() }})</span></strong
+                    >
+                  </li>
+                }
+              </ul>
             </div>
-            <ul class="quality-list">
-              @for (slice of quality(); track $index) {
+          </msh-statistics-chart-panel>
+        } @placeholder {
+          <section class="surface-card statistics__chart-placeholder" aria-labelledby="statistics-quality">
+            <h2 id="statistics-quality">{{ 'statistics.qualityTitle' | translate }}</h2>
+            <p role="status">{{ 'deferred.loading' | translate }}</p>
+          </section>
+        } @error {
+          <section class="surface-card statistics__chart-placeholder" aria-labelledby="statistics-quality">
+            <h2 id="statistics-quality">{{ 'statistics.qualityTitle' | translate }}</h2>
+            <p role="alert">{{ 'deferred.error' | translate }}</p>
+          </section>
+        }
+        @defer (on viewport) {
+          <msh-statistics-chart-panel headingId="statistics-years" titleKey="statistics.years" descriptionKey="statistics.yearsDescription">
+            <ul class="histogram">
+              @for (decade of snapshot.decades; track decade.start; let i = $index) {
                 <li>
-                  <span class="quality-list__label"
-                    ><i aria-hidden="true" [style.background]="slice.color"></i
-                    >{{ slice.kind === 'quality' ? slice.value : ('statistics.quality.' + slice.kind | translate) }}</span
-                  ><strong
-                    >{{ slice.count | number: '1.0-0' : locale() }}
-                    <span class="muted">({{ slice.percentage / 100 | percent: '1.0-1' : locale() }})</span></strong
-                  >
+                  <span>{{ 'statistics.decade' | translate: { year: decade.start } }}</span>
+                  <div class="histogram__track" aria-hidden="true"><span [style.width.%]="years()[i]"></span></div>
+                  <strong>{{ decade.count | number: '1.0-0' : locale() }}</strong>
                 </li>
               }
             </ul>
-          </div>
-        </msh-statistics-chart-panel>
-        <msh-statistics-chart-panel headingId="statistics-years" titleKey="statistics.years" descriptionKey="statistics.yearsDescription">
-          <ul class="histogram">
-            @for (decade of snapshot.decades; track decade.start; let i = $index) {
-              <li>
-                <span>{{ 'statistics.decade' | translate: { year: decade.start } }}</span>
-                <div class="histogram__track" aria-hidden="true"><span [style.width.%]="years()[i]"></span></div>
-                <strong>{{ decade.count | number: '1.0-0' : locale() }}</strong>
-              </li>
-            }
-          </ul>
-          <p class="coverage">
-            {{ 'statistics.unknownYears' | translate }} <strong>{{ snapshot.unknownYears | number: '1.0-0' : locale() }}</strong>
-          </p>
-        </msh-statistics-chart-panel>
-        <msh-statistics-chart-panel
-          headingId="statistics-ratings"
-          titleKey="statistics.ratings"
-          descriptionKey="statistics.ratingsDescription"
-        >
-          <div class="rating-summary">
-            <p>
-              {{ 'statistics.mean' | translate }} <strong>{{ (snapshot.ratings.mean | number: '1.0-2' : locale()) ?? '—' }}</strong>
+            <p class="coverage">
+              {{ 'statistics.unknownYears' | translate }} <strong>{{ snapshot.unknownYears | number: '1.0-0' : locale() }}</strong>
             </p>
-            <p>
-              {{ 'statistics.median' | translate }} <strong>{{ (snapshot.ratings.median | number: '1.0-2' : locale()) ?? '—' }}</strong>
+          </msh-statistics-chart-panel>
+        } @placeholder {
+          <section class="surface-card statistics__chart-placeholder" aria-labelledby="statistics-years">
+            <h2 id="statistics-years">{{ 'statistics.years' | translate }}</h2>
+            <p role="status">{{ 'deferred.loading' | translate }}</p>
+          </section>
+        } @error {
+          <section class="surface-card statistics__chart-placeholder" aria-labelledby="statistics-years">
+            <h2 id="statistics-years">{{ 'statistics.years' | translate }}</h2>
+            <p role="alert">{{ 'deferred.error' | translate }}</p>
+          </section>
+        }
+        @defer (on viewport) {
+          <msh-statistics-chart-panel
+            headingId="statistics-ratings"
+            titleKey="statistics.ratings"
+            descriptionKey="statistics.ratingsDescription"
+          >
+            <div class="rating-summary">
+              <p>
+                {{ 'statistics.mean' | translate }} <strong>{{ (snapshot.ratings.mean | number: '1.0-2' : locale()) ?? '—' }}</strong>
+              </p>
+              <p>
+                {{ 'statistics.median' | translate }} <strong>{{ (snapshot.ratings.median | number: '1.0-2' : locale()) ?? '—' }}</strong>
+              </p>
+            </div>
+            <ul class="histogram histogram--rating">
+              @for (bin of snapshot.ratings.bins; track bin.from; let i = $index) {
+                <li>
+                  <span>{{ bin.from | number: '1.0-0' : locale() }}–{{ bin.to | number: '1.0-0' : locale() }}</span>
+                  <div class="histogram__track" aria-hidden="true"><span [style.width.%]="ratings()[i]"></span></div>
+                  <strong>{{ bin.count | number: '1.0-0' : locale() }}</strong>
+                </li>
+              }
+            </ul>
+            <p class="coverage">
+              {{ 'statistics.unknownRatings' | translate }}
+              <strong>{{ snapshot.ratings.unknownCount | number: '1.0-0' : locale() }}</strong>
             </p>
-          </div>
-          <ul class="histogram histogram--rating">
-            @for (bin of snapshot.ratings.bins; track bin.from; let i = $index) {
-              <li>
-                <span>{{ bin.from | number: '1.0-0' : locale() }}–{{ bin.to | number: '1.0-0' : locale() }}</span>
-                <div class="histogram__track" aria-hidden="true"><span [style.width.%]="ratings()[i]"></span></div>
-                <strong>{{ bin.count | number: '1.0-0' : locale() }}</strong>
-              </li>
-            }
-          </ul>
-          <p class="coverage">
-            {{ 'statistics.unknownRatings' | translate }} <strong>{{ snapshot.ratings.unknownCount | number: '1.0-0' : locale() }}</strong>
-          </p>
-          <p class="rating-highlight">
-            {{ 'statistics.highRated' | translate }} <strong>{{ snapshot.ratings.highRatedCount | number: '1.0-0' : locale() }}</strong>
-          </p>
-        </msh-statistics-chart-panel>
+            <p class="rating-highlight">
+              {{ 'statistics.highRated' | translate }} <strong>{{ snapshot.ratings.highRatedCount | number: '1.0-0' : locale() }}</strong>
+            </p>
+          </msh-statistics-chart-panel>
+        } @placeholder {
+          <section class="surface-card statistics__chart-placeholder" aria-labelledby="statistics-ratings">
+            <h2 id="statistics-ratings">{{ 'statistics.ratings' | translate }}</h2>
+            <p role="status">{{ 'deferred.loading' | translate }}</p>
+          </section>
+        } @error {
+          <section class="surface-card statistics__chart-placeholder" aria-labelledby="statistics-ratings">
+            <h2 id="statistics-ratings">{{ 'statistics.ratings' | translate }}</h2>
+            <p role="alert">{{ 'deferred.error' | translate }}</p>
+          </section>
+        }
       </div>
     } @else {
       <msh-empty-state messageKey="statistics.unscanned" />

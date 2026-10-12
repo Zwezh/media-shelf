@@ -25,6 +25,16 @@ export class Pwa {
   private readonly installingState = signal(false);
   private readonly installErrorState = signal(false);
 
+  readonly mobilePlatform = this.detectMobilePlatform();
+
+  private detectMobilePlatform(): 'ios' | 'android' | null {
+    const navigator = this.window?.navigator;
+    const userAgent = navigator?.userAgent ?? '';
+    if (/iPhone|iPad|iPod/i.test(userAgent) || (navigator?.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ios';
+    if (/Android/i.test(userAgent)) return 'android';
+    return null;
+  }
+
   readonly installed = this.installedState.asReadonly();
   readonly online = this.onlineState.asReadonly();
   readonly updateReady = this.readyState.asReadonly();

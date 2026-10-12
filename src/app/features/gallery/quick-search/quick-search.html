@@ -35,6 +35,8 @@
                   [alt]="'media.posterAlt' | translate: { title: item.title }"
                   width="48"
                   height="64"
+                  loading="lazy"
+                  decoding="async"
                   (error)="useFallbackPoster($event)"
                 />
                 <span class="quick-search__summary">

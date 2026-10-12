@@ -5,6 +5,7 @@
 - [practices.md](practices.md) - Current engineering and styling practices.
 - [minimal-change.md](minimal-change.md) - User-required investigation, complexity control, diff review, and completion policy for future work.
 - [ui/summary.md](ui/summary.md) - UI architecture overview.
+- [ui/performance.md](ui/performance.md) - Loading boundaries, viewport deferral, poster priorities and audit limits.
 - [ui/application-shell.md](ui/application-shell.md) - Responsive header, main outlet, footer, and version contract.
 - [ui/pwa.md](ui/pwa.md) - Mobile installation, static offline shell, updates and production hosting contract.
 - [ui/design-tokens.md](ui/design-tokens.md) - Global CSS design-token contract.
@@ -49,6 +50,7 @@ flowchart TD
   Root --> Practices[practices.md]
   Root --> MinimalChange[minimal-change.md]
   Root --> UI[ui]
+  UI --> Performance[performance.md]
   UI --> UIShell[application-shell.md]
   UI --> UITokens[design-tokens.md]
   UI --> UIPrimitives[style-primitives.md]

@@ -56,3 +56,5 @@ Rationale and lessons:
 Related lodes: [authentication](../auth/summary.md), [UI summary](summary.md), [design tokens](design-tokens.md), [application shell](application-shell.md), [project practices](../practices.md).
 
 Toast live regions use a generic `div` with `status` or `alert` semantics; an article cannot take those roles. Light-theme success messages use the foreground white token to meet AA contrast against the success background.
+
+The optional `onDismiss` callback runs once after a toast is removed by `dismiss(id)`; clearing the store does not invoke dismissal callbacks. Persistent installation guidance uses it to save the user's choice through `BrowserStorage`. On mobile the viewport sits above the shell's bottom navigation and safe area.

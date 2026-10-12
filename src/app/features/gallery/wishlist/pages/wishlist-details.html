@@ -59,16 +59,22 @@
           {{ 'wishlist.delete.confirm' | translate }}
         </button>
       </div>
-      <div class="movie-details__content">
-        <div class="movie-details__cards">
-          <msh-production-and-cast [movie]="view" />
-        </div>
-        <msh-related-movie-lists
-          [similarTitleKey]="
-            title.kind === 'series' ? 'movieDetails.additionalInformation.similarTitles' : 'movieDetails.related.similarMovies'
-          "
-          [movie]="view"
-        />
+      <div #detailContent class="movie-details__content">
+        @defer (on viewport(detailContent)) {
+          <div class="movie-details__cards">
+            <msh-production-and-cast [movie]="view" />
+          </div>
+          <msh-related-movie-lists
+            [similarTitleKey]="
+              title.kind === 'series' ? 'movieDetails.additionalInformation.similarTitles' : 'movieDetails.related.similarMovies'
+            "
+            [movie]="view"
+          />
+        } @placeholder {
+          <msh-page-status messageKey="deferred.loading" />
+        } @error {
+          <msh-page-status kind="error" messageKey="deferred.error" />
+        }
       </div>
     }
   }

@@ -5,6 +5,7 @@ import { provideRouter, Router } from '@angular/router';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { NavigationItem } from '@msh-core/navigation';
 import { IconRegistry } from '@msh-shared/components/icon/icon-registry';
+import { ToastStore } from '@msh-shared/services/toast-store';
 import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
 import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
@@ -15,6 +16,12 @@ import { Header } from './header';
   template: '',
 })
 class RouteStub {}
+
+@Component({
+  imports: [Header],
+  template: '<msh-header [navigationItems]="[]"><input header-search type="search" aria-label="Search" /></msh-header>',
+})
+class SearchHeaderStub {}
 
 describe('Header', () => {
   const navigationItems: readonly NavigationItem[] = [
@@ -86,6 +93,9 @@ describe('Header', () => {
     const authButton = () => (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.app-header__auth button')!;
     expect(authButton().textContent).toContain('Sign In');
     authButton().click();
+    authButton().click();
+    await vi.dynamicImportSettled();
+    await fixture.whenStable();
     expect(open).toHaveBeenCalledOnce();
 
     TestBed.inject(AuthSession).start(TEST_ACCESS_TOKEN);
@@ -97,6 +107,58 @@ describe('Header', () => {
     fixture.detectChanges();
     expect(TestBed.inject(AuthSession).isAuthenticated()).toBe(false);
     expect(authButton().textContent).toContain('Sign In');
+  });
+
+  it('does not open sign in after the header is destroyed during loading', async () => {
+    const open = vi.spyOn(TestBed.inject(FloatingPanel), 'open');
+    const fixture = TestBed.createComponent(Header);
+    fixture.componentRef.setInput('navigationItems', navigationItems);
+    await fixture.whenStable();
+    (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.app-header__auth button')!.click();
+    fixture.destroy();
+    await vi.dynamicImportSettled();
+    expect(open).not.toHaveBeenCalled();
+  });
+
+  it('reports a failure opening the lazy sign-in form and allows another attempt', async () => {
+    vi.spyOn(TestBed.inject(FloatingPanel), 'open').mockImplementation(() => {
+      throw new Error('Unable to attach the sign-in form');
+    });
+    const fixture = TestBed.createComponent(Header);
+    fixture.componentRef.setInput('navigationItems', navigationItems);
+    await fixture.whenStable();
+    const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.app-header__auth button')!;
+    button.click();
+    await vi.dynamicImportSettled();
+    await fixture.whenStable();
+    expect(button.disabled).toBe(false);
+    expect(button.getAttribute('aria-busy')).toBe('false');
+    expect(TestBed.inject(ToastStore).toasts()[0]?.message).toContain('sign-in form could not be loaded');
+  });
+
+  it('opens mobile search, focuses the field and restores focus on close or Escape', async () => {
+    const fixture = TestBed.createComponent(SearchHeaderStub);
+    document.body.appendChild(fixture.nativeElement);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    const trigger = element.querySelector<HTMLButtonElement>('.app-header__search-toggle')!;
+    const close = element.querySelector<HTMLButtonElement>('.app-header__search-close')!;
+    const input = element.querySelector<HTMLInputElement>('input')!;
+    trigger.click();
+    await fixture.whenStable();
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(document.activeElement).toBe(input);
+    close.click();
+    await fixture.whenStable();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+    trigger.click();
+    await fixture.whenStable();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await fixture.whenStable();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+    fixture.nativeElement.remove();
   });
 
   it('composes dedicated language and theme selectors', async () => {

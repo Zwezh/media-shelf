@@ -11,7 +11,13 @@ describe('PwaInstallation', () => {
         ...provideI18nTesting(),
         {
           provide: Pwa,
-          useValue: { installed: signal(false), canInstall: signal(false), installError: signal(false), installing: signal(false) },
+          useValue: {
+            mobilePlatform: 'ios',
+            installed: signal(false),
+            canInstall: signal(false),
+            installError: signal(false),
+            installing: signal(false),
+          },
         },
       ],
     });
@@ -23,5 +29,13 @@ describe('PwaInstallation', () => {
     expect(element.textContent).toContain('Safari');
     expect(element.textContent).toContain('Android');
     expect(element.querySelector('button')).toBeNull();
+  });
+  it('hides installation guidance on desktop browsers', async () => {
+    TestBed.configureTestingModule({
+      providers: [...provideI18nTesting(), { provide: Pwa, useValue: { mobilePlatform: null } }],
+    });
+    const fixture = TestBed.createComponent(PwaInstallation);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('section')).toBeNull();
   });
 });

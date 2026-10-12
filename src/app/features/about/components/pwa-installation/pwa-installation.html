@@ -1,22 +1,24 @@
-<section class="surface-card" aria-labelledby="pwa-installation-title">
-  <h2 id="pwa-installation-title" class="text-headline-sm">{{ 'pwa.title' | translate }}</h2>
-  @if (pwa.installed()) {
-    <p>{{ 'pwa.installed' | translate }}</p>
-  } @else {
-    <p>{{ 'pwa.description' | translate }}</p>
-    @if (pwa.canInstall()) {
-      <button class="btn btn-primary" type="button" [disabled]="pwa.installing()" (click)="pwa.install()">
-        {{ 'pwa.install' | translate }}
-      </button>
+@if (pwa.mobilePlatform) {
+  <section class="surface-card" aria-labelledby="pwa-installation-title">
+    <h2 id="pwa-installation-title" class="text-headline-sm">{{ 'pwa.title' | translate }}</h2>
+    @if (pwa.installed()) {
+      <p>{{ 'pwa.installed' | translate }}</p>
+    } @else {
+      <p>{{ 'pwa.description' | translate }}</p>
+      @if (pwa.canInstall()) {
+        <button class="btn btn-primary" type="button" [disabled]="pwa.installing()" (click)="pwa.install()">
+          {{ 'pwa.install' | translate }}
+        </button>
+      }
+      <details>
+        <summary>{{ 'pwa.instructions' | translate }}</summary>
+        <p>{{ 'pwa.ios' | translate }}</p>
+        <p>{{ 'pwa.android' | translate }}</p>
+      </details>
+      @if (pwa.installError()) {
+        <p role="status">{{ 'pwa.installError' | translate }}</p>
+      }
     }
-    <details>
-      <summary>{{ 'pwa.instructions' | translate }}</summary>
-      <p>{{ 'pwa.ios' | translate }}</p>
-      <p>{{ 'pwa.android' | translate }}</p>
-    </details>
-    @if (pwa.installError()) {
-      <p role="status">{{ 'pwa.installError' | translate }}</p>
-    }
-  }
-  <p>{{ 'pwa.offlineHint' | translate }}</p>
-</section>
+    <p>{{ 'pwa.offlineHint' | translate }}</p>
+  </section>
+}

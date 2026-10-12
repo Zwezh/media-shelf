@@ -71,6 +71,21 @@ describe('MediaCard', () => {
     expect(element.querySelector('h2')?.textContent).toBe('Dune: Part Two');
   });
 
+  it('loads secondary posters lazily and prioritizes the first visible poster', async () => {
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
+    const fixture = TestBed.createComponent(MediaCard);
+    fixture.componentRef.setInput('media', media);
+    await fixture.whenStable();
+    const poster = (fixture.nativeElement as HTMLElement).querySelector('img')!;
+    expect(poster.getAttribute('loading')).toBe('lazy');
+    expect(poster.getAttribute('fetchpriority')).toBe('auto');
+    expect(poster.getAttribute('decoding')).toBe('async');
+    fixture.componentRef.setInput('priority', true);
+    await fixture.whenStable();
+    expect(poster.getAttribute('loading')).toBe('eager');
+    expect(poster.getAttribute('fetchpriority')).toBe('high');
+  });
+
   it('keeps edit and delete disabled while signed out', async () => {
     TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
     const fixture = TestBed.createComponent(MediaCard);

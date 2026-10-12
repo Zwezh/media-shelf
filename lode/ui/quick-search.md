@@ -1,6 +1,6 @@
 # Global Quick Search
 
-The application shell projects the Gallery-owned `QuickSearch` into the header's `[header-search]` slot. This keeps feature HTTP/state logic out of `layout/` while making catalog search available across root routes. The search field is visible above the mobile breakpoint and has no trailing action or shortcut control; Escape and outside clicks close its result flyout.
+The application shell projects the Gallery-owned `QuickSearch` into the header's `[header-search]` slot. This keeps feature HTTP/state logic out of `layout/` while making catalog search available across root routes. The search field is inline above the mobile breakpoint and opens over the header from a search icon on mobile and has no trailing action or shortcut control; Escape and outside clicks close its result flyout.
 
 ```html
 <msh-header [navigationItems]="navigationItems">
@@ -32,6 +32,6 @@ Contracts:
 - Poster failures use the shared local poster placeholder.
 - The result request uses `GetGalleryQuery`, preserving runtime compact response validation and summary conversion behind the Gallery repository boundary. Ratings remain nullable; Wishlist entries show an additional membership badge.
 - The header owns only a projection slot and sizing. `App` composes the Gallery-owned quick-search feature into that slot so `layout/` never imports `features/`.
-- Gallery uses this global search without an additional local field or scope selectors. At 640 px and below, the header search is hidden to preserve the existing compact shell and horizontally scrollable navigation, matching the Stitch header's responsive search visibility.
+- Gallery uses this global search without an additional local field or scope selectors. At 640 px and below, the header owns a search icon and closable header overlay; the result flyout spans the viewport with shell margins below the header. Mobile rows wrap badges to avoid horizontal overflow.
 
 Related lodes: [application shell](application-shell.md), [media gallery](media-gallery.md), [routing](../routing/summary.md), [internationalization](../i18n/summary.md).

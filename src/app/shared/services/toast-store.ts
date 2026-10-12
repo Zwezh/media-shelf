@@ -28,6 +28,7 @@ export class ToastStore {
       autoHide: options.autoHide ?? true,
       delay,
       action: options.action,
+      onDismiss: options.onDismiss,
     };
 
     this.toastSignal.update((toasts) => [...toasts, toast]);
@@ -59,8 +60,10 @@ export class ToastStore {
   }
 
   dismiss(id: ToastId): void {
+    const toast = this.toastSignal().find((toast) => toast.id === id);
     this.cancelTimer(id);
     this.toastSignal.update((toasts) => toasts.filter((toast) => toast.id !== id));
+    toast?.onDismiss?.();
   }
 
   activateAction(id: ToastId): void {

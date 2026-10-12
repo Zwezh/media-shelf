@@ -21,6 +21,7 @@ flowchart LR
 Contracts:
 
 - `language` stores a supported locale. `token` exists only for migration cleanup.
+- `pwa-installation-dismissed` stores `'true'` after closing the device-specific installation toast. It prevents subsequent display on the same browser.
 - Feature code calls `BrowserStorage.get`, `set`, or `remove` rather than accessing localStorage directly.
 - The wrapper resolves storage through `DOCUMENT.defaultView` and catches unavailable-storage errors.
 - Authentication restores through the backend refresh cookie. Access JWTs remain in memory; neither access nor refresh tokens are written to localStorage.

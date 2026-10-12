@@ -19,6 +19,7 @@
       "value": "Wprowadź prawidłową wartość."
     }
   },
+  "deferred": { "loading": "Ładowanie tej sekcji…", "error": "Nie udało się wczytać tej sekcji. Odśwież stronę, aby spróbować ponownie." },
   "auth": {
     "actions": {
       "signIn": "Zaloguj się",
@@ -35,6 +36,7 @@
     },
     "requiredForWrite": "Zaloguj się, aby dodawać lub zmieniać elementy biblioteki",
     "toasts": {
+      "dialogLoadErrorMessage": "Nie udało się wczytać formularza logowania. Sprawdź połączenie i spróbuj ponownie.",
       "signInErrorMessage": "Sprawdź klucz tajny i połączenie, a następnie spróbuj ponownie.",
       "signInErrorTitle": "Logowanie nie powiodło się",
       "signInSuccessMessage": "Chronione działania w bibliotece są dostępne w tej sesji strony.",
@@ -64,6 +66,7 @@
     "mutationError": "Nie udało się usunąć pozycji."
   },
   "header": {
+    "closeSearch": "Zamknij wyszukiwanie",
     "home": "Strona główna MediaShelf",
     "language": {
       "label": "Język aplikacji"
@@ -622,8 +625,8 @@
     "install": "Zainstaluj aplikację",
     "installed": "MediaShelf działa jako zainstalowana aplikacja.",
     "instructions": "Jak zainstalować",
-    "ios": "iPhone lub iPad: otwórz stronę w Safari, wybierz Udostępnij, a potem Dodaj do ekranu początkowego. Włącz Otwórz jako aplikację internetową, jeśli ta opcja jest widoczna.",
-    "android": "Android: w menu przeglądarki wybierz Zainstaluj aplikację lub Dodaj do ekranu głównego. Instalacja wymaga HTTPS.",
+    "ios": "Jeśli chcesz korzystać z MediaShelf jak z aplikacji na iPhonie lub iPadzie, możesz dodać ją do ekranu początkowego w Safari: Udostępnij → Dodaj do ekranu początkowego. Włącz Otwórz jako aplikację internetową, jeśli ta opcja jest dostępna.",
+    "android": "Jeśli chcesz korzystać z MediaShelf jak z aplikacji na Androidzie, możesz wybrać Zainstaluj aplikację lub Dodaj do ekranu głównego w menu przeglądarki.",
     "installError": "Nie udało się rozpocząć instalacji. Spróbuj użyć menu przeglądarki.",
     "offlineHint": "Po pierwszej wizycie online interfejs aplikacji może otwierać się offline. Dane biblioteki, logowanie i zmiany wymagają połączenia.",
     "offline": "Jesteś offline. Dane biblioteki i zmiany wymagają połączenia.",

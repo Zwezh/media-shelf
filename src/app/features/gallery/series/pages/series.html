@@ -63,6 +63,7 @@
       <div class="movies__grid">
         @for (card of cards(); track card.title.id) {
           <msh-media-card
+            [priority]="$first"
             [media]="card.media"
             [actions]="['view', 'edit', 'delete']"
             [actionsDisabled]="store.isDeleting()"

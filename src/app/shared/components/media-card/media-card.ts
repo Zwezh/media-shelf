@@ -17,6 +17,7 @@ import type { MediaCardModel } from './media-card.model';
   templateUrl: './media-card.html',
 })
 export class MediaCard {
+  readonly priority = input(false);
   readonly showTypeBadge = input(false);
   readonly wrapBadges = input(false);
   readonly showQuality = input(true);

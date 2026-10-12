@@ -19,9 +19,6 @@
           [defaultSorting]="defaultSorting"
           (sortingChange)="store.applySorting($event)"
         />
-        <button class="btn btn-secondary movies__add-button" type="button" [mshRequiresAuth]="false" (click)="add()">
-          <msh-icon name="add" [size]="18" /> {{ 'wishlist.add' | translate }}
-        </button>
       </div>
     </msh-page-header>
     @if (hasQuery()) {
@@ -57,6 +54,7 @@
       <div class="movies__grid">
         @for (card of cards(); track card.title.id) {
           <msh-media-card
+            [priority]="$first"
             [media]="card.media"
             [showTypeBadge]="true"
             [wrapBadges]="true"

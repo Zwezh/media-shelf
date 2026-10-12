@@ -19,6 +19,7 @@
       "value": "Enter a valid value."
     }
   },
+  "deferred": { "loading": "Loading this section…", "error": "This section could not be loaded. Reload the page to try again." },
   "auth": {
     "actions": {
       "signIn": "Sign In",
@@ -35,6 +36,7 @@
     },
     "requiredForWrite": "Sign in to add or modify library items",
     "toasts": {
+      "dialogLoadErrorMessage": "The sign-in form could not be loaded. Check your connection and try again.",
       "signInErrorMessage": "Check the secret key and connection, then try again.",
       "signInErrorTitle": "Sign in failed",
       "signInSuccessMessage": "Protected library actions are now available for this page session.",
@@ -64,6 +66,7 @@
     "mutationError": "Could not delete this item."
   },
   "header": {
+    "closeSearch": "Close search",
     "home": "MediaShelf home",
     "language": {
       "label": "Application language"
@@ -622,8 +625,8 @@
     "install": "Install app",
     "installed": "MediaShelf is running as an installed app.",
     "instructions": "How to install",
-    "ios": "iPhone or iPad: open this site in Safari, tap Share, then Add to Home Screen. Enable Open as Web App if shown.",
-    "android": "Android: open the browser menu and choose Install app or Add to Home screen. Installation requires HTTPS.",
+    "ios": "If you'd like to use MediaShelf as an app on your iPhone or iPad, you can add it to your Home Screen from Safari: Share → Add to Home Screen. Turn on Open as Web App if offered.",
+    "android": "If you'd like to use MediaShelf as an app on Android, you can choose Install app or Add to Home screen from your browser's menu.",
     "installError": "Installation could not start. Try the browser menu instead.",
     "offlineHint": "After your first online visit, the app shell can open offline. Library data, sign-in and changes require a connection.",
     "offline": "You’re offline. Library data and changes require a connection.",

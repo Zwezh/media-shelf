@@ -15,6 +15,7 @@ export interface ToastOptions {
   readonly autoHide?: boolean;
   readonly delay?: number;
   readonly action?: ToastAction;
+  readonly onDismiss?: () => void;
 }
 
 export interface ToastMessage {
@@ -26,4 +27,5 @@ export interface ToastMessage {
   readonly autoHide: boolean;
   readonly delay: number;
   readonly action?: ToastAction;
+  readonly onDismiss?: () => void;
 }

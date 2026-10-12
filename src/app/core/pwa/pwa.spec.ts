@@ -8,7 +8,7 @@ describe('Pwa', () => {
   const versions = new Subject<VersionEvent>();
   const unrecoverable = new Subject<{ reason: string }>();
   let browser: EventTarget & {
-    navigator: { onLine: boolean; standalone: boolean };
+    navigator: { onLine: boolean; standalone: boolean; userAgent: string; platform: string; maxTouchPoints: number };
     document: EventTarget & { visibilityState: string };
     location: { reload: ReturnType<typeof vi.fn> };
   };
@@ -16,7 +16,7 @@ describe('Pwa', () => {
 
   beforeEach(() => {
     browser = Object.assign(new EventTarget(), {
-      navigator: { onLine: true, standalone: false },
+      navigator: { onLine: true, standalone: false, userAgent: '', platform: '', maxTouchPoints: 0 },
       document: Object.assign(new EventTarget(), { visibilityState: 'visible' }),
       location: { reload: vi.fn() },
     });
@@ -27,6 +27,21 @@ describe('Pwa', () => {
         { provide: SwUpdate, useValue: { isEnabled: true, versionUpdates: versions, unrecoverable, checkForUpdate } },
       ],
     });
+  });
+
+  it.each([
+    ['Mozilla/5.0 (Linux; Android 15)', 'android'],
+    ['Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)', 'ios'],
+    ['Mozilla/5.0 (Windows NT 10.0)', null],
+  ] as const)('detects installation guidance for %s', (userAgent, expected) => {
+    browser.navigator.userAgent = userAgent;
+    expect(TestBed.inject(Pwa).mobilePlatform).toBe(expected);
+  });
+
+  it('recognizes iPads using the desktop user agent', () => {
+    browser.navigator.platform = 'MacIntel';
+    browser.navigator.maxTouchPoints = 5;
+    expect(TestBed.inject(Pwa).mobilePlatform).toBe('ios');
   });
 
   it('tracks connectivity and removes listeners when destroyed', () => {
