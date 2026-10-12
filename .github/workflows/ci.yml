@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   verify:
@@ -38,3 +38,41 @@ jobs:
 
       - name: Build application
         run: npm run build
+
+      - name: Upload production build
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build
+          path: dist/app/browser
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Firebase Hosting
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.3
+
+      - name: Download verified production build
+        uses: actions/download-artifact@v4
+        with:
+          name: production-build
+          path: dist/app/browser
+
+      - name: Deploy verified build to live channel
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZWEZH_MEDIA_SHELF }}
+          projectId: zwezh-media-shelf
+          channelId: live

@@ -1,0 +1,24 @@
+{
+  "hosting": {
+    "site": "media-shelf",
+    "public": "dist/app/browser",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "regex": "^/((gallery|statistics|settings|about)(/[^.]*)?)?$",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
+  }
+}

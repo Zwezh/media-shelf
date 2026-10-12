@@ -90,7 +90,7 @@ npm start
 
 Open `http://localhost:4200/`. Angular reloads the app when source files change.
 
-Run the backend separately using its repository’s setup instructions. The development proxy forwards `/api` to `http://localhost:3000`; production uses the same-origin `/api` path, which hosting must route to the backend.
+Run the backend separately using its repository’s setup instructions. The development proxy forwards `/api` to `http://localhost:3000`; production calls `https://cinema-catalogue-be.onrender.com/api` directly. The backend must allow the frontend origin through CORS.
 
 ### Metadata autofill
 
@@ -106,6 +106,24 @@ npm run build
 `check` runs ESLint and the non-watching unit suite. `npm test` starts the Vitest-backed Angular runner in watch mode; `npm run format:check` checks source formatting. GitHub Actions runs checks and a production build.
 
 Production artifacts are written to `dist/app/browser`.
+
+## Firebase deployment and merge protection
+
+`.firebaserc` selects project `zwezh-media-shelf`; `firebase.json` targets its Hosting site `media-shelf` and serves `dist/app/browser` with application-route fallbacks and cache revalidation for PWA updates. Missing assets and `/api` requests return 404 rather than the app shell. Add new root application routes to the rewrite pattern when needed.
+
+GitHub Actions checks PRs targeting `master` and pushes to `master`. A successful push run deploys its verified build to the Firebase Hosting live channel, including pushes created by merging a PR. PRs and manual CI runs perform validation only. New PR runs cancel older PR runs; master runs are serialized without interrupting active deployments.
+
+One-time account setup:
+
+1. In the Firebase console, select project `zwezh-media-shelf` and ensure its Hosting site `media-shelf` exists.
+2. In [Google Cloud service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts?project=zwezh-media-shelf), create a dedicated deployment account with **Firebase Hosting Admin** and **API Keys Viewer** roles. Download a JSON key and store its entire contents in the GitHub repository's **Settings → Secrets and variables → Actions → New repository secret**, named `FIREBASE_SERVICE_ACCOUNT_ZWEZH_MEDIA_SHELF`. Keep the key out of source control. These roles cover static live Hosting; no Firebase Auth or Cloud Run integration is configured. See Firebase's [service-account instructions](https://github.com/FirebaseExtended/action-hosting-deploy/blob/main/docs/service-account.md).
+3. Ensure backend CORS permits `https://media-shelf.web.app` and `https://media-shelf.firebaseapp.com`, plus any custom frontend domain.
+4. Commit and push these configuration files; after checks and deployment pass, verify [the live site](https://media-shelf.web.app), direct navigation to `/about` and gallery detail routes, login and API calls, and mobile installation.
+5. In GitHub **Settings → Branches → Add branch protection rule**, target `master`. Enable **Require status checks to pass before merging**, select **Lint, test, and build**, and enable **Require branches to be up to date before merging**. Enable **Do not allow bypassing the above settings** to apply the gate to administrators too. If the check is not offered yet, run CI on a PR first. See [GitHub branch protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+
+The required check blocks PR merges while lint, tests or the build are pending or failing. Do not require **Deploy to Firebase Hosting** as a PR check: it runs after a push to `master`, so its result cannot gate the merge that triggers it. Enabling **Require a pull request before merging** additionally prevents normal direct pushes; use that option if you want every change to go through a PR. GitHub plan eligibility applies to protection on private repositories.
+
+The Firebase web SDK configuration identifies browser services; it does not authorize CI deployment and is not needed for static Hosting. Only the project ID and deployment service-account secret are used here.
 
 Code follows strict TypeScript, standalone OnPush components, signals, native template control flow and feature-owned state. Shared SCSS design tokens keep styling consistent. Accessibility work targets WCAG AA and AXE checks.
 
