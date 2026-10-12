@@ -1,4 +1,5 @@
 import { signal } from '@angular/core';
+import { EMPTY } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthSession } from '@msh-core/auth/auth-session';
@@ -43,7 +44,7 @@ describe('Series page', () => {
         provideAuthSessionTesting(),
         ...provideI18nTesting(),
         { provide: ActivatedRoute, useValue: {} },
-        { provide: Router, useValue: { navigate } },
+        { provide: Router, useValue: { navigate, events: EMPTY } },
         { provide: FloatingPanel, useValue: { open } },
         { provide: SettingsStore, useValue: { qualityOptions: signal([{ id: 'quality-1', title: '4K', value: '2160p' }]) } },
       ],

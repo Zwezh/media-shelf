@@ -1,5 +1,15 @@
 <header class="app-header" [class.app-header--search-open]="searchOpen()">
   <div class="app-header__navigation-area">
+    <button
+      class="btn btn-secondary app-header__menu-toggle"
+      type="button"
+      [attr.aria-label]="'header.primaryNavigation' | translate"
+      [attr.aria-expanded]="menuOpen()"
+      aria-haspopup="dialog"
+      (click)="openMenu()"
+    >
+      <msh-icon name="menu" [size]="24" />
+    </button>
     <a class="app-header__brand" routerLink="/gallery" [attr.aria-label]="'header.home' | translate">
       <img ngSrc="logo.svg" width="32" height="32" alt="" priority />
     </a>

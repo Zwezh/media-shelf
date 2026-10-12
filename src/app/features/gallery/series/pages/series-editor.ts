@@ -1,3 +1,4 @@
+import { NavigationFocus } from '@msh-core/navigation-focus';
 import { MEDIA_LIMITS } from '../../models/media-limits';
 import { isProviderId } from '../../utils/provider-id';
 import { isIsoDate } from '@msh-shared/utils/date';
@@ -46,6 +47,7 @@ import { toSeriesDraft } from '../utils/series-editor.converter';
   ],
 })
 export class SeriesEditorPage {
+  private readonly navigationFocus = inject(NavigationFocus);
   protected readonly store = inject(SeriesEditorStore);
   protected readonly settings = inject(SettingsStore);
   private readonly injector = inject(Injector);
@@ -116,7 +118,7 @@ export class SeriesEditorPage {
   protected readonly canAutofill = computed(() => isProviderId(this.model().kpId) && !this.store.isBusy());
 
   constructor() {
-    afterNextRender(() => this.element.nativeElement.querySelector<HTMLElement>('h1')?.focus());
+    afterNextRender(() => this.navigationFocus.heading(this.element.nativeElement.querySelector<HTMLElement>('h1') ?? undefined));
   }
 
   protected async save(event: SubmitEvent): Promise<void> {

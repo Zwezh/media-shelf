@@ -12,7 +12,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationStart, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { AuthDialog } from '@msh-core/auth/auth-dialog/auth-dialog';
 import { AuthSession } from '@msh-core/auth/auth-session';
@@ -22,6 +22,10 @@ import { FloatingPanel } from '@msh-shared/floating-panel/floating-panel';
 import { ToastStore } from '@msh-shared/services/toast-store';
 import { LanguageSelector } from './language-selector/language-selector';
 import { ThemeSelector } from './theme-selector/theme-selector';
+import { NavigationPanel } from './navigation-panel';
+import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   host: { '(keydown.escape)': 'closeSearch()' },
@@ -40,6 +44,8 @@ export class Header {
   private readonly translate = inject(TranslateService);
   protected readonly searchOpen = signal(false);
   protected readonly signInLoading = signal(false);
+  protected readonly menuOpen = signal(false);
+  private menuPanel: FloatingPanelRef<unknown> | undefined;
   private readonly searchBlock = viewChild<ElementRef<HTMLElement>>('searchBlock');
   private readonly searchTrigger = viewChild<ElementRef<HTMLButtonElement>>('searchTrigger');
   protected readonly navigationIcons: Readonly<Partial<Record<string, IconName>>> = {
@@ -50,8 +56,29 @@ export class Header {
   };
 
   constructor() {
+    inject(Router)
+      .events.pipe(takeUntilDestroyed())
+      .subscribe((event) => {
+        if (event instanceof NavigationStart) this.menuPanel?.close();
+      });
     afterRenderEffect(() => {
       if (this.searchOpen()) this.searchBlock()?.nativeElement.querySelector<HTMLInputElement>('input')?.focus();
+    });
+  }
+
+  protected openMenu(): void {
+    if (this.menuOpen()) return;
+    const panel = this.floatingPanel.open(NavigationPanel, {
+      ariaLabelledBy: 'main-navigation-title',
+      data: this.navigationItems(),
+      owner: this.destroyRef,
+      placement: 'start',
+    });
+    this.menuPanel = panel;
+    this.menuOpen.set(true);
+    panel.closed.pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.menuPanel = undefined;
+      this.menuOpen.set(false);
     });
   }
 

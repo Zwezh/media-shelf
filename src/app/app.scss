@@ -9,7 +9,7 @@
 }
 
 @include breakpoint.mobile {
-  :host {
+  :host:has(msh-gallery-layout) {
     padding-bottom: calc(var(--size-shell-navigation-height-mobile) + env(safe-area-inset-bottom));
   }
 }

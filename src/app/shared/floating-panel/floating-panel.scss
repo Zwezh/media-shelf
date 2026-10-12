@@ -37,6 +37,21 @@
     border-radius: 0;
   }
 
+  &--start {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(22rem, calc(100vw - (2 * var(--space-base))));
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0 auto 0 0;
+    border-radius: 0;
+
+    &[open] {
+      animation-name: floating-panel-enter-start;
+    }
+  }
+
   &--anchored-responsive {
     position: fixed;
     inset: calc(var(--floating-panel-anchor-top) + var(--space-sm)) max(var(--space-base), var(--floating-panel-anchor-right)) auto auto;
@@ -94,6 +109,12 @@
   from {
     opacity: 0;
     transform: translateX(1rem);
+  }
+}
+
+@keyframes floating-panel-enter-start {
+  from {
+    transform: translateX(-100%);
   }
 }
 

@@ -1,3 +1,4 @@
+import { NavigationFocus } from '@msh-core/navigation-focus';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +32,7 @@ import { WishlistStore } from '../state/wishlist.store';
   styleUrl: './wishlist.scss',
 })
 export class Wishlist {
+  private readonly navigationFocus = inject(NavigationFocus);
   private readonly content = viewChild<ElementRef<HTMLElement>>('content');
   protected readonly store = inject(WishlistStore);
   private readonly deletion = inject(DeletionConfirmation);
@@ -52,7 +54,7 @@ export class Wishlist {
   protected readonly hasQuery = computed(() => this.store.activeFilterCount() > 0 || !!this.store.params().search);
 
   constructor() {
-    afterNextRender(() => this.content()?.nativeElement.querySelector<HTMLElement>('h1')?.focus());
+    afterNextRender(() => this.navigationFocus.heading(this.content()?.nativeElement.querySelector<HTMLElement>('h1') ?? undefined));
   }
 
   protected add(): void {

@@ -28,6 +28,7 @@ flowchart LR
 
 Invariants:
 - `.github/workflows/ci.yml` is the CI source of truth.
+- CI's `deploy` job is the only live deployment triggered by a master push. Do not add the Firebase CLI-generated `firebase-hosting-merge.yml`: it duplicates the live deployment and bypasses the quality gate.
 - CI targets `master`, the repository's default branch.
 - `package-lock.json` controls installed dependency versions.
 - `npm run check` must continue to include linting and the complete non-watch unit suite.
@@ -36,7 +37,7 @@ Invariants:
 - Workflow permissions remain read-only unless a future job has a documented need to write.
 - `.firebaserc` selects project `zwezh-media-shelf`. `firebase.json` targets Hosting site `media-shelf` (`https://media-shelf.web.app`), serves `dist/app/browser`, revalidates cached responses, and rewrites `/` plus extensionless Gallery, Statistics, Settings and About paths to the app shell. New root routes require updating that pattern. Missing assets and `/api` are not rewritten.
 - Deployment uses `FIREBASE_SERVICE_ACCOUNT_ZWEZH_MEDIA_SHELF`, a GitHub Actions secret containing a deployment service-account JSON key. The browser Firebase config does not authorize deployments. The account needs Firebase Hosting Admin and API Keys Viewer for this static live deployment.
-- PRs and manual workflow runs validate only. Merging a PR triggers deployment through the resulting master push.
+- CI PRs and manual runs validate only. The separate `firebase-hosting-pull-request.yml` workflow creates Firebase preview channels for same-repository PRs; it never deploys to the live channel. Merging a PR triggers one live deployment through CI's master push.
 - Repository administrators must configure master protection to require `Lint, test, and build`, require branches to be current, and disable bypassing when the gate should apply to admins. These external settings are not enabled by the YAML. The deploy job must not be a required PR check because it runs after merging.
 - Production backend CORS must permit the Firebase web.app/firebaseapp.com origins and any custom domain. Backend deployment is separate.
 

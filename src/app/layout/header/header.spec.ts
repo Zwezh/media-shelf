@@ -169,4 +169,31 @@ describe('Header', () => {
     expect(fixture.nativeElement.querySelector('msh-language-selector')).not.toBeNull();
     expect(fixture.nativeElement.querySelector('msh-theme-selector')).not.toBeNull();
   });
+
+  it('opens branded main navigation in a left drawer and closes it when a route is selected', async () => {
+    const fixture = TestBed.createComponent(Header);
+    fixture.componentRef.setInput('navigationItems', navigationItems);
+    document.body.append(fixture.nativeElement);
+    await fixture.whenStable();
+    const trigger = fixture.nativeElement.querySelector('.app-header__menu-toggle') as HTMLButtonElement;
+    trigger.focus();
+    trigger.click();
+    await fixture.whenStable();
+
+    const dialog = document.querySelector('dialog')!;
+    expect(dialog.classList.contains('floating-panel--start')).toBe(true);
+    expect(dialog.getAttribute('aria-labelledby')).toBe('main-navigation-title');
+    expect(dialog.querySelector('.navigation-panel__brand')?.textContent).toContain('MediaShelf');
+    expect(dialog.querySelector('.navigation-panel__brand img')?.getAttribute('src')).toContain('logo.svg');
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    const links = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('nav a'));
+    expect(links.map((link) => link.textContent?.trim())).toEqual(['Gallery', 'Statistics', 'Settings']);
+    links[1].click();
+    await fixture.whenStable();
+    expect(TestBed.inject(Router).url).toBe('/statistics');
+    expect(document.querySelector('dialog')).toBeNull();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    fixture.destroy();
+    fixture.nativeElement.remove();
+  });
 });

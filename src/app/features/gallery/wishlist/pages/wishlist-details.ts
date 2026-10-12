@@ -1,3 +1,4 @@
+import { NavigationFocus } from '@msh-core/navigation-focus';
 import { Language } from '@msh-core/i18n/language';
 import { displayTitle } from '@msh-shared/utils/display-title';
 import { DOCUMENT } from '@angular/common';
@@ -33,6 +34,7 @@ import { WishlistDetailsStore } from '../state/wishlist-details.store';
   styleUrl: './wishlist-details.scss',
 })
 export class WishlistDetails {
+  private readonly navigationFocus = inject(NavigationFocus);
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
   private readonly router = inject(Router);
@@ -82,7 +84,7 @@ export class WishlistDetails {
       const title = this.store.title();
       if (title && title.id !== this.focusedId) {
         this.focusedId = title.id;
-        this.content()?.nativeElement.querySelector<HTMLElement>('h1')?.focus();
+        this.navigationFocus.heading(this.content()?.nativeElement.querySelector<HTMLElement>('h1') ?? undefined);
       } else if (!title) this.focusedId = null;
     });
   }

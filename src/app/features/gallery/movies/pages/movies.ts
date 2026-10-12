@@ -41,7 +41,6 @@ export class Movies {
 
   protected changePage(page: number): void {
     this.store.changePage(page);
-    globalThis.scrollTo?.({ top: 0, behavior: 'smooth' });
   }
 
   protected addMovie(): void {
