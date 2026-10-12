@@ -2,7 +2,11 @@
   "hosting": {
     "site": "media-shelf",
     "public": "dist/app/browser",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
         "regex": "^/((gallery|statistics|settings|about)(/[^.]*)?)?$",
