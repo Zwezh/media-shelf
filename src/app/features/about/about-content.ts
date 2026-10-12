@@ -11,15 +11,15 @@ export const APP_HISTORY = [
     id: 'second',
     number: 2,
     period: '2015–2016',
-    images: [{ src: '/images/about/my-library-cinema.png', width: 1003, height: 655, caption: 'desktop' }],
+    images: [{ src: '/images/about/my-library-cinema.webp', width: 1003, height: 655, caption: 'desktop' }],
   },
   {
     id: 'third',
     number: 3,
     period: '',
     images: [
-      { src: '/images/about/cinema-catalogue-gallery.png', width: 1906, height: 921, caption: 'gallery' },
-      { src: '/images/about/cinema-catalogue-details.png', width: 1913, height: 915, caption: 'details' },
+      { src: '/images/about/cinema-catalogue-gallery.webp', width: 1906, height: 921, caption: 'gallery' },
+      { src: '/images/about/cinema-catalogue-details.webp', width: 1913, height: 915, caption: 'details' },
     ],
   },
   { id: 'fourth', number: 4, period: '', images: [] },

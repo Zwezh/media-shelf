@@ -38,7 +38,7 @@ I rebuilt the idea with Java 8 and JavaFX. **My Library Cinema**, or «Моя к
 
 A sortable film list occupied the left panel; the right panel showed details or a workspace for adding and editing films. Search helped with larger collections, while an HTML scraper retrieved information and artwork from Kinopoisk. There was no mobile version or shared collection between devices.
 
-![My Library Cinema: the JavaFX film list and details panel](public/images/about/my-library-cinema.png)
+![My Library Cinema: the JavaFX film list and details panel](public/images/about/my-library-cinema.webp)
 
 ### 3. Cinema Catalogue goes online
 
@@ -48,9 +48,9 @@ Angular 17, ng-bootstrap 16, Bootstrap and Font Awesome powered the interface, w
 
 This edition introduced a film gallery, search, filters, detail pages, quality and file-extension defaults, and Poiskkino API autofill.
 
-![Cinema Catalogue: the third-generation film gallery](public/images/about/cinema-catalogue-gallery.png)
+![Cinema Catalogue: the third-generation film gallery](public/images/about/cinema-catalogue-gallery.webp)
 
-![Cinema Catalogue: a film detail page](public/images/about/cinema-catalogue-details.png)
+![Cinema Catalogue: a film detail page](public/images/about/cinema-catalogue-details.webp)
 
 ### 4. MediaShelf · the current generation
 

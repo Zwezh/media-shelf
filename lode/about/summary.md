@@ -11,7 +11,7 @@
 - English, Polish and Russian `about.*` dictionaries hold prose, features, captions and dependency descriptions. `about-content.ts` holds only shared structure, URLs and image metadata.
 - Frontend dependency ranges derive from package.json. Backend names/major versions reflect the active sibling backend source; they are descriptive content, not a cross-project build import.
 - Feature descriptions reflect Gallery/Movies/Series/Wishlist, global search, filters, protected workflows, provider autofill, season formats/availability, atomic Wishlist transfer, saved statistics, themes, localized title display and PWA limits.
-- The three unique supplied screenshots retain their original pixels/dimensions under `public/images/about`; the repeated legacy detail screenshot is intentionally represented once. Native links open original images, and NgOptimizedImage reserves their aspect ratio with lazy loading.
+- The three supplied screenshots use high-quality WebP (quality 90, sharp YUV conversion) under `public/images/about`, preserving their original dimensions. The repeated legacy detail screenshot is represented once. Native links open the full-resolution WebP images; NgOptimizedImage reserves their aspect ratio with lazy loading. README uses the same assets. Unused PNG copies are removed.
 - Historical screenshots use a lazy worker asset group. The shell and translations are prefetched; API data remains network only.
 - `components/pwa-installation` owns installation presentation and reuses the root `Pwa` service. It is rendered here only; Settings contains catalog configuration. Root install-event capture and update notices are unchanged.
 - The page reuses shared surfaces and design tokens; no backend, store or new dependency is required.
