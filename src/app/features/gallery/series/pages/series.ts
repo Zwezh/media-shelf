@@ -1,3 +1,4 @@
+import { NavigationFocus } from '@msh-core/navigation-focus';
 import { PRODUCTION_STATUSES } from '../../models/production-status';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,6 +34,7 @@ import { SeriesStore } from '../state/series.store';
   styleUrl: './series.scss',
 })
 export class Series {
+  private readonly navigationFocus = inject(NavigationFocus);
   private readonly content = viewChild<ElementRef<HTMLElement>>('content');
   protected readonly authSession = inject(AuthSession);
   private readonly settings = inject(SettingsStore);
@@ -62,7 +64,7 @@ export class Series {
   protected readonly hasQuery = computed(() => this.store.activeFilterCount() > 0 || !!this.store.params().search);
 
   constructor() {
-    afterNextRender(() => this.content()?.nativeElement.querySelector<HTMLElement>('h1')?.focus());
+    afterNextRender(() => this.navigationFocus.heading(this.content()?.nativeElement.querySelector<HTMLElement>('h1') ?? undefined));
   }
 
   protected add(): void {

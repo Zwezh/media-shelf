@@ -57,7 +57,7 @@ msh-toast {
 }
 
 @include breakpoint.mobile {
-  :host {
+  :host-context(msh-root:has(msh-gallery-layout)) {
     bottom: calc(var(--size-shell-navigation-height-mobile) + env(safe-area-inset-bottom) + var(--space-base));
   }
 }

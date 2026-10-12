@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { GALLERY_NAVIGATION_ITEMS } from '../gallery.routes';
+import { Icon, type IconName } from '@msh-shared/components/icon/icon';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, TranslatePipe],
+  imports: [Icon, RouterLink, RouterLinkActive, RouterOutlet, TranslatePipe],
   selector: 'msh-gallery-layout',
   styleUrl: './gallery-layout.scss',
   template: `
@@ -23,8 +24,10 @@ import { GALLERY_NAVIGATION_ITEMS } from '../gallery.routes';
                 matrixParams: 'ignored',
               }"
               ariaCurrentWhenActive="page"
-              >{{ item.labelKey | translate }}</a
             >
+              <msh-icon class="gallery-navigation__icon" [name]="icons[item.path]" [size]="22" />
+              <span>{{ item.labelKey | translate }}</span>
+            </a>
           </li>
         }
       </ul>
@@ -34,4 +37,10 @@ import { GALLERY_NAVIGATION_ITEMS } from '../gallery.routes';
 })
 export class GalleryLayout {
   protected readonly navigationItems = GALLERY_NAVIGATION_ITEMS;
+  protected readonly icons: Readonly<Record<string, IconName>> = {
+    '/gallery': 'gallery',
+    '/gallery/movies': 'view',
+    '/gallery/series': 'monitor',
+    '/gallery/wishlist': 'heart',
+  };
 }

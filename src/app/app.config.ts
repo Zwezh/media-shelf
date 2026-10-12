@@ -10,7 +10,7 @@ import { AuthSession } from '@msh-core/auth/auth-session';
 import { authenticatedRouteInitializer } from '@msh-core/auth/authenticated-route-initializer';
 import { authenticationInterceptor } from '@msh-core/auth/authentication-interceptor';
 import { provideEnvironment } from '@msh-core/config/environment.token';
-import { provideRouter, TitleStrategy, withViewTransitions } from '@angular/router';
+import { provideRouter, TitleStrategy, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { languageInitializer } from '@msh-core/i18n/language-initializer';
@@ -44,7 +44,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(authenticatedRouteInitializer),
     provideAppInitializer(themeInitializer),
     provideAppInitializer(languageInitializer),
-    provideRouter(routes, withViewTransitions()),
+    provideRouter(routes, withViewTransitions(), withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
     { provide: TITLE_AUTOFILL_REPOSITORY, useExisting: HttpTitleAutofillRepository },
     { provide: SERIES_REPOSITORY, useExisting: HttpSeriesRepository },
     { provide: WISHLIST_REPOSITORY, useExisting: HttpWishlistRepository },

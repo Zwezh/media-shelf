@@ -41,7 +41,7 @@ describe('About', () => {
     expect(element.querySelector('#about-stack-backend')?.textContent).toBe('Backend');
     expect(element.querySelector('msh-pwa-installation')).not.toBeNull();
     expect(element.textContent).toContain('Aleksy Zwierzyński');
-    expect(element.ownerDocument.activeElement).toBe(element.querySelector('h1'));
+    expect(element.ownerDocument.activeElement).not.toBe(element.querySelector('h1'));
   });
 
   it.each([

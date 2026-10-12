@@ -6,6 +6,16 @@ The root router exposes four lazy feature boundaries: `/gallery`, `/statistics`,
 
 Router navigation uses Angular's progressive View Transitions integration with a short global fade/vertical shift. Unsupported browsers navigate normally, and reduced-motion preference disables the animation.
 
+`withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })` starts initial and forward navigation at the top and restores saved history positions on Back/Forward. `MainContent` retries a history position when its content resizes, so asynchronous list loading does not lose the saved scroll. Pending restoration is canceled by another navigation or user wheel/touch/keyboard interaction. The resize observer is disconnected with the shell.
+
+`NavigationFocus` tracks keyboard versus pointer interaction before navigation. Page headings receive focus once with `preventScroll: true` only after keyboard-driven imperative navigation. Initial loads, touch/mouse navigation and history restoration do not autofocus headings, so loading a detail page never jumps to its title. Form-validation and dialog focus remain independent.
+
+```typescript
+provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }));
+// Page render callbacks use the shared navigation policy.
+navigationFocus.heading(heading);
+```
+
 ```typescript
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'gallery' },

@@ -41,6 +41,7 @@ Contracts:
 - Backdrop and Escape dismissal return `undefined`; an explicit result is supplied by content calling `close(result)`.
 - Closing detaches the Angular view, destroys the container and its content, removes the host element, completes the result stream, and restores the previously focused element when it still exists.
 - `responsive` placement is a full-height end sheet on desktop and a full-height sheet on mobile; neither mode uses a top offset.
+- `start` placement is a full-height left drawer, at most 22rem wide and leaving a backdrop strip on narrow screens. It enters from outside the left viewport edge; reduced-motion preferences disable this animation. Header main navigation uses this placement.
 - `anchored-responsive` accepts an `HTMLElement` anchor. It opens beneath and end-aligned with the trigger, updates its anchor coordinates on resize, and becomes a content-height modal bottom sheet with a scrim on mobile. Feature-specific `panelClass` values may narrow the shared maximum width and radius; Movies sorting uses an 18rem-wide, 8px-radius desktop panel.
 - Enter motion uses design motion tokens and is removed for reduced-motion preferences.
 - Shared destructive confirmations use `ConfirmationDialog` with translated title/message/action keys and a boolean result. Cancel receives initial focus; confirmation is danger-styled, while Escape and backdrop dismissal return no affirmative result.

@@ -171,6 +171,13 @@ describe('root routes', () => {
 
   it('keeps All items active with query parameters and only Movies active on movie details', async () => {
     const harness = await RouterTestingHarness.create('/gallery?search=Thing');
+    const collectionLinks = harness.routeNativeElement?.querySelectorAll('nav.gallery-navigation a');
+    expect(Array.from(collectionLinks ?? []).map((link) => link.textContent?.trim())).toEqual([
+      'All items',
+      'Movies',
+      'Series',
+      'Wishlist',
+    ]);
     expect(harness.routeNativeElement?.querySelector('nav.gallery-navigation a[aria-current="page"]')?.textContent?.trim()).toBe(
       'All items',
     );
@@ -178,6 +185,8 @@ describe('root routes', () => {
     const active = harness.routeNativeElement?.querySelectorAll('nav.gallery-navigation a[aria-current="page"]');
     expect(active?.length).toBe(1);
     expect(active?.[0].textContent?.trim()).toBe('Movies');
+    await harness.navigateByUrl('/about');
+    expect(harness.routeNativeElement?.querySelector('nav.gallery-navigation')).toBeNull();
   });
 
   it.each(['/', '/wishlist', '/missing'])('redirects %s to the gallery', async (path) => {

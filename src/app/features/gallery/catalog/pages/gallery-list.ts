@@ -1,3 +1,4 @@
+import { NavigationFocus } from '@msh-core/navigation-focus';
 import { SettingsStore } from '@msh-core/settings/settings.store';
 import { MediaBadge } from '@msh-shared/components/media-badge/media-badge';
 import type { GalleryItem } from '../models/gallery-item';
@@ -32,6 +33,7 @@ import { GalleryStore } from '../state/gallery.store';
   styleUrl: './gallery-list.scss',
 })
 export class GalleryList {
+  private readonly navigationFocus = inject(NavigationFocus);
   private readonly content = viewChild<ElementRef<HTMLElement>>('content');
   protected readonly store = inject(GalleryStore);
   private readonly deletion = inject(DeletionConfirmation);
@@ -59,7 +61,7 @@ export class GalleryList {
   );
 
   constructor() {
-    afterNextRender(() => this.content()?.nativeElement.querySelector<HTMLElement>('h1')?.focus());
+    afterNextRender(() => this.navigationFocus.heading(this.content()?.nativeElement.querySelector<HTMLElement>('h1') ?? undefined));
   }
 
   protected confirmDelete(item: GalleryItem): void {

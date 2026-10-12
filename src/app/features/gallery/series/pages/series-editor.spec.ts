@@ -179,7 +179,7 @@ describe('SeriesEditorPage', () => {
   });
   it('uses current season checkboxes for the edit count and leaves quality unset on new rows', async () => {
     const { root, store, fixture } = await setup('edit');
-    expect(root.ownerDocument.activeElement).toBe(root.querySelector('h1'));
+    expect(root.ownerDocument.activeElement).not.toBe(root.querySelector('h1'));
     store.seed.set({
       ...store.seed(),
       seasons: [{ key: 0, seasonNumber: '1', releaseYear: '2020', isAvailable: true, qualityId: '', extensionId: '' }],

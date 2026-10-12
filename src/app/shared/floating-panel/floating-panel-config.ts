@@ -1,6 +1,6 @@
 import type { DestroyRef } from '@angular/core';
 
-export type FloatingPanelPlacement = 'anchored-responsive' | 'center' | 'end' | 'responsive';
+export type FloatingPanelPlacement = 'anchored-responsive' | 'center' | 'end' | 'responsive' | 'start';
 
 export type FloatingPanelConfig<TData = unknown> = {
   readonly anchor?: HTMLElement;

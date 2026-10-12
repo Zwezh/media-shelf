@@ -1,3 +1,4 @@
+import { NavigationFocus } from '@msh-core/navigation-focus';
 import { Language } from '@msh-core/i18n/language';
 import { displayTitle } from '@msh-shared/utils/display-title';
 import { DatePipe } from '@angular/common';
@@ -36,6 +37,7 @@ import { SeriesDetailsStore } from '../state/series-details.store';
   styleUrl: './series-details.scss',
 })
 export class SeriesDetails {
+  private readonly navigationFocus = inject(NavigationFocus);
   private readonly router = inject(Router);
   private readonly owner = inject(DestroyRef);
   private readonly deletion = inject(DeletionConfirmation);
@@ -72,7 +74,7 @@ export class SeriesDetails {
   constructor() {
     afterRenderEffect(() => {
       const title = this.store.title();
-      if (title) this.content()?.nativeElement.querySelector<HTMLElement>('h1')?.focus();
+      if (title) this.navigationFocus.heading(this.content()?.nativeElement.querySelector<HTMLElement>('h1') ?? undefined);
     });
   }
 }

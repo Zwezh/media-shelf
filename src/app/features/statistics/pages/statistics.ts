@@ -1,3 +1,4 @@
+import { NavigationFocus } from '@msh-core/navigation-focus';
 import localePl from '@angular/common/locales/pl';
 import localeRu from '@angular/common/locales/ru';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, ElementRef, inject, viewChild } from '@angular/core';
@@ -36,6 +37,7 @@ registerLocaleData(localeRu);
   styleUrl: './statistics.scss',
 })
 export class Statistics {
+  private readonly navigationFocus = inject(NavigationFocus);
   protected readonly store = inject(StatisticsStore);
   protected readonly locale = inject(Language).language;
   protected readonly authenticated = inject(AuthSession).isAuthenticated;
@@ -49,6 +51,6 @@ export class Statistics {
   protected readonly topGenres = computed(() => this.allGenres().slice(0, 8));
   protected readonly allGenres = computed(() => this.store.snapshot()?.genres ?? []);
   constructor() {
-    afterNextRender(() => this.heading()?.nativeElement.focus());
+    afterNextRender(() => this.navigationFocus.heading(this.heading()?.nativeElement));
   }
 }
