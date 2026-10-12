@@ -27,6 +27,7 @@ Invariants:
 
 - Supported runtime languages are exactly `en`, `ru`, and `pl`; English is the fallback.
 - The exact `language` localStorage key comes from `StorageKey.Language`; a supported persisted value takes precedence over browser detection.
+- The header language selector binds each option's `selected` property to `Language.language()`, so browser-detected and persisted languages appear correctly on first render. Binding only the select's `value` before its `@for` options exist makes the browser display the first option (English) despite the initialized language.
 - Translation files use nested contextual keys and preserve the same leaf-key set in every language.
 - Visible interface copy, accessibility labels, navigation labels, and route document titles use translation keys.
 - API content remains source data. List cards and Movie/Series/Wishlist detail breadcrumbs select `title` (API `name`) for Russian and `originalTitle` (API `enName`) for English/Polish, falling back to the other nonempty name. The shared `displayTitle(media, language)` helper runs inside computed signals, so language changes update visible and accessible card titles without refetching. Directors and genres remain untranslated.
