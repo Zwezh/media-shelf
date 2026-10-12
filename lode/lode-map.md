@@ -5,7 +5,9 @@
 - [practices.md](practices.md) - Current engineering and styling practices.
 - [minimal-change.md](minimal-change.md) - User-required investigation, complexity control, diff review, and completion policy for future work.
 - [ui/summary.md](ui/summary.md) - UI architecture overview.
+- [ui/performance.md](ui/performance.md) - Loading boundaries, viewport deferral, poster priorities and audit limits.
 - [ui/application-shell.md](ui/application-shell.md) - Responsive header, main outlet, footer, and version contract.
+- [ui/pwa.md](ui/pwa.md) - Mobile installation, static offline shell, updates and production hosting contract.
 - [ui/design-tokens.md](ui/design-tokens.md) - Global CSS design-token contract.
 - [ui/style-primitives.md](ui/style-primitives.md) - Reusable Bootstrap-like button, typography, and form class contract.
 - [ui/floating-panels.md](ui/floating-panels.md) - Dynamic native-dialog infrastructure, typed data/results, lifecycle, and responsive placement.
@@ -14,6 +16,7 @@
 - [ui/toast-notifications.md](ui/toast-notifications.md) - Global toast store, viewport, variants, timers, accessibility, and animations.
 - [routing/summary.md](routing/summary.md) - Root URL contract and lazy feature boundaries.
 - [i18n/summary.md](i18n/summary.md) - Runtime language initialization, translation resources, and key contracts.
+- [about/summary.md](about/summary.md) - Public project history, screenshots, dependency descriptions, version and installation page.
 - [ci/summary.md](ci/summary.md) - GitHub Actions quality gate and production build contract.
 - [auth/summary.md](auth/summary.md) - Memory JWTs, rotating refresh cookies, authorization dialog, interceptor, guarded routes, and protected-control contract.
 - [storage/summary.md](storage/summary.md) - Guarded localStorage wrapper and centralized token/language key contract.
@@ -47,6 +50,7 @@ flowchart TD
   Root --> Practices[practices.md]
   Root --> MinimalChange[minimal-change.md]
   Root --> UI[ui]
+  UI --> Performance[performance.md]
   UI --> UIShell[application-shell.md]
   UI --> UITokens[design-tokens.md]
   UI --> UIPrimitives[style-primitives.md]

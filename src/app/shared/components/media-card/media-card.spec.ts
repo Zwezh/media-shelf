@@ -1,3 +1,4 @@
+import { Language } from '@msh-core/i18n/language';
 import { TestBed } from '@angular/core/testing';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { provideAuthSessionTesting, resetTestAuthStorage, TEST_ACCESS_TOKEN } from '@msh/testing/auth-testing';
@@ -51,6 +52,38 @@ describe('MediaCard', () => {
     expect(viewed).toHaveBeenCalledWith(media);
     expect(edited).toHaveBeenCalledWith(media);
     expect(deleted).toHaveBeenCalledWith(media);
+  });
+
+  it('updates the heading and accessible title when the selected language changes', async () => {
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
+    const fixture = TestBed.createComponent(MediaCard);
+    fixture.componentRef.setInput('media', { ...media, title: 'Дюна' });
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('h2')?.textContent).toBe('Dune: Part Two');
+    await TestBed.inject(Language).select('ru');
+    await fixture.whenStable();
+    expect(element.querySelector('h2')?.textContent).toBe('Дюна');
+    expect(element.querySelector('img')?.alt).toContain('Дюна');
+    expect(element.querySelector('.media-card__action')?.getAttribute('aria-label')).toContain('Дюна');
+    await TestBed.inject(Language).select('pl');
+    await fixture.whenStable();
+    expect(element.querySelector('h2')?.textContent).toBe('Dune: Part Two');
+  });
+
+  it('loads secondary posters lazily and prioritizes the first visible poster', async () => {
+    TestBed.configureTestingModule({ providers: [provideAuthSessionTesting(), ...provideI18nTesting()] });
+    const fixture = TestBed.createComponent(MediaCard);
+    fixture.componentRef.setInput('media', media);
+    await fixture.whenStable();
+    const poster = (fixture.nativeElement as HTMLElement).querySelector('img')!;
+    expect(poster.getAttribute('loading')).toBe('lazy');
+    expect(poster.getAttribute('fetchpriority')).toBe('auto');
+    expect(poster.getAttribute('decoding')).toBe('async');
+    fixture.componentRef.setInput('priority', true);
+    await fixture.whenStable();
+    expect(poster.getAttribute('loading')).toBe('eager');
+    expect(poster.getAttribute('fetchpriority')).toBe('high');
   });
 
   it('keeps edit and delete disabled while signed out', async () => {

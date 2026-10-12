@@ -231,3 +231,16 @@ summary {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+
+.statistics__chart-placeholder {
+  min-height: 20rem;
+
+  h2 {
+    margin: 0;
+    font: var(--text-headline-md);
+  }
+
+  p {
+    color: var(--color-text-muted);
+  }
+}

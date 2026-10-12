@@ -1,3 +1,5 @@
+@use 'abstracts/breakpoints' as breakpoint;
+
 :host {
   position: fixed;
   right: max(var(--space-base), env(safe-area-inset-right));
@@ -51,5 +53,11 @@ msh-toast {
   .toast-enter,
   .toast-leave {
     animation-duration: var(--duration-instant);
+  }
+}
+
+@include breakpoint.mobile {
+  :host {
+    bottom: calc(var(--size-shell-navigation-height-mobile) + env(safe-area-inset-bottom) + var(--space-base));
   }
 }

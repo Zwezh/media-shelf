@@ -9,7 +9,7 @@
         <a routerLink="/gallery/wishlist" queryParamsHandling="preserve">{{ 'navigation.wishlist' | translate }}</a>
       </li>
       <li aria-hidden="true">/</li>
-      <li aria-current="page">{{ store.title()?.title || ('wishlist.details' | translate) }}</li>
+      <li aria-current="page">{{ breadcrumbTitle() || ('wishlist.details' | translate) }}</li>
     </ol>
   </nav>
   @if (store.status() === 'loading' || store.status() === 'idle') {
@@ -59,16 +59,22 @@
           {{ 'wishlist.delete.confirm' | translate }}
         </button>
       </div>
-      <div class="movie-details__content">
-        <div class="movie-details__cards">
-          <msh-production-and-cast [movie]="view" />
-        </div>
-        <msh-related-movie-lists
-          [similarTitleKey]="
-            title.kind === 'series' ? 'movieDetails.additionalInformation.similarTitles' : 'movieDetails.related.similarMovies'
-          "
-          [movie]="view"
-        />
+      <div #detailContent class="movie-details__content">
+        @defer (on viewport(detailContent)) {
+          <div class="movie-details__cards">
+            <msh-production-and-cast [movie]="view" />
+          </div>
+          <msh-related-movie-lists
+            [similarTitleKey]="
+              title.kind === 'series' ? 'movieDetails.additionalInformation.similarTitles' : 'movieDetails.related.similarMovies'
+            "
+            [movie]="view"
+          />
+        } @placeholder {
+          <msh-page-status messageKey="deferred.loading" />
+        } @error {
+          <msh-page-status kind="error" messageKey="deferred.error" />
+        }
       </div>
     }
   }

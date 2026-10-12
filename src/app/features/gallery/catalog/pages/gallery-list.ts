@@ -20,15 +20,13 @@ import { CATALOG_SORTING_KEYS, DEFAULT_CATALOG_PARAMS } from '../models/catalog-
 import type { CollectionFilters } from '../../models/collection-filters';
 import { toCollectionFilterChips } from '../../utils/collection-filter-chips';
 import { GalleryRouteState } from '../state/gallery-route-state';
-import { RequiresAuth } from '@msh-shared/directives/requires-auth';
 import { DeletionConfirmation } from '../ui/deletion-confirmation';
-import { WishlistAddDialog } from '../../wishlist/components/wishlist-add-dialog';
 import { GalleryStore } from '../state/gallery.store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'msh-gallery-list',
-  imports: [EmptyState, Icon, MediaCard, MoviesSortSelect, PageHeader, PageStatus, Pagination, RequiresAuth, TranslatePipe, MediaBadge],
+  imports: [EmptyState, Icon, MediaCard, MoviesSortSelect, PageHeader, PageStatus, Pagination, TranslatePipe, MediaBadge],
   providers: [GalleryRouteState, GalleryStore],
   templateUrl: './gallery-list.html',
   styleUrl: './gallery-list.scss',
@@ -64,20 +62,6 @@ export class GalleryList {
     afterNextRender(() => this.content()?.nativeElement.querySelector<HTMLElement>('h1')?.focus());
   }
 
-  protected add(): void {
-    this.floatingPanel
-      .open<WishlistAddDialog, undefined, string>(WishlistAddDialog, {
-        ariaLabelledBy: 'wishlist-add-title',
-        owner: this.destroyRef,
-        placement: 'center',
-        closeOnBackdrop: false,
-        closeOnEscape: true,
-      })
-      .closed.pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe((id) => {
-        if (id) void this.router.navigate(['/gallery/wishlist', id]);
-      });
-  }
   protected confirmDelete(item: GalleryItem): void {
     if (this.store.pendingIds().includes(item.id)) return;
     this.deletion

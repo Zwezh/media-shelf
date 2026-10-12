@@ -2,7 +2,7 @@
 <section class="movie-hero" aria-labelledby="movie-details-title">
   <div class="movie-hero__ambient" aria-hidden="true">
     @if (currentMovie.backdropUrl) {
-      <img alt="" [src]="currentMovie.backdropUrl" (error)="hideFailedBackdrop($event)" />
+      <img alt="" decoding="async" fetchpriority="low" [src]="currentMovie.backdropUrl" (error)="hideFailedBackdrop($event)" />
     }
   </div>
 
@@ -13,6 +13,7 @@
           [src]="currentMovie.posterUrl"
           [alt]="'media.posterAlt' | translate: { title: displayTitle() }"
           fetchpriority="high"
+          decoding="async"
           (error)="usePosterPlaceholder($event)"
         />
         @if (showQuality() && currentMovie.quality) {

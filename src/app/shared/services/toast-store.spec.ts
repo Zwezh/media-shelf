@@ -73,6 +73,16 @@ describe('ToastStore', () => {
     expect(store.toasts()).toHaveLength(1);
   });
 
+  it('invokes a persistent toast dismissal callback once', () => {
+    const onDismiss = vi.fn();
+    const id = store.info({ title: 'Installation', autoHide: false, onDismiss });
+    vi.advanceTimersByTime(60_000);
+    expect(onDismiss).not.toHaveBeenCalled();
+    store.dismiss(id);
+    store.dismiss(id);
+    expect(onDismiss).toHaveBeenCalledOnce();
+  });
+
   it('runs an action and dismisses its toast', () => {
     const handler = vi.fn();
     const id = store.show({ title: 'Ready', action: { label: 'Open', handler } });

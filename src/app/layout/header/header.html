@@ -1,4 +1,4 @@
-<header class="app-header">
+<header class="app-header" [class.app-header--search-open]="searchOpen()">
   <div class="app-header__navigation-area">
     <a class="app-header__brand" routerLink="/gallery" [attr.aria-label]="'header.home' | translate">
       <img ngSrc="logo.svg" width="32" height="32" alt="" priority />
@@ -14,7 +14,8 @@
               routerLinkActive="app-header__navigation-link--active"
               ariaCurrentWhenActive="page"
             >
-              {{ item.labelKey | translate }}
+              <msh-icon class="app-header__navigation-icon" [name]="navigationIcons[item.path] ?? 'gallery'" [size]="24" />
+              <span>{{ item.labelKey | translate }}</span>
             </a>
           </li>
         }
@@ -23,8 +24,27 @@
   </div>
 
   <div class="app-header__controls">
-    <div class="app-header__search">
+    <button
+      #searchTrigger
+      class="btn btn-secondary app-header__search-toggle"
+      type="button"
+      [attr.aria-label]="'quickSearch.label' | translate"
+      [attr.aria-expanded]="searchOpen()"
+      aria-controls="header-search"
+      (click)="searchOpen.set(true)"
+    >
+      <msh-icon name="search" [size]="22" />
+    </button>
+    <div #searchBlock id="header-search" class="app-header__search">
       <ng-content select="[header-search]" />
+      <button
+        class="btn btn-secondary app-header__search-close"
+        type="button"
+        [attr.aria-label]="'header.closeSearch' | translate"
+        (click)="closeSearch()"
+      >
+        <msh-icon name="close" [size]="22" />
+      </button>
     </div>
 
     <msh-language-selector />
@@ -40,7 +60,13 @@
             <span>{{ 'auth.actions.signOut' | translate }}</span>
           </button>
         } @else {
-          <button class="btn btn-primary btn-sm" type="button" (click)="openSignIn()">
+          <button
+            class="btn btn-primary btn-sm"
+            type="button"
+            [disabled]="signInLoading()"
+            [attr.aria-busy]="signInLoading()"
+            (click)="openSignIn()"
+          >
             <msh-icon name="login" [size]="18" />
             <span>{{ 'auth.actions.signIn' | translate }}</span>
           </button>

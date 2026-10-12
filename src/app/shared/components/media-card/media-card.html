@@ -4,7 +4,9 @@
     <img
       [src]="media().posterUrl"
       [alt]="'media.posterAlt' | translate: { title: displayTitle() }"
-      loading="lazy"
+      [attr.loading]="priority() ? 'eager' : 'lazy'"
+      [attr.fetchpriority]="priority() ? 'high' : 'auto'"
+      decoding="async"
       (error)="usePlaceholder($event)"
     />
     <div class="media-card__topline">

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { PwaStatus } from '@msh-layout/pwa-status/pwa-status';
 import { APP_VERSION } from '@msh-core/config/app-version';
 import { QuickSearch } from '@msh-features/gallery/quick-search/quick-search';
 import { Footer } from '@msh-layout/footer/footer';
@@ -8,7 +9,7 @@ import { ToastViewport } from '@msh-shared/components/toast-viewport/toast-viewp
 import { APP_NAVIGATION_ITEMS } from './app.routes';
 
 @Component({
-  imports: [Footer, Header, MainContent, QuickSearch, ToastViewport],
+  imports: [Footer, Header, MainContent, PwaStatus, QuickSearch, ToastViewport],
   selector: 'msh-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',

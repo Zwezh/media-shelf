@@ -29,7 +29,7 @@ Invariants:
 - The exact `language` localStorage key comes from `StorageKey.Language`; a supported persisted value takes precedence over browser detection.
 - Translation files use nested contextual keys and preserve the same leaf-key set in every language.
 - Visible interface copy, accessibility labels, navigation labels, and route document titles use translation keys.
-- API content such as movie names, directors, and genres remains source data and is not translated by the UI layer.
+- API content remains source data. List cards and Movie/Series/Wishlist detail breadcrumbs select `title` (API `name`) for Russian and `originalTitle` (API `enName`) for English/Polish, falling back to the other nonempty name. The shared `displayTitle(media, language)` helper runs inside computed signals, so language changes update visible and accessible card titles without refetching. Directors and genres remain untranslated.
 - Route metadata stores title and navigation translation keys; `TranslatedTitleStrategy` resolves document titles.
 - Shared components accept semantic translation keys when their copy is supplied by a feature.
 - Shared form-validation translations provide specific copy for required, parsing, email, pattern, min/max, date, length, range, and schema validation kinds; feature validator messages override these defaults.

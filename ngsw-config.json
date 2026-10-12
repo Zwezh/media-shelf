@@ -1,0 +1,35 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/index.html",
+          "/*.css",
+          "/*.js",
+          "/i18n/*.json",
+          "/favicon.ico",
+          "/logo.svg",
+          "/manifest.webmanifest",
+          "/icons/**",
+          "/media/*.{woff,woff2}",
+          "/poster-placeholder.svg"
+        ]
+      }
+    },
+    {
+      "name": "about-history",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": ["/images/about/**"]
+      }
+    }
+  ],
+  "dataGroups": [],
+  "navigationUrls": ["/**", "!/**/*.*", "!/**/*__*", "!/**/*__*/**", "!/api", "!/api/**"],
+  "navigationRequestStrategy": "performance"
+}

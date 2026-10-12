@@ -77,8 +77,19 @@
     font: var(--text-body-sm);
   }
 
-  &__text-field {
+  &__text-field + &__text-field {
     margin-top: var(--space-md);
+  }
+
+  &__availability {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-on-surface);
+    font: var(--text-body-md);
+    input {
+      accent-color: var(--color-primary);
+    }
   }
 
   @include breakpoint.mobile {

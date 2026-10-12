@@ -12,6 +12,7 @@
   gap: var(--space-sm) var(--space-xl);
   min-height: var(--size-shell-footer-height);
   padding: var(--space-md) var(--size-shell-inline-padding);
+  padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
   color: var(--color-shell-text);
   background: var(--color-shell-surface);
   border-top: var(--border-width-hairline) solid var(--color-shell-border);

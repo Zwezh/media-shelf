@@ -1,0 +1,41 @@
+import { signal } from '@angular/core';
+import { Pwa } from '@msh-core/pwa/pwa';
+import { TestBed } from '@angular/core/testing';
+import { provideI18nTesting } from '@msh/testing/i18n-testing';
+import { PwaInstallation } from './pwa-installation';
+
+describe('PwaInstallation', () => {
+  it('shows manual mobile installation instructions without authentication or an install event', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        ...provideI18nTesting(),
+        {
+          provide: Pwa,
+          useValue: {
+            mobilePlatform: 'ios',
+            installed: signal(false),
+            canInstall: signal(false),
+            installError: signal(false),
+            installing: signal(false),
+          },
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(PwaInstallation);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('h2')?.textContent).toBe('Install MediaShelf');
+    expect(element.querySelector('summary')?.textContent).toBe('How to install');
+    expect(element.textContent).toContain('Safari');
+    expect(element.textContent).toContain('Android');
+    expect(element.querySelector('button')).toBeNull();
+  });
+  it('hides installation guidance on desktop browsers', async () => {
+    TestBed.configureTestingModule({
+      providers: [...provideI18nTesting(), { provide: Pwa, useValue: { mobilePlatform: null } }],
+    });
+    const fixture = TestBed.createComponent(PwaInstallation);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('section')).toBeNull();
+  });
+});

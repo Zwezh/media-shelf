@@ -1,6 +1,6 @@
 # Routing Summary
 
-The root router exposes three lazy feature boundaries: `/gallery`, `/statistics`, and `/settings`. Gallery loads a feature layout whose children include `/gallery/movies`, static `/gallery/movies/new`, `/gallery/movies/:id`, `/gallery/movies/:id/edit`, `/gallery/series`, `/gallery/series/:id`, `/gallery/series/new`, `/gallery/series/:id/edit`, and `/gallery/wishlist`; the static add route precedes the parameterized detail route. Movie and Series list/detail navigation preserve their collection query parameters; Movie and Series editor navigation also preserves them. Editor routes carry an explicit `add` or `edit` mode in route data and omit navigation metadata, so they add no subnavigation items. Gallery subnavigation is All items → Movies → Series → Wishlist. All items matches the Gallery path exactly and ignores query parameters for active state. `/`, the obsolete `/wishlist` URL, and other unmatched URLs redirect to the combined `/gallery` list. Route titles are translation keys resolved by `TranslatedTitleStrategy`.
+The root router exposes four lazy feature boundaries: `/gallery`, `/statistics`, `/settings`, and `/about`. Gallery loads a feature layout whose children include `/gallery/movies`, static `/gallery/movies/new`, `/gallery/movies/:id`, `/gallery/movies/:id/edit`, `/gallery/series`, `/gallery/series/:id`, `/gallery/series/new`, `/gallery/series/:id/edit`, and `/gallery/wishlist`; the static add route precedes the parameterized detail route. Movie and Series list/detail navigation preserve their collection query parameters; Movie and Series editor navigation also preserves them. Editor routes carry an explicit `add` or `edit` mode in route data and omit navigation metadata, so they add no subnavigation items. Gallery subnavigation is All items → Movies → Series → Wishlist. All items matches the Gallery path exactly and ignores query parameters for active state. `/`, the obsolete `/wishlist` URL, and other unmatched URLs redirect to the combined `/gallery` list. Route titles are translation keys resolved by `TranslatedTitleStrategy`.
 
 `/statistics` lazily renders the persisted Library dashboard. Its page-owned store loads only the saved snapshot; the authenticated Scan/Rescan action explicitly calculates it. See [Statistics](../statistics/summary.md).
 
@@ -26,6 +26,7 @@ flowchart LR
   App[Main RouterOutlet] --> Gallery
   App --> Statistics[/statistics]
   App --> Settings[/settings]
+  App --> About[/about]
   Gallery --> GalleryRoutes[gallery.routes.ts]
   GalleryRoutes --> Movies[/gallery/movies]
   Movies --> MovieDetails[/gallery/movies/:id]
@@ -62,3 +63,5 @@ Invariants:
 Related lodes: [authentication](../auth/summary.md), [project summary](../summary.md), [practices](../practices.md), [application shell](../ui/application-shell.md), [media gallery](../ui/media-gallery.md).
 
 Wishlist viewing uses public lazy `/gallery/wishlist` and `/gallery/wishlist/:id` routes for either movie or series membership. Detail breadcrumbs and card navigation preserve query parameters; no Wishlist write routes are exposed. See [Wishlist viewing](../plans/wishlist-viewing.md).
+
+`/about` is a public lazy route with translated document title and root navigation order 4. It presents project history, dependencies, author and PWA installation guidance; see [About](../about/summary.md).

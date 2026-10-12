@@ -33,6 +33,8 @@ No Wishlist KPI, file sizes, episode estimates, recent activity, date filters or
 
 ## Presentation and verification
 
+KPI cards and scan/rescan controls render immediately; chart panels use independent viewport-triggered @defer with localized feedback and reserved placeholders. Deferral never initiates a scan or another snapshot read. See [frontend performance](../ui/performance.md).
+
 The page adapts `stitch-statistic/code.html` into a three-card KPI row and four chart panels. Focused feature components frame KPI/chart content; shared Icon, EmptyState, PageStatus, RequiresAuth, buttons and toasts are reused. Charts use native SVG/CSS and complete readable legends/counts; SVG is decorative. Semantic theme tokens support light/dark, layouts stack at narrow widths, and EN/PL/RU resources localize labels, dates, numbers and percentages.
 
 Verification: FE full suite (342 tests) plus a targeted first-scan failure regression, strict spec compilation, lint/format and production build; BE fixture and HTTP tests cover authentication, migration, aggregation, persisted reads, corruption, concurrency and rollback. Browser flows verify scan/reload/error/guest/empty behavior and ten AXE audits across themes, 320px/desktop and localized PL/RU layouts. Existing bundle budget warnings remain unchanged. An isolated 10,000-title fixture scanned in approximately 0.7 seconds after the covering-index optimization; production/network timing can differ.

@@ -39,6 +39,8 @@
     </label>
     @if (posterUrl()) {
       <img
+        loading="lazy"
+        decoding="async"
         class="artwork-preview artwork-preview--poster"
         [src]="posterUrl()"
         [alt]="'movieEditor.posterPreviewAlt' | translate: { title: movieTitle() || ('media.untitled' | translate) }"
@@ -57,7 +59,14 @@
       <msh-form-validation-message [field]="form().backdropUrl()" messageId="movie-editor-backdrop-url-error" />
     </label>
     @if (backdropUrl()) {
-      <img class="artwork-preview artwork-preview--backdrop" [src]="backdropUrl()" alt="" (error)="useImageFallback($event)" />
+      <img
+        loading="lazy"
+        decoding="async"
+        class="artwork-preview artwork-preview--backdrop"
+        [src]="backdropUrl()"
+        alt=""
+        (error)="useImageFallback($event)"
+      />
     }
   </div>
 </msh-movie-editor-section>

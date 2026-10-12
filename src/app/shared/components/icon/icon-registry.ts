@@ -3,6 +3,12 @@ import { inject, Service } from '@angular/core';
 
 export const ICON_NAMES = [
   'add',
+  'close',
+  'search',
+  'gallery',
+  'statistics',
+  'settings',
+  'info',
   'arrow-down',
   'arrow-up',
   'delete',

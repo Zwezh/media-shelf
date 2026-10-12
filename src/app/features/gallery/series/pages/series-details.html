@@ -9,7 +9,7 @@
         <a routerLink="/gallery/series" queryParamsHandling="preserve">{{ 'navigation.series' | translate }}</a>
       </li>
       <li aria-hidden="true">/</li>
-      <li aria-current="page">{{ store.title()?.title || ('series.details' | translate) }}</li>
+      <li aria-current="page">{{ breadcrumbTitle() || ('series.details' | translate) }}</li>
     </ol>
   </nav>
   @if (store.status() === 'loading' || store.status() === 'idle') {
@@ -47,40 +47,46 @@
           }
         </div>
       </msh-movie-details-hero>
-      <div class="movie-details__content">
-        <div class="movie-details__cards movie-details__cards--library">
-          <msh-production-and-cast [movie]="view" />
-          <msh-detail-card headingId="series-information-title" titleKey="movieDetails.additionalInformation.title">
-            <dl class="series-details__information">
-              <div>
-                <dt>{{ 'movieDetails.additionalInformation.addedDate' | translate }}</dt>
-                <dd>{{ (view.addedDate | date: 'mediumDate') || ('series.unknown' | translate) }}</dd>
-              </div>
-              @if (title.releaseDate; as releaseDate) {
+      <div #detailContent class="movie-details__content">
+        @defer (on viewport(detailContent)) {
+          <div class="movie-details__cards movie-details__cards--library">
+            <msh-production-and-cast [movie]="view" />
+            <msh-detail-card headingId="series-information-title" titleKey="movieDetails.additionalInformation.title">
+              <dl class="series-details__information">
                 <div>
-                  <dt>{{ 'series.releaseDate' | translate }}</dt>
-                  <dd>{{ releaseDate | date: 'mediumDate' }}</dd>
+                  <dt>{{ 'movieDetails.additionalInformation.addedDate' | translate }}</dt>
+                  <dd>{{ (view.addedDate | date: 'mediumDate') || ('series.unknown' | translate) }}</dd>
                 </div>
-              }
-              <div>
-                <dt>{{ 'series.formats' | translate }}</dt>
-                <dd>
-                  @if (formats().length > 0) {
-                    <ul>
-                      @for (format of formats(); track $index) {
-                        <li>{{ format }}</li>
-                      }
-                    </ul>
-                  } @else {
-                    {{ 'series.noFormats' | translate }}
-                  }
-                </dd>
-              </div>
-            </dl>
-          </msh-detail-card>
-        </div>
-        <msh-series-seasons [seasons]="title.series.seasons" />
-        <msh-related-movie-lists similarTitleKey="movieDetails.additionalInformation.similarTitles" [movie]="view" />
+                @if (title.releaseDate; as releaseDate) {
+                  <div>
+                    <dt>{{ 'series.releaseDate' | translate }}</dt>
+                    <dd>{{ releaseDate | date: 'mediumDate' }}</dd>
+                  </div>
+                }
+                <div>
+                  <dt>{{ 'series.formats' | translate }}</dt>
+                  <dd>
+                    @if (formats().length > 0) {
+                      <ul>
+                        @for (format of formats(); track $index) {
+                          <li>{{ format }}</li>
+                        }
+                      </ul>
+                    } @else {
+                      {{ 'series.noFormats' | translate }}
+                    }
+                  </dd>
+                </div>
+              </dl>
+            </msh-detail-card>
+          </div>
+          <msh-series-seasons [seasons]="title.series.seasons" />
+          <msh-related-movie-lists similarTitleKey="movieDetails.additionalInformation.similarTitles" [movie]="view" />
+        } @placeholder {
+          <msh-page-status messageKey="deferred.loading" />
+        } @error {
+          <msh-page-status kind="error" messageKey="deferred.error" />
+        }
       </div>
     }
   }

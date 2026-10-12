@@ -219,3 +219,23 @@
     }
   }
 }
+
+@media (max-width: 40rem) {
+  .quick-search__flyout {
+    position: fixed;
+    top: calc(var(--size-shell-header-height-mobile) + env(safe-area-inset-top) + var(--space-xs));
+    right: var(--size-shell-inline-padding-mobile);
+    width: calc(100vw - 2 * var(--size-shell-inline-padding-mobile));
+  }
+
+  .quick-search__result {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+  }
+
+  .quick-search__badges {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+}

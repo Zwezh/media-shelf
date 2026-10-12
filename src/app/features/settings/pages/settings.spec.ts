@@ -32,6 +32,7 @@ describe('Settings', () => {
     const root = fixture.nativeElement as HTMLElement;
 
     expect(TestBed.inject(ToastStore).toasts()).toEqual([expect.objectContaining({ title: 'settings.loadSuccessTitle', type: 'success' })]);
+    expect(root.querySelector('msh-pwa-installation')).toBeNull();
     expect(selectValue(root, '#settings-quality')).toBe('1080p');
     expect(selectValue(root, '#settings-extension')).toBe('MKV');
     expect(root.textContent).toContain('Sign in to change defaults');

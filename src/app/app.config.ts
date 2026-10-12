@@ -1,3 +1,4 @@
+import { provideServiceWorker } from '@angular/service-worker';
 import { STATISTICS_REPOSITORY } from './features/statistics/application/statistics.repository';
 import { HttpStatisticsRepository } from './features/statistics/infrastructure/http-statistics.repository';
 import { GALLERY_REPOSITORY } from './features/gallery/catalog/application/gallery.repository';
@@ -29,6 +30,7 @@ import { routes } from './app.routes';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideServiceWorker('ngsw-worker.js', { enabled: environment.production, registrationStrategy: 'registerWhenStable:30000' }),
     provideEnvironment(environment),
     provideHttpClient(withInterceptors([authenticationInterceptor])),
     provideTranslateService({

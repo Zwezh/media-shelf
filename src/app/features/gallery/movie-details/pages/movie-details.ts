@@ -1,3 +1,5 @@
+import { Language } from '@msh-core/i18n/language';
+import { displayTitle } from '@msh-shared/utils/display-title';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
@@ -24,7 +26,8 @@ export class MovieDetailsPage {
   private readonly movieDeletion = inject(DeletionConfirmation);
   private readonly router = inject(Router);
   protected readonly store = inject(MovieDetailsStore);
-  protected readonly breadcrumbTitle = computed(() => this.store.movie()?.title ?? '');
+  private readonly language = inject(Language).language;
+  protected readonly breadcrumbTitle = computed(() => displayTitle(this.store.movie(), this.language()));
 
   protected editMovie(movie: MovieDetails): void {
     void this.router.navigate(['/gallery/movies', movie.id, 'edit'], { queryParamsHandling: 'preserve' });

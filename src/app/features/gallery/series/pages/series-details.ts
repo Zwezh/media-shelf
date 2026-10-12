@@ -1,3 +1,5 @@
+import { Language } from '@msh-core/i18n/language';
+import { displayTitle } from '@msh-shared/utils/display-title';
 import { DatePipe } from '@angular/common';
 import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -37,7 +39,9 @@ export class SeriesDetails {
   private readonly router = inject(Router);
   private readonly owner = inject(DestroyRef);
   private readonly deletion = inject(DeletionConfirmation);
+  private readonly language = inject(Language).language;
   protected readonly store = inject(SeriesDetailsStore);
+  protected readonly breadcrumbTitle = computed(() => displayTitle(this.store.title(), this.language()));
   private readonly settings = inject(SettingsStore);
   private readonly present = translate('series.present');
   private readonly unknown = translate('series.unknown');

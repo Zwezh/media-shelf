@@ -43,6 +43,29 @@
       }
     </section>
 
+    @if (seriesFilters) {
+      <fieldset class="form-fieldset filter-panel__group">
+        <legend class="form-legend">{{ 'series.filters.productionStatus' | translate }}</legend>
+        <select
+          class="form-control"
+          [formControl]="filterForm.controls.productionStatus"
+          [attr.aria-label]="'series.filters.productionStatus' | translate"
+        >
+          <option value="">{{ 'movies.filters.any' | translate }}</option>
+          @for (status of productionStatuses; track status.value) {
+            <option [value]="status.value">{{ status.label() }}</option>
+          }
+        </select>
+      </fieldset>
+      <fieldset class="form-fieldset filter-panel__group">
+        <legend class="form-legend">{{ 'series.filters.seasonAvailability' | translate }}</legend>
+        <label class="filter-panel__availability">
+          <input type="checkbox" [formControl]="filterForm.controls.seasonAvailability" />
+          <span>{{ 'series.filters.incomplete' | translate }}</span>
+        </label>
+      </fieldset>
+    }
+
     <fieldset class="form-fieldset filter-panel__group">
       <legend class="form-legend">
         <span>{{ 'movies.filters.genres' | translate }}</span>

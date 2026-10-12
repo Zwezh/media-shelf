@@ -1,0 +1,135 @@
+:host {
+  display: block;
+}
+
+.about {
+  width: min(100%, 72rem);
+  margin-inline: auto;
+  padding: var(--space-2xl) var(--size-shell-inline-padding) var(--space-3xl);
+  line-height: 1.65;
+}
+
+.about__hero {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-3xl);
+}
+
+.about__hero img {
+  flex-shrink: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+}
+h1 {
+  margin-top: var(--space-xs);
+}
+h2 {
+  margin-top: 0;
+}
+h3 {
+  margin: 0;
+}
+p {
+  max-width: 75ch;
+}
+
+.about__eyebrow {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: var(--text-label-md);
+}
+
+.about__intro {
+  font: var(--text-body-lg);
+}
+.about__muted,
+figcaption {
+  color: var(--color-text-secondary);
+}
+.about__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+.about > section {
+  margin-bottom: var(--space-3xl);
+}
+.about__timeline {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.about__chapter-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-base);
+}
+
+.about__number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border: var(--border-subtle);
+  border-radius: var(--radius-lg);
+  font: var(--text-headline-sm);
+}
+
+.about__screenshots,
+.about__dependencies {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+figure,
+dl {
+  margin: 0;
+}
+figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+figcaption {
+  margin-top: var(--space-sm);
+  font: var(--text-body-sm);
+}
+.about__features {
+  padding-left: var(--space-xl);
+}
+.about__features li + li {
+  margin-top: var(--space-sm);
+}
+.about__dependency {
+  margin-top: var(--space-base);
+}
+dt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-sm);
+  font-weight: 600;
+}
+dd {
+  margin: var(--space-xs) 0 0;
+}
+
+@media (max-width: 40rem) {
+  .about {
+    padding-inline: var(--size-shell-inline-padding-mobile);
+  }
+  .about__hero {
+    flex-direction: column;
+  }
+}

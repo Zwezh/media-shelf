@@ -6,7 +6,7 @@ import { WISHLIST_MUTATION_TEST_PROVIDERS } from '@msh/testing/wishlist-testing'
 import { provideAuthSessionTesting } from '@msh/testing/auth-testing';
 import { provideHttpClient } from '@angular/common/http';
 import { signal } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { SettingsStore } from '@msh-core/settings/settings.store';
@@ -73,6 +73,7 @@ describe('root routes', () => {
     getWishlist = vi.fn(() => of({ currentPage: 0, media: [wishlistMovie, wishlistSeries], totalCount: 2 }));
     getMovies = vi.fn(() => of({ currentPage: 0, media: [], totalCount: 0 }));
     TestBed.configureTestingModule({
+      deferBlockBehavior: DeferBlockBehavior.Manual,
       providers: [
         ...WISHLIST_MUTATION_TEST_PROVIDERS,
         provideAuthSessionTesting(),
@@ -114,6 +115,7 @@ describe('root routes', () => {
       { labelKey: 'navigation.gallery', order: 1, path: '/gallery' },
       { labelKey: 'navigation.statistics', order: 2, path: '/statistics' },
       { labelKey: 'navigation.settings', order: 3, path: '/settings' },
+      { labelKey: 'navigation.about', order: 4, path: '/about' },
     ]);
   });
 
@@ -126,6 +128,7 @@ describe('root routes', () => {
     ['/gallery/wishlist/wishlist-series', 'Wishlist series'],
     ['/statistics', 'Library Statistics'],
     ['/settings', 'Settings'],
+    ['/about', 'About MediaShelf'],
   ])('lazy-loads %s', async (path, heading) => {
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl(path);
@@ -158,6 +161,10 @@ describe('root routes', () => {
     await harness.fixture.whenStable();
     expect(TestBed.inject(Router).url).toBe(`/gallery/wishlist/${id}?search=Test&key=rating&direction=desc`);
     expect(harness.routeNativeElement?.querySelector('.movie-hero__primary-actions')).toBeNull();
+    expect(harness.routeNativeElement?.querySelector('msh-production-and-cast')).toBeNull();
+    const [detailsBlock] = await harness.fixture.getDeferBlocks();
+    await detailsBlock.render(DeferBlockState.Complete);
+    await harness.fixture.whenStable();
     expect(harness.routeNativeElement?.querySelector('msh-production-and-cast')).not.toBeNull();
     expect(harness.routeNativeElement?.querySelector('msh-series-seasons')).toBeNull();
   });

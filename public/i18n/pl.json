@@ -19,6 +19,7 @@
       "value": "Wprowadź prawidłową wartość."
     }
   },
+  "deferred": { "loading": "Ładowanie tej sekcji…", "error": "Nie udało się wczytać tej sekcji. Odśwież stronę, aby spróbować ponownie." },
   "auth": {
     "actions": {
       "signIn": "Zaloguj się",
@@ -35,6 +36,7 @@
     },
     "requiredForWrite": "Zaloguj się, aby dodawać lub zmieniać elementy biblioteki",
     "toasts": {
+      "dialogLoadErrorMessage": "Nie udało się wczytać formularza logowania. Sprawdź połączenie i spróbuj ponownie.",
       "signInErrorMessage": "Sprawdź klucz tajny i połączenie, a następnie spróbuj ponownie.",
       "signInErrorTitle": "Logowanie nie powiodło się",
       "signInSuccessMessage": "Chronione działania w bibliotece są dostępne w tej sesji strony.",
@@ -64,6 +66,7 @@
     "mutationError": "Nie udało się usunąć pozycji."
   },
   "header": {
+    "closeSearch": "Zamknij wyszukiwanie",
     "home": "Strona główna MediaShelf",
     "language": {
       "label": "Język aplikacji"
@@ -442,7 +445,8 @@
     "settings": "Ustawienia",
     "statistics": "Statystyki",
     "wishlist": "Lista życzeń",
-    "series": "Seriale"
+    "series": "Seriale",
+    "about": "O aplikacji"
   },
   "pagination": {
     "first": "Pierwsza strona",
@@ -464,7 +468,8 @@
     "statisticsTitle": "Statystyki | MediaShelf",
     "wishlistTitle": "Lista życzeń | MediaShelf",
     "seriesTitle": "Seriale | MediaShelf",
-    "seriesDetailsTitle": "Szczegóły serialu | MediaShelf"
+    "seriesDetailsTitle": "Szczegóły serialu | MediaShelf",
+    "aboutTitle": "O aplikacji | MediaShelf"
   },
   "series": {
     "title": "Seriale",
@@ -507,6 +512,12 @@
       "successMessage": "Serial został usunięty z biblioteki.",
       "successTitle": "Serial usunięty",
       "title": "Usunąć ten serial?"
+    },
+    "filters": {
+      "productionStatus": "Status produkcji",
+      "seasonAvailability": "Dostępność sezonów",
+      "incomplete": "Brakujące sezony",
+      "productionChip": "Produkcja: {{value}}"
     }
   },
   "seriesEditor": {
@@ -607,5 +618,90 @@
     "median": "Mediana ocen",
     "unknownRatings": "Tytuły bez oceny:",
     "highRated": "Ocena 9,0 lub wyższa"
+  },
+  "pwa": {
+    "title": "Zainstaluj MediaShelf",
+    "description": "Dodaj MediaShelf do ekranu głównego i otwieraj jako osobną aplikację.",
+    "install": "Zainstaluj aplikację",
+    "installed": "MediaShelf działa jako zainstalowana aplikacja.",
+    "instructions": "Jak zainstalować",
+    "ios": "Jeśli chcesz korzystać z MediaShelf jak z aplikacji na iPhonie lub iPadzie, możesz dodać ją do ekranu początkowego w Safari: Udostępnij → Dodaj do ekranu początkowego. Włącz Otwórz jako aplikację internetową, jeśli ta opcja jest dostępna.",
+    "android": "Jeśli chcesz korzystać z MediaShelf jak z aplikacji na Androidzie, możesz wybrać Zainstaluj aplikację lub Dodaj do ekranu głównego w menu przeglądarki.",
+    "installError": "Nie udało się rozpocząć instalacji. Spróbuj użyć menu przeglądarki.",
+    "offlineHint": "Po pierwszej wizycie online interfejs aplikacji może otwierać się offline. Dane biblioteki, logowanie i zmiany wymagają połączenia.",
+    "offline": "Jesteś offline. Dane biblioteki i zmiany wymagają połączenia.",
+    "updateReady": "Aktualizacja aplikacji jest gotowa. Zapisz zmiany przed ponownym załadowaniem.",
+    "recovery": "Aplikacja wymaga ponownego załadowania. Jeśli to możliwe, najpierw zapisz zmiany.",
+    "reload": "Załaduj ponownie"
+  },
+  "about": {
+    "eyebrow": "Osobisty projekt, cztery generacje",
+    "title": "O MediaShelf",
+    "intro": "MediaShelf zaczęło się od prostego sposobu na uporządkowanie moich filmów. Każda kolejna wersja wynikała z tego, czego się nauczyłem — i czego brakowało mi we własnej bibliotece.",
+    "repository": "Repozytorium frontendu",
+    "backendRepository": "Repozytorium backendu",
+    "historyTitle": "Jak to się zaczęło",
+    "historyIntro": "Od studenckiej aplikacji desktopowej do biblioteki dostępnej na różnych urządzeniach.",
+    "winFormsReference": "O Windows Forms",
+    "legacyApp": "Otwórz Cinema Catalogue",
+    "history": {
+      "first": {
+        "title": "Pierwsza biblioteka, jedno okno",
+        "intro": "Pierwszą wersję napisałem w latach 2010–2011, podczas studiów na Państwowym Uniwersytecie w Baranowiczach. Była to aplikacja desktopowa w C#, z interfejsem Windows Forms, znanym też jako WinForms.",
+        "details": "Pomysł był prosty: jedno okno, tabela filmów i informacje wpisywane ręcznie. Mogłem dodawać wiersze, edytować wpisy i usuwać filmy. Nie pamiętam już wszystkich szczegółów, ale właśnie od tego małego narzędzia zaczął się projekt."
+      },
+      "second": {
+        "title": "My Library Cinema",
+        "intro": "W latach 2015–2016 stworzyłem nową wersję w Java 8 i JavaFX. Nosiła nazwę My Library Cinema, a po rosyjsku «Моя кинотека». Działała na różnych desktopowych systemach operacyjnych, ale każda instalacja przechowywała własną kolekcję w pliku XML.",
+        "details": "Interfejs składał się z dwóch paneli: po lewej była lista filmów z sortowaniem, a po prawej miejsce na szczegóły, dodawanie lub edycję filmu. Wyszukiwanie ułatwiało przeglądanie większej kolekcji. Parser HTML pobierał informacje i obrazy z Kinopoisk, ograniczając ręczne wpisywanie danych. Nadal była to aplikacja desktopowa, bez wersji mobilnej i bez wspólnej biblioteki między urządzeniami."
+      },
+      "third": {
+        "period": "Wersja internetowa",
+        "title": "Cinema Catalogue trafia do sieci",
+        "intro": "Trzecia generacja przeniosła bibliotekę do przeglądarki dzięki Angularowi i Node.js. Początki nie były idealne, ale z czasem powstało Cinema Catalogue, dostępne pod adresem cinema-catalogue.web.app.",
+        "details": "Ta wersja korzystała z Angulara 17, ng-bootstrap 16, stylów Bootstrap i Font Awesome. ngx-translate zapewniało języki rosyjski, angielski i polski. Backend opierał się na NestJS 10 i MongoDB. Frontend był hostowany w Firebase, backend w Render, a GitHub Actions sprawdzało lint i wdrażało zmiany po scaleniu do głównej gałęzi. Aplikacja oferowała galerię filmów, wyszukiwanie, filtry, strony szczegółów, ustawienia domyślnej jakości i rozszerzenia pliku oraz uzupełnianie danych przez API Poiskkino."
+      },
+      "fourth": {
+        "period": "Obecna generacja",
+        "title": "MediaShelf",
+        "intro": "MediaShelf to czwarta generacja projektu. Zbudowałem ją w całości z pomocą agentów AI w Codex — głównie modeli GPT-6 i GPT-6.1 ze średnim poziomem rozumowania — osobiście wyznaczając kierunek, przeglądając zmiany i sprawdzając rezultaty. Metoda Lode przechowuje decyzje i wiedzę o projekcie blisko kodu, a Google Stitch pomogło nadać kształt interfejsowi.",
+        "details": "Interfejs korzysta z Angulara 22, sygnałów, Signal Forms, NgRx SignalStore i ngx-translate, z niewielkim zestawem zależności. Backend wywodzi się z poprzedniej wersji, został zaktualizowany do NestJS 12 i przeszedł z MongoDB na bazę SQL opartą na SQLite/libSQL. Frontend jest hostowany w Firebase. Biblioteka obejmuje teraz filmy, seriale i listę życzeń, oferując więcej sposobów organizacji, przeglądania i utrzymania kolekcji."
+      }
+    },
+    "images": {
+      "desktop": "My Library Cinema: lista filmów i panel szczegółów w JavaFX",
+      "gallery": "Cinema Catalogue: galeria filmów trzeciej generacji",
+      "details": "Cinema Catalogue: strona szczegółów filmu",
+      "open": "Otwórz zrzut ekranu w pełnym rozmiarze: {{title}}"
+    },
+    "features": {
+      "collections": "Wspólna galeria oraz osobne strony filmów, seriali i listy życzeń.",
+      "discovery": "Globalne wyszukiwanie, sortowanie, paginacja oraz filtry gatunków, lat, ocen, jakości, kategorii wiekowych i osób.",
+      "editing": "Chronione operacje dodawania, edycji i usuwania, strony szczegółów, formaty wydań oraz odnośniki do powiązanych filmów.",
+      "autofill": "Uzupełnianie danych i obrazów z Poiskkino odbywa się na backendzie. Klucz dostawcy pozostaje w zmiennych środowiskowych serwera, poza kodem przeglądarki.",
+      "series": "Status produkcji serialu, dostępność i formaty sezonów, liczba zapowiedzianych sezonów oraz filtry statusu produkcji i brakujących sezonów.",
+      "wishlist": "Import i odświeżanie pozycji na liście życzeń oraz przenoszenie ich do biblioteki.",
+      "statistics": "Zapisany panel statystyk biblioteki z ręcznym skanowaniem oraz zestawieniami według gatunku, jakości, roku premiery i oceny.",
+      "personalization": "Języki angielski, rosyjski i polski, nazwy tytułów zależne od języka, jasny i ciemny motyw oraz wspólne ustawienia jakości, rozszerzeń i gatunków.",
+      "mobile": "Responsywny interfejs i instalowalna PWA z interfejsem dostępnym offline oraz powiadomieniami o aktualizacjach. Dane biblioteki i zmiany wymagają połączenia."
+    },
+    "stackTitle": "Technologie",
+    "stackIntro": "Główne zależności uruchomieniowe. Zakresy wersji frontendu pochodzą bezpośrednio z package.json.",
+    "stack": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "angular": "Komponenty, routing, wstrzykiwanie zależności, sygnały i Signal Forms.",
+      "ngrx": "Stan danych i operacji oparty na sygnałach.",
+      "translate": "Tłumaczenia interfejsu na angielski, rosyjski i polski.",
+      "rxjs": "Strumienie HTTP, anulowanie żądań i operacje asynchroniczne.",
+      "worker": "Wersjonowana pamięć podręczna interfejsu i powiadomienia o aktualizacjach.",
+      "nestjs": "Modułowe API katalogu, integracji z dostawcą danych i statystyk.",
+      "database": "Przechowywanie w SQL tytułów, przypisań do kolekcji, sezonów, formatów i zapisanych statystyk.",
+      "auth": "Chronione operacje zapisu i sesje z tokenami odświeżania."
+    },
+    "delivery": "Frontend jest hostowany w Firebase. TypeScript, Vitest, ESLint i kompilacje produkcyjne wspierają kontrolę jakości; GitHub Actions uruchamia CI projektu.",
+    "authorTitle": "Autor projektu",
+    "authorRole": "Starszy inżynier frontendu",
+    "authorNote": "Osobisty, niekomercyjny projekt Aleksego Zwierzyńskiego, rozwijany przez lata nauki i z zamiłowania do kina."
   }
 }

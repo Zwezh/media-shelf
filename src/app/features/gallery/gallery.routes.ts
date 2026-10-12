@@ -42,7 +42,7 @@ export const GALLERY_ROUTES: Routes = [
       {
         path: 'series',
         title: 'routes.seriesTitle',
-        data: { navigation: { labelKey: 'navigation.series', order: 2 } satisfies NavigationMetadata },
+        data: { seriesFilters: true, navigation: { labelKey: 'navigation.series', order: 2 } satisfies NavigationMetadata },
         loadComponent: () => import('./series/pages/series').then((module) => module.Series),
       },
       {

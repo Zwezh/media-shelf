@@ -19,6 +19,7 @@
       "value": "Enter a valid value."
     }
   },
+  "deferred": { "loading": "Loading this section…", "error": "This section could not be loaded. Reload the page to try again." },
   "auth": {
     "actions": {
       "signIn": "Sign In",
@@ -35,6 +36,7 @@
     },
     "requiredForWrite": "Sign in to add or modify library items",
     "toasts": {
+      "dialogLoadErrorMessage": "The sign-in form could not be loaded. Check your connection and try again.",
       "signInErrorMessage": "Check the secret key and connection, then try again.",
       "signInErrorTitle": "Sign in failed",
       "signInSuccessMessage": "Protected library actions are now available for this page session.",
@@ -64,6 +66,7 @@
     "mutationError": "Could not delete this item."
   },
   "header": {
+    "closeSearch": "Close search",
     "home": "MediaShelf home",
     "language": {
       "label": "Application language"
@@ -442,7 +445,8 @@
     "settings": "Settings",
     "statistics": "Statistics",
     "wishlist": "Wishlist",
-    "series": "Series"
+    "series": "Series",
+    "about": "About"
   },
   "pagination": {
     "first": "First page",
@@ -464,7 +468,8 @@
     "statisticsTitle": "Statistics | MediaShelf",
     "wishlistTitle": "Wishlist | MediaShelf",
     "seriesTitle": "Series | MediaShelf",
-    "seriesDetailsTitle": "Series details | MediaShelf"
+    "seriesDetailsTitle": "Series details | MediaShelf",
+    "aboutTitle": "About | MediaShelf"
   },
   "series": {
     "title": "Series",
@@ -507,6 +512,12 @@
       "successMessage": "The series was removed from your library.",
       "successTitle": "Series deleted",
       "title": "Delete this series?"
+    },
+    "filters": {
+      "productionStatus": "Production status",
+      "seasonAvailability": "Season availability",
+      "incomplete": "Missing seasons",
+      "productionChip": "Production: {{value}}"
     }
   },
   "seriesEditor": {
@@ -607,5 +618,90 @@
     "median": "Median rating",
     "unknownRatings": "Titles without a rating:",
     "highRated": "Rated 9.0 or higher"
+  },
+  "pwa": {
+    "title": "Install MediaShelf",
+    "description": "Add MediaShelf to your home screen and open it as a standalone app.",
+    "install": "Install app",
+    "installed": "MediaShelf is running as an installed app.",
+    "instructions": "How to install",
+    "ios": "If you'd like to use MediaShelf as an app on your iPhone or iPad, you can add it to your Home Screen from Safari: Share → Add to Home Screen. Turn on Open as Web App if offered.",
+    "android": "If you'd like to use MediaShelf as an app on Android, you can choose Install app or Add to Home screen from your browser's menu.",
+    "installError": "Installation could not start. Try the browser menu instead.",
+    "offlineHint": "After your first online visit, the app shell can open offline. Library data, sign-in and changes require a connection.",
+    "offline": "You’re offline. Library data and changes require a connection.",
+    "updateReady": "An app update is ready. Save your work before reloading.",
+    "recovery": "The app needs to reload. Save your work first if possible.",
+    "reload": "Reload app"
+  },
+  "about": {
+    "eyebrow": "A personal project, four generations",
+    "title": "About MediaShelf",
+    "intro": "MediaShelf began as a small way to keep track of my films. Each new version grew out of what I had learned—and what I wanted my own library to do next.",
+    "repository": "Frontend repository",
+    "backendRepository": "Backend repository",
+    "historyTitle": "How it started",
+    "historyIntro": "From a student desktop app to a library that travels between devices.",
+    "winFormsReference": "About Windows Forms",
+    "legacyApp": "Visit Cinema Catalogue",
+    "history": {
+      "first": {
+        "title": "A first library, one window",
+        "intro": "I wrote the first version in 2010–2011, while studying at Baranovichi State University. It was a C# desktop application built with Windows Forms, often called WinForms.",
+        "details": "The idea was simple: one window, a table of films, and information entered by hand. I could add rows, edit the entries and delete films. I no longer remember every detail, but this small tool was the beginning of the project."
+      },
+      "second": {
+        "title": "My Library Cinema",
+        "intro": "In 2015–2016 I rebuilt the idea with Java 8 and JavaFX. The app was called My Library Cinema, or «Моя кинотека» in Russian. It could run on different desktop operating systems, although each installation kept its own collection in an XML file.",
+        "details": "The interface had two panels: a sortable film list on the left and a workspace on the right for viewing, adding or editing a film. Search made larger collections easier to browse. An HTML scraper collected information and artwork from Kinopoisk, replacing much of the manual typing. It was still a desktop app, with no mobile version or shared collection between devices."
+      },
+      "third": {
+        "period": "The web edition",
+        "title": "Cinema Catalogue goes online",
+        "intro": "The third generation moved the library to the web with Angular and Node.js. Early versions were rough around the edges, but the project gradually became Cinema Catalogue, available at cinema-catalogue.web.app.",
+        "details": "This edition used Angular 17, ng-bootstrap 16, Bootstrap styles and Font Awesome, with ngx-translate for Russian, English and Polish. NestJS 10 and MongoDB powered the backend. The frontend was hosted on Firebase and the backend on Render; GitHub Actions checked lint and handled deployment after merges to the main branch. It offered a film gallery, search, filters and detail pages, configurable quality and file-extension defaults, and autofill through the Poiskkino API."
+      },
+      "fourth": {
+        "period": "The current generation",
+        "title": "MediaShelf",
+        "intro": "MediaShelf is the fourth generation. I built it entirely with AI coding agents in Codex—mostly GPT-6 and GPT-6.1 with medium reasoning—while personally guiding the work, reviewing changes and checking the result. The Lode method keeps project decisions and knowledge close to the code; Google Stitch helped shape the design.",
+        "details": "The interface uses Angular 22, signals, Signal Forms, NgRx SignalStore and ngx-translate, with a small set of focused dependencies. The backend grew from the previous edition, was updated to NestJS 12, and moved from MongoDB to a SQL database built on SQLite/libSQL. The frontend is hosted on Firebase. The library now covers films, series and a wishlist, with more ways to organize, explore and maintain the collection."
+      }
+    },
+    "images": {
+      "desktop": "My Library Cinema: the JavaFX film list and details panel",
+      "gallery": "Cinema Catalogue: the third-generation film gallery",
+      "details": "Cinema Catalogue: a film detail page",
+      "open": "Open full-size screenshot: {{title}}"
+    },
+    "features": {
+      "collections": "One combined gallery, with dedicated Movies, Series and Wishlist pages.",
+      "discovery": "Global search, sorting, pagination and filters for genres, years, rating, quality, age certification and people.",
+      "editing": "Protected add, edit and delete workflows, detailed title pages, release formats and links to related films.",
+      "autofill": "Poiskkino metadata and artwork autofill runs on the backend. The provider key stays in server environment variables, outside the browser bundle.",
+      "series": "Series production status, season availability and formats, announced season counts, and filters for production status and missing seasons.",
+      "wishlist": "Import and refresh wishlist titles, then move them to the library when ready.",
+      "statistics": "A saved library statistics dashboard with explicit scans and breakdowns by genre, quality, release year and rating.",
+      "personalization": "English, Russian and Polish, language-aware title names, light and dark themes, and shared quality, extension and genre settings.",
+      "mobile": "A responsive layout and installable PWA with a cached offline app shell and update prompts. Library data and changes require a connection."
+    },
+    "stackTitle": "Built with",
+    "stackIntro": "The main runtime dependencies. Frontend version ranges come directly from package.json.",
+    "stack": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "angular": "Components, routing, dependency injection, signals and Signal Forms.",
+      "ngrx": "Signal-based state for feature data and workflows.",
+      "translate": "Runtime translations in English, Russian and Polish.",
+      "rxjs": "HTTP streams, cancellation and asynchronous workflows.",
+      "worker": "Versioned app-shell caching and update notifications.",
+      "nestjs": "A modular API for the catalog, provider integration and statistics.",
+      "database": "SQL storage for titles, memberships, seasons, formats and saved statistics.",
+      "auth": "Protected write operations and refresh-token sessions."
+    },
+    "delivery": "Firebase hosts the frontend. TypeScript, Vitest, ESLint and production builds support the quality checks; GitHub Actions runs the project’s CI.",
+    "authorTitle": "The person behind it",
+    "authorRole": "Senior Frontend Engineer",
+    "authorNote": "A personal, non-commercial project by Aleksy Zwierzyński, shaped by years of learning and a love of cinema."
   }
 }

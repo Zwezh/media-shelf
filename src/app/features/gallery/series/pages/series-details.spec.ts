@@ -1,6 +1,7 @@
+import { Language } from '@msh-core/i18n/language';
 import { provideAuthSessionTesting } from '@msh/testing/auth-testing';
 import { signal } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { SettingsStore } from '@msh-core/settings/settings.store';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
@@ -18,6 +19,8 @@ describe('Series details page', () => {
       retry: vi.fn(),
     };
     TestBed.configureTestingModule({
+      imports: [SeriesDetails],
+      deferBlockBehavior: DeferBlockBehavior.Manual,
       providers: [
         provideAuthSessionTesting(),
         provideRouter([]),
@@ -31,9 +34,14 @@ describe('Series details page', () => {
     TestBed.overrideComponent(SeriesDetails, {
       set: { providers: [provideAuthSessionTesting(), { provide: SeriesDetailsStore, useValue: store }] },
     });
+    await TestBed.compileComponents();
     const fixture = TestBed.createComponent(SeriesDetails);
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('msh-series-seasons')).toBeNull();
+    const [detailsBlock] = await fixture.getDeferBlocks();
+    await detailsBlock.render(DeferBlockState.Complete);
+    await fixture.whenStable();
     expect(element.querySelectorAll('h1')).toHaveLength(1);
     expect(element.querySelector('.badge--quality')?.textContent).toBe('4K');
     expect(element.querySelector('#series-information-title')).not.toBeNull();
@@ -49,6 +57,13 @@ describe('Series details page', () => {
     ).toBe(true);
     expect(element.querySelector('.movie-hero__rating')).toBeNull();
     expect(element.querySelector('a[href="/gallery/series"]')).not.toBeNull();
+    expect(element.querySelector('[aria-current="page"]')?.textContent).toBe('Original');
+    await TestBed.inject(Language).select('ru');
+    await fixture.whenStable();
+    expect(element.querySelector('[aria-current="page"]')?.textContent).toBe('Series');
+    await TestBed.inject(Language).select('pl');
+    await fixture.whenStable();
+    expect(element.querySelector('[aria-current="page"]')?.textContent).toBe('Original');
     store.status.set('error');
     await fixture.whenStable();
     element.querySelector<HTMLButtonElement>('.movie-details__error-actions button')?.click();

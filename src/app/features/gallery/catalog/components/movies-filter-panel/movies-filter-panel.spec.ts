@@ -4,21 +4,23 @@ import { SettingsStore } from '@msh-core/settings/settings.store';
 import { FLOATING_PANEL_DATA } from '@msh-shared/floating-panel/floating-panel.tokens';
 import { FloatingPanelRef } from '@msh-shared/floating-panel/floating-panel-ref';
 import { provideI18nTesting } from '@msh/testing/i18n-testing';
-import { MoviesFilterPanel } from './movies-filter-panel';
+import { MoviesFilterPanel, type MoviesFilterPanelData } from './movies-filter-panel';
 
 describe('MoviesFilterPanel', () => {
   let fixture: ComponentFixture<MoviesFilterPanel>;
+  let data: MoviesFilterPanelData;
   let close: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     close = vi.fn();
+    data = { filters: { genres: ['Drama'], rating: 7.5 } };
     TestBed.configureTestingModule({
       imports: [MoviesFilterPanel],
       providers: [
         ...provideI18nTesting(),
         {
           provide: FLOATING_PANEL_DATA,
-          useValue: { filters: { genres: ['Drama'], rating: 7.5 } },
+          useValue: data,
         },
         { provide: FloatingPanelRef, useValue: { close } },
         {
@@ -137,5 +139,38 @@ describe('MoviesFilterPanel', () => {
     input.dispatchEvent(new Event('input'));
     await fixture.whenStable();
     expect((fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.filter-panel__apply')?.disabled).toBe(false);
+  });
+  it('keeps Series-specific controls out of the Movie filter panel', () => {
+    expect(fixture.nativeElement.querySelector('select')).toBeNull();
+    expect(fixture.nativeElement.querySelector('input[type="checkbox"]')).toBeNull();
+  });
+
+  it('applies, restores and clears Series status and incomplete-season filters', async () => {
+    fixture.destroy();
+    Object.assign(data, { seriesFilters: true, filters: { productionStatus: 'finished', seasonAvailability: 'incomplete' } });
+    fixture = TestBed.createComponent(MoviesFilterPanel);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    const status = element.querySelector<HTMLSelectElement>('select')!;
+    const availability = element.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
+    expect(status.value).toBe('finished');
+    expect(availability.checked).toBe(true);
+    expect(element.querySelector<HTMLButtonElement>('.filter-panel__apply')!.disabled).toBe(true);
+    status.value = 'in_production';
+    status.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    element.querySelector('form')!.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+    expect(close).toHaveBeenCalledWith({ productionStatus: 'in_production', seasonAvailability: 'incomplete' });
+    const remove = [...element.querySelectorAll<HTMLButtonElement>('.filter-panel__active-chip')].find((button) =>
+      button.textContent?.includes('In production'),
+    )!;
+    remove.click();
+    await fixture.whenStable();
+    expect(status.value).toBe('');
+    element.querySelector<HTMLButtonElement>('.filter-panel__reset')!.click();
+    await fixture.whenStable();
+    expect(availability.checked).toBe(false);
+    expect(element.querySelectorAll('.filter-panel__active-chip')).toHaveLength(0);
   });
 });

@@ -126,9 +126,11 @@
   }
 
   &__group {
-    padding: var(--space-lg) 0 0;
+    margin-top: var(--space-xl);
+    padding: 0;
 
     legend {
+      margin-bottom: var(--space-sm);
       color: var(--color-text-primary);
     }
 

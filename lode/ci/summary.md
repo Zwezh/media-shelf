@@ -25,6 +25,7 @@ Invariants:
 - `package-lock.json` controls installed dependency versions.
 - `npm run check` must continue to include linting and the complete non-watch unit suite.
 - CI must produce a production build after the quality gate passes.
+- Production replaces `src/environments/environment.ts` with `environment.prod.ts`, whose API base URL is `https://cinema-catalogue-be.onrender.com/api`. Development uses `http://localhost:4200/api` with the local proxy.
 - Workflow permissions remain read-only unless a future job has a documented need to write.
 
 Related lodes: [project practices](../practices.md), [project summary](../summary.md).

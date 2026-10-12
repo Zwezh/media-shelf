@@ -1,3 +1,4 @@
+import { PRODUCTION_STATUSES } from '../../models/production-status';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -45,7 +46,13 @@ export class Series {
   private readonly unknown = translate('series.unknown');
   protected readonly sortingKeys = CATALOG_SORTING_KEYS;
   protected readonly defaultSorting = { key: DEFAULT_CATALOG_PARAMS.key, direction: DEFAULT_CATALOG_PARAMS.direction };
-  protected readonly filterChips = computed(() => toCollectionFilterChips(this.store.filters()));
+  private readonly productionStatuses = PRODUCTION_STATUSES.map((value) => ({ value, label: translate(`series.status.${value}`) }));
+  protected readonly filterChips = computed(() =>
+    toCollectionFilterChips(this.store.filters()).map((chip) => ({
+      ...chip,
+      value: chip.key === 'productionStatus' ? this.productionStatuses.find((status) => status.value === chip.value)!.label() : chip.value,
+    })),
+  );
   protected readonly cards = computed(() =>
     this.store.titles().map((title) => ({
       title,
@@ -76,7 +83,7 @@ export class Series {
     this.floatingPanel
       .open<MoviesFilterPanel, MoviesFilterPanelData, CollectionFilters>(MoviesFilterPanel, {
         ariaLabelledBy: 'movies-filter-panel-title',
-        data: { filters: this.store.filters() },
+        data: { filters: this.store.filters(), seriesFilters: true },
         owner: this.destroyRef,
         placement: 'responsive',
       })

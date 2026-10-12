@@ -176,4 +176,12 @@ describe('Series list deletion', () => {
     expect(store.titles()).toEqual([other]);
     expect(store.totalCount()).toBe(5);
   });
+  it('normalizes Series-only URL filters without adding them to Wishlist params', () => {
+    const params = convertToParamMap({ productionStatus: 'finished', seasonAvailability: 'incomplete' });
+    expect(readCatalogParams(params, true)).toMatchObject({ productionStatus: 'finished', seasonAvailability: 'incomplete' });
+    expect(readCatalogParams(params)).toEqual(DEFAULT_CATALOG_PARAMS);
+    expect(readCatalogParams(convertToParamMap({ productionStatus: 'bad', seasonAvailability: 'false' }), true)).toEqual(
+      DEFAULT_CATALOG_PARAMS,
+    );
+  });
 });

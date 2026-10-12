@@ -100,3 +100,24 @@ Related lodes: [Series foundations](../gallery/series-wishlist.md), [Gallery arc
 Series list cards place the year range alongside production status below the genres, while Movie cards keep the year in their title row. Related Series headings reuse the existing `movieDetails.additionalInformation.similarTitles` translation.
 
 Wishlist uses the same card/hero with explicit presentation inputs: `showTypeBadge=true`, `showQuality=false` on cards and `showQuality=false` on the hero. Library defaults remain type-badge-free cards with quality and projected season counts, plus full Additional Information/season sections. Series and Wishlist share catalog status/layout SCSS; only library details apply `movie-details__cards--library` for the 7/5 split.
+
+
+## Series-specific filters
+
+The shared filter panel enables Series controls only when `seriesFilters: true` is supplied. Series list route data enables parsing `productionStatus=unknown|in_production|finished` and `seasonAvailability=incomplete`; Movies and Wishlist omit these controls and ignore those URL fields. Both filters participate in active-group counts, removal, reset, Apply, URL pagination reset and HTTP serialization.
+
+The checkbox and active chip use the concise label “Missing seasons” (`series.filters.incomplete`). `incomplete` means at least one recorded regular season (number > 0) has `isAvailable=false`. Unknown/unrecorded seasons and unavailable specials do not establish an incomplete collection. Production and availability constraints combine with all existing filters before server counting/pagination. The active backend source is the sibling `cinema-catalogue-be` repository (`shared/titles/title-list-query.ts` and `database/titles/titles.repository.ts`), not the older `.backend-v3-work` review snapshot.
+
+```typescript
+readCatalogParams(params, true); // Series-only URL fields
+// GET /series?productionStatus=finished&seasonAvailability=incomplete
+```
+
+```mermaid
+flowchart LR
+  Panel[Series filter controls] --> URL[Canonical Series URL]
+  URL --> Store[SeriesStore]
+  Store --> API[Series API query]
+  API --> SQL[Status and missing recorded season predicates]
+  SQL --> Page[Filtered count and page]
+```

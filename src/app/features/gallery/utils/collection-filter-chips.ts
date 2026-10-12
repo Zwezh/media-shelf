@@ -8,6 +8,26 @@ export type FilterChip = {
 
 export function toCollectionFilterChips(filters: CollectionFilters): FilterChip[] {
   return [
+    ...(filters.productionStatus
+      ? [
+          {
+            key: 'productionStatus' as const,
+            filterKeys: ['productionStatus' as const],
+            labelKey: 'series.filters.productionChip',
+            value: filters.productionStatus,
+          },
+        ]
+      : []),
+    ...(filters.seasonAvailability
+      ? [
+          {
+            key: 'seasonAvailability' as const,
+            filterKeys: ['seasonAvailability' as const],
+            labelKey: 'series.filters.incomplete',
+            value: '',
+          },
+        ]
+      : []),
     ...(filters.genres?.length
       ? [
           {
