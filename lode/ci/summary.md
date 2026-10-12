@@ -40,6 +40,6 @@ Invariants:
 - Repository administrators must configure master protection to require `Lint, test, and build`, require branches to be current, and disable bypassing when the gate should apply to admins. These external settings are not enabled by the YAML. The deploy job must not be a required PR check because it runs after merging.
 - Production backend CORS must permit the Firebase web.app/firebaseapp.com origins and any custom domain. Backend deployment is separate.
 
-Setup instructions are in [README](../../README.md#firebase-deployment-and-merge-protection). Actual service-account provisioning, GitHub secrets, branch protection and live deployment require account setup outside the repository.
+The [README](../../README.md) links to the live site and omits Firebase setup instructions. Deployment contracts remain documented here. Actual service-account provisioning, GitHub secrets, branch protection and live deployment require account setup outside the repository.
 
 Related lodes: [project practices](../practices.md), [project summary](../summary.md), [PWA hosting](../ui/pwa.md).
