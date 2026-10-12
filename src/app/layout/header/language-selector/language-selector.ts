@@ -13,11 +13,10 @@ import { isSupportedLanguage, Language } from '@msh-core/i18n/language';
       <select
         [attr.aria-label]="'header.language.label' | translate"
         [attr.title]="'header.language.label' | translate"
-        [value]="language.language()"
         (change)="changeLanguage($event)"
       >
         @for (option of language.supportedLanguages; track option) {
-          <option [lang]="option" [value]="option">{{ option.toUpperCase() }}</option>
+          <option [lang]="option" [value]="option" [selected]="option === language.language()">{{ option.toUpperCase() }}</option>
         }
       </select>
     </label>
