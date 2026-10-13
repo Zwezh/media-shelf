@@ -5,6 +5,8 @@ MediaShelf is an installable standalone PWA. Production builds use the official 
 ## Contracts
 
 - `public/manifest.webmanifest` uses a stable root ID/scope and launches `/gallery` in standalone mode. Shortcuts open Movies, Series and Wishlist. PNG icons derive from `public/logo.svg`; the maskable variant has padding around the mark. The Apple touch icon is opaque.
+- The manifest's `background_color` matches the light shell (`#faf8ff`). Android browsers generate their native launch splash from the manifest name, icons and background; native splash presentation remains platform-owned.
+- `src/index.html` places a centered decorative `logo.svg` and MediaShelf name inside `msh-root` while JavaScript and application initializers load. Critical styles are inline so the screen appears before bundled CSS; fallback colors/font work before design tokens load. The busy main landmark has an accessible loading label. Angular replaces this content on the first root render, with no timer or minimum delay. This startup screen also appears in browser tabs and after the platform launch splash in installed apps; it is not an iOS native launch image. Its image is plain HTML because Angular directives, including `NgOptimizedImage`, cannot run before bootstrap. The existing worker cache includes index.html and logo.svg.
 - `viewport-fit=cover`, shell safe-area insets and the existing `100dvh` sizing support device cutouts and home indicators.
 - `ngsw-config.json` prefetches the app shell, all lazy JavaScript, CSS/fonts, UI icons, poster placeholder and all three language dictionaries. A completed first online visit is required for offline reopening. Deferred chunks are still prefetched by the worker; @defer postpones application execution/rendering rather than excluding chunks from the offline cache. See [performance](performance.md).
 - History screenshots use a separate lazy asset cache: they are stored only after viewing, without enlarging the initial shell download. API responses, auth, settings, catalog records and remote posters are not cached. There are no data groups or offline mutation queues. API paths are excluded from navigation fallback. Offline pages show the existing data-loading errors and a connection notice.
@@ -27,6 +29,9 @@ provideServiceWorker('ngsw-worker.js', {
 ```mermaid
 flowchart LR
   Build[Production build] --> Manifest[Manifest and icons]
+  Manifest --> NativeSplash[Platform launch splash]
+  NativeSplash --> Startup[Static branded startup screen]
+  Startup --> Bootstrap[Angular replaces root content]
   Build --> Worker[Angular worker]
   Worker --> Cache[Versioned static shell cache]
   Cache --> Offline[Offline shell]

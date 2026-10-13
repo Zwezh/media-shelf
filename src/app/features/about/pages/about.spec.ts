@@ -40,6 +40,7 @@ describe('About', () => {
     expect(element.querySelector('#about-stack-frontend')?.textContent).toBe('Frontend');
     expect(element.querySelector('#about-stack-backend')?.textContent).toBe('Backend');
     expect(element.querySelector('msh-pwa-installation')).not.toBeNull();
+    expect(element.querySelector('#about-loading-title')?.parentElement?.textContent).toContain('30–60 seconds');
     expect(element.textContent).toContain('Aleksy Zwierzyński');
     expect(element.ownerDocument.activeElement).not.toBe(element.querySelector('h1'));
   });
@@ -59,5 +60,6 @@ describe('About', () => {
     expect(element.querySelector('figcaption')?.textContent).toBe(dictionary.about.images.desktop);
     expect(element.querySelector('.about__features li')?.textContent).toBe(dictionary.about.features.collections);
     expect(element.querySelector('summary')?.textContent).toBe(dictionary.pwa.instructions);
+    expect(element.querySelector('#about-loading-title')?.textContent).toBe(dictionary.about.loadingTitle);
   });
 });

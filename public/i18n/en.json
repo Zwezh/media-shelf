@@ -1,5 +1,6 @@
 {
   "common": {
+    "coldStart": "The backend runs on Render’s free plan and sleeps after inactivity. The first request may take around 30–60 seconds, sometimes longer, while the server wakes up. Please wait; loading will continue automatically.",
     "cancel": "Cancel",
     "close": "Close",
     "dismissNotification": "Dismiss notification",
@@ -635,6 +636,7 @@
     "reload": "Reload app"
   },
   "about": {
+    "loadingTitle": "First load after inactivity",
     "eyebrow": "A personal project, four generations",
     "title": "About MediaShelf",
     "intro": "MediaShelf began as a small way to keep track of my films. Each new version grew out of what I had learned—and what I wanted my own library to do next.",

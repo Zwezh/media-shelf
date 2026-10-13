@@ -18,7 +18,7 @@
     <p class="statistics__note">{{ 'statistics.signIn' | translate }}</p>
   }
   @if (store.status() === 'loading') {
-    <msh-page-status messageKey="statistics.loading" />
+    <msh-page-status messageKey="statistics.loading" descriptionKey="common.coldStart" />
   } @else if (store.status() === 'error') {
     <msh-page-status kind="error" messageKey="statistics.loadError" /><button
       class="btn btn-secondary"

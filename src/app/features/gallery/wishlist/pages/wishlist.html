@@ -45,7 +45,7 @@
       </div>
     }
     @if (store.status() === 'loading') {
-      <msh-page-status messageKey="wishlist.loading" />
+      <msh-page-status messageKey="wishlist.loading" descriptionKey="common.coldStart" />
     } @else if (store.status() === 'error') {
       <div class="movies__error">
         <msh-page-status kind="error" messageKey="wishlist.loadError" />

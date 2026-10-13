@@ -14,8 +14,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="icon" type="image/svg+xml" href="logo.svg" sizes="any" />
+    <style>
+      .app-startup {
+        box-sizing: border-box;
+        display: flex;
+        min-height: 100vh;
+        min-height: 100dvh;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        padding: 2rem;
+        background: var(--color-shell-background, #faf8ff);
+        color: var(--color-text-primary, #0f172a);
+        font-family: var(--font-family-base, system-ui, sans-serif);
+      }
+
+      .app-startup__name {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 800;
+      }
+
+      body:has(.app-startup) {
+        margin: 0;
+      }
+    </style>
   </head>
   <body>
-    <msh-root></msh-root>
+    <msh-root>
+      <main class="app-startup" aria-busy="true" aria-label="Loading MediaShelf">
+        <img src="logo.svg" alt="" width="96" height="96" fetchpriority="high" />
+        <h1 class="app-startup__name">MediaShelf</h1>
+      </main>
+    </msh-root>
   </body>
 </html>

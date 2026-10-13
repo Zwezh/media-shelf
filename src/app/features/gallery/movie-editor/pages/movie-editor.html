@@ -40,7 +40,7 @@
     <h1>{{ titleKey() | translate }}</h1>
 
     @if (store.isLoading()) {
-      <msh-page-status messageKey="movieEditor.loading" />
+      <msh-page-status messageKey="movieEditor.loading" descriptionKey="common.coldStart" />
     } @else if (store.hasLoadError()) {
       <div class="movie-editor__load-error">
         <msh-page-status kind="error" messageKey="movieEditor.loadError" />

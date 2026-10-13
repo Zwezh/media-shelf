@@ -27,7 +27,7 @@
   <div class="movie-editor__workspace">
     <h1 tabindex="-1">{{ titleKey() | translate }}</h1>
     @if (store.operation() === 'loading') {
-      <msh-page-status messageKey="series.loading" />
+      <msh-page-status messageKey="series.loading" descriptionKey="common.coldStart" />
     } @else if (store.hasLoadError()) {
       <msh-page-status kind="error" messageKey="series.loadError" />
       <button class="btn btn-primary" type="button" (click)="store.retry()">{{ 'movies.retry' | translate }}</button>

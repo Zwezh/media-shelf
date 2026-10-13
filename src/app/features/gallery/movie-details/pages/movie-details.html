@@ -18,7 +18,7 @@
   @if (store.isLoading()) {
     <div class="movie-details__status">
       <h1 class="movie-details__visually-hidden">{{ 'movieDetails.breadcrumbs.current' | translate }}</h1>
-      <msh-page-status messageKey="movieDetails.loading" />
+      <msh-page-status messageKey="movieDetails.loading" descriptionKey="common.coldStart" />
     </div>
   } @else if (store.hasError()) {
     <div class="movie-details__status">
