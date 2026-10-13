@@ -42,7 +42,7 @@
       </div>
     }
     @if (store.status() === 'loading') {
-      <msh-page-status messageKey="gallery.loading" />
+      <msh-page-status messageKey="gallery.loading" descriptionKey="common.coldStart" />
     } @else if (store.status() === 'error') {
       <div class="movies__error">
         <msh-page-status kind="error" messageKey="gallery.loadError" />

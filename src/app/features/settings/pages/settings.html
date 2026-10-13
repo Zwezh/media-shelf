@@ -20,7 +20,7 @@
     </header>
 
     @if (settings.settings.isLoading()) {
-      <msh-page-status messageKey="settings.loading" />
+      <msh-page-status messageKey="settings.loading" descriptionKey="common.coldStart" />
     } @else if (settings.settings.error()) {
       <div class="settings-page__load-error">
         <msh-page-status kind="error" messageKey="settings.loadError" />

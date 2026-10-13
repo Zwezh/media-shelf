@@ -24,6 +24,12 @@ A personal, non-commercial project by **Aleksy Zwierzyński, Senior Frontend Eng
 
 The public **About** page at `/about` tells the project’s story in all three languages and includes dependency information and installation instructions.
 
+## First load after inactivity
+
+The backend runs on Render’s free plan and sleeps after inactivity. The first request may take around **30–60 seconds, sometimes longer**, while the server wakes up. Please wait; loading continues automatically. This can affect the gallery, Movies, Series, Wishlist, Settings, Statistics and other pages that request backend data. The frontend and About page remain available independently of the backend.
+
+See [Render’s free-service documentation](https://render.com/docs/free#spinning-down-on-idle) for the hosting limits.
+
 ## Four generations
 
 ### 1. A first library, one window · 2010–2011

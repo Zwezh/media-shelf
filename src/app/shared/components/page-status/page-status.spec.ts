@@ -20,6 +20,20 @@ describe('PageStatus', () => {
     expect(status.getAttribute('role')).toBe('status');
     expect(status.getAttribute('aria-live')).toBe('polite');
     expect(status.querySelector('.page-status__spinner')).not.toBeNull();
+    expect(status.querySelector('.page-status__description')).toBeNull();
+  });
+
+  it('shows the translated cold-start description only while loading backend data', async () => {
+    fixture.componentRef.setInput('descriptionKey', 'common.coldStart');
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.page-status__description')?.textContent).toContain('30–60 seconds');
+    expect(element.querySelector('.page-status__description')?.textContent).toContain('Render');
+
+    fixture.componentRef.setInput('kind', 'error');
+    fixture.componentRef.setInput('messageKey', 'movies.loadError');
+    await fixture.whenStable();
+    expect(element.querySelector('.page-status__description')).toBeNull();
   });
 
   it('announces errors assertively without a loading spinner', () => {

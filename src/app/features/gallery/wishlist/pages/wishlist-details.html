@@ -15,7 +15,7 @@
   @if (store.status() === 'loading' || store.status() === 'idle') {
     <div class="movie-details__status">
       <h1 class="movie-details__visually-hidden">{{ 'wishlist.details' | translate }}</h1>
-      <msh-page-status messageKey="wishlist.loading" />
+      <msh-page-status messageKey="wishlist.loading" descriptionKey="common.coldStart" />
     </div>
   } @else if (store.status() === 'error') {
     <div class="movie-details__status">

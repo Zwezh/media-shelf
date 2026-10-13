@@ -41,7 +41,7 @@
     </msh-page-header>
 
     @if (store.isLoading()) {
-      <msh-page-status messageKey="movies.loading" />
+      <msh-page-status messageKey="movies.loading" descriptionKey="common.coldStart" />
     } @else if (store.hasError()) {
       <div class="movies__error">
         <msh-page-status kind="error" messageKey="movies.loadError" />

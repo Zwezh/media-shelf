@@ -1,5 +1,6 @@
 {
   "common": {
+    "coldStart": "Serwer działa w bezpłatnym planie Render i przechodzi w stan uśpienia po okresie bezczynności. Pierwsze żądanie może potrwać około 30–60 sekund, a czasem dłużej, zanim serwer się uruchomi. Proszę poczekać — ładowanie będzie kontynuowane automatycznie.",
     "cancel": "Anuluj",
     "close": "Zamknij",
     "dismissNotification": "Zamknij powiadomienie",
@@ -635,6 +636,7 @@
     "reload": "Załaduj ponownie"
   },
   "about": {
+    "loadingTitle": "Pierwsze ładowanie po okresie bezczynności",
     "eyebrow": "Osobisty projekt, cztery generacje",
     "title": "O MediaShelf",
     "intro": "MediaShelf zaczęło się od prostego sposobu na uporządkowanie moich filmów. Każda kolejna wersja wynikała z tego, czego się nauczyłem — i czego brakowało mi we własnej bibliotece.",

@@ -39,8 +39,8 @@ export class GalleryLayout {
   protected readonly navigationItems = GALLERY_NAVIGATION_ITEMS;
   protected readonly icons: Readonly<Record<string, IconName>> = {
     '/gallery': 'gallery',
-    '/gallery/movies': 'view',
-    '/gallery/series': 'monitor',
-    '/gallery/wishlist': 'heart',
+    '/gallery/movies': 'movies',
+    '/gallery/series': 'series',
+    '/gallery/wishlist': 'wishlist',
   };
 }
