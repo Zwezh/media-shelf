@@ -1,9 +1,11 @@
 # Refresh Session Authentication
 
-MediaShelf uses a 15-minute access JWT in memory and a backend-issued HttpOnly refresh cookie with a 30-day absolute expiry. Access JWTs are never persisted. AuthSession removes the retired localStorage token on construction. Startup POSTs `/auth/refresh` before routing; failed restoration permits public browsing.
+MediaShelf uses a 15-minute access JWT in memory and a backend-issued HttpOnly refresh cookie with a 30-day absolute expiry. Access JWTs are never persisted. AuthSession removes the retired localStorage token on construction. Startup POSTs `/auth/refresh` in the background without blocking the shell or public routes; failed restoration permits public browsing. Protected route guards await the shared startup restoration before deciding access.
 
 ```typescript
-provideAppInitializer(() => firstValueFrom(inject(AuthSession).restore()));
+provideAppInitializer(() => {
+  inject(AuthSession).restore().subscribe();
+});
 ```
 
 ```mermaid
@@ -36,6 +38,7 @@ sequenceDiagram
 - Web Locks serialize refresh-cookie rotation across same-origin tabs when supported. Generation checks discard delayed responses after sign-out or session replacement.
 - Expiry triggers refresh. Confirmed refresh rejection clears the session and redirects protected routes using existing metadata. Temporary network failures can be retried by a subsequent request.
 - Logout awaits server revocation. Failed logout retains the session and displays an error; it cannot masquerade as server logout.
+- Startup restoration is replayed once per AuthSession instance. Guards reuse the pending or completed result rather than issuing another refresh after sign-out or failed restoration. Normal interceptor and expiry refreshes remain retryable.
 - Guards and protected controls remain UX boundaries. Backend guards enforce authorization.
 
 Production should expose `/api` through the frontend origin or same-site HTTPS domains. This repository has no hosting configuration to provision a proxy. Frontend and backend must release together; old JWTs lack session IDs and are rejected.

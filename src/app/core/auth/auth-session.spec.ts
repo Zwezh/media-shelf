@@ -41,6 +41,15 @@ describe('AuthSession', () => {
     await firstValueFrom(session.restore());
     expect(session.isAuthenticated()).toBe(false);
   });
+  it('reuses the completed startup restoration without refreshing again after sign out', async () => {
+    refresh.mockReturnValue(of(TEST_ACCESS_TOKEN));
+    const session = TestBed.inject(AuthSession);
+    await firstValueFrom(session.restore());
+    await session.signOut();
+    await firstValueFrom(session.restore());
+    expect(refresh).toHaveBeenCalledOnce();
+    expect(session.isAuthenticated()).toBe(false);
+  });
   it('shares concurrent refreshes and rejects delayed responses after session replacement', () => {
     const response = new Subject<string>();
     refresh.mockReturnValue(response);
