@@ -48,7 +48,7 @@ flowchart LR
 - Search/list reads already use switchMap cancellation. Settings shares one root httpResource with computed catalogs. Ordinary lists have bounded 30-card pagination; virtual scrolling is unnecessary for that size.
 - Icons share a cached loader promise per name; fonts are local. Static images use NgOptimizedImage; remote posters retain native fallback handling.
 - The worker prefetches all JavaScript, including deferred chunks, to preserve offline reopening of unvisited routes. Deferral reduces initial execution/rendering but does not eliminate later PWA cache downloads.
-- Bootstrap waits for AuthSession.restore(); auth requests have a 15-second timeout. A slow backend can delay application rendering. Removing the wait requires coordinated restoration and route-guard behavior.
+- AuthSession.restore() runs in the background; bootstrap and public routes do not await backend authentication. Auth requests have a 15-second timeout, with any cross-tab Web Lock wait occurring before that timer. Protected route guards await the shared startup restoration before deciding access.
 - About history screenshots use quality-90 WebP at their original dimensions, totaling roughly 618 kB. They are lazy and cached only after use; full-size links and README share the optimized files.
 - Initial bundle and Header/QuickSearch/MediaCard style budgets remain exceeded. Do not raise budgets merely to suppress warnings.
 - Build statistics establish chunk boundaries and byte sizes, not mobile CPU, LCP, INP, CLS or live network timing. Real-device/Lighthouse and browser AXE verification require an available browser.

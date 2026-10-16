@@ -61,6 +61,7 @@ Invariants:
 - The combined empty-path Gallery list, Movies, Series and Wishlist are Gallery-owned children rendered inside `GalleryLayout`. Existing collection routes and editor/detail navigation remain unchanged.
 - Movie details is a lazy gallery child without navigation metadata, so it reuses the Gallery layout while adding no subnavigation tab.
 - Movie add/edit pages are lazy Gallery children without navigation metadata and share `MovieEditorPage`; `movies/new` must remain before `movies/:id`.
+- Protected route guards await the shared background startup restoration before deciding access; public routing and the shell render independently of refresh.
 - Movie add/edit routes use `authenticatedGuard`. A signed-out attempt returns a `/gallery/movies` `UrlTree` with the attempted route's collection query parameters; backend authorization remains authoritative.
 - Movies reads request parameters from its child route query string and preserves them across reloads. `currentPage` is a zero-based API index; pagination translates its one-based page before navigation, and an index beyond the collection is replaced with the last valid index.
 - Gallery subnavigation contains only child routes with valid `navigation` metadata; redirects are excluded.

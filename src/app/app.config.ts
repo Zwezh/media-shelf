@@ -5,7 +5,6 @@ import { GALLERY_REPOSITORY } from './features/gallery/catalog/application/galle
 import { HttpGalleryRepository } from './features/gallery/catalog/infrastructure/http-gallery.repository';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import { AuthSession } from '@msh-core/auth/auth-session';
 import { authenticatedRouteInitializer } from '@msh-core/auth/authenticated-route-initializer';
 import { authenticationInterceptor } from '@msh-core/auth/authentication-interceptor';
@@ -40,7 +39,9 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json',
       }),
     }),
-    provideAppInitializer(() => firstValueFrom(inject(AuthSession).restore())),
+    provideAppInitializer(() => {
+      inject(AuthSession).restore().subscribe();
+    }),
     provideAppInitializer(authenticatedRouteInitializer),
     provideAppInitializer(themeInitializer),
     provideAppInitializer(languageInitializer),

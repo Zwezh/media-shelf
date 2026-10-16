@@ -17,6 +17,7 @@ export class AuthSession {
   private readonly token = signal('');
   private expiryTimer: ReturnType<typeof setTimeout> | undefined;
   private refreshInFlight: Observable<string> | undefined;
+  private restoration: Observable<void> | undefined;
   private generation = 0;
   private logoutInFlight: Promise<void> | undefined;
 
@@ -38,10 +39,12 @@ export class AuthSession {
   }
 
   restore(): Observable<void> {
-    return this.refresh().pipe(
+    this.restoration ??= this.refresh().pipe(
       map(() => undefined),
       catchError(() => of(undefined)),
+      shareReplay({ bufferSize: 1, refCount: false }),
     );
+    return this.restoration;
   }
 
   needsRefresh(): boolean {
